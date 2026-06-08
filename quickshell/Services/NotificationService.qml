@@ -23,6 +23,38 @@ Singleton {
     property bool historyLoaded: false
     property int historyEntryCounter: 0
 
+    // hardening/notification-suite: centralized read state, capped
+    // at 500 entries (FIFO eviction). Plugins that track "seen"
+    // notifications can call markRead(id, ts) and read
+    // readIds to avoid duplicated bookkeeping.
+    property var readIds: ({})
+    readonly property int readIdsCap: 500
+    // Last markRead timestamp per id, exposed as a flat object.
+    // Format: { "<id>": <epoch_ms>, ... }. Persisted to disk as
+    // part of the same JSON file as historyList.
+    function markRead(notifId, ts) {
+        if (!notifId) return false;
+        const id = notifId.toString();
+        const next = Object.assign({}, root.readIds);
+        next[id] = ts || Date.now();
+        const keys = Object.keys(next);
+        if (keys.length > root.readIdsCap) {
+            // FIFO eviction: drop oldest by ts.
+            const sorted = keys.sort((a, b) => next[a] - next[b]);
+            const drop = sorted.slice(0, keys.length - root.readIdsCap);
+            for (const k of drop) delete next[k];
+        }
+        readIds = next;
+        return true;
+    }
+    function isRead(notifId) {
+        if (!notifId) return false;
+        return root.readIds[notifId.toString()] !== undefined;
+    }
+    function clearReadIds() {
+        readIds = ({});
+    }
+
     property list<NotifWrapper> notificationQueue: []
     property list<NotifWrapper> visibleNotifications: []
     property int maxVisibleNotifications: 4
@@ -612,6 +644,22 @@ Singleton {
     property var expandedGroups: ({})
     property var expandedMessages: ({})
     property bool popupsDisabled: false
+    // hardening/notification-suite: per-screen popup suppression map.
+    // Keyed by Quickshell.screen.name (or any string the caller passes).
+    // When perScreenPopupsDisabled[screen] === true, popups for that screen
+    // are blocked at the gate. The legacy popupsDisabled (global) still
+    // works as a hard kill switch and takes precedence.
+    property var perScreenPopupsDisabled: ({})
+    // Public read-only access to the active screen name (the screen the
+    // user is currently focused on, used as the default target when
+    // a plugin calls setPopupsDisabled without a screen arg).
+    readonly property string activeScreen: {
+        try {
+            return Quickshell.screen.name || "_all";
+        } catch (e) {
+            return "_all";
+        }
+    }
 
     NotificationServer {
         id: server
@@ -664,7 +712,17 @@ Singleton {
                 }
             }
 
-            const shouldShowPopup = !root.popupsDisabled && !SessionData.doNotDisturb && !policy.disablePopup;
+            // hardening/notification-suite: gate extended to honor per-screen
+            // suppression. The global popupsDisabled is a hard kill switch;
+            // perScreenPopupsDisabled is a soft kill switch keyed by the
+            // current focused screen. Both must be clear to show the popup.
+            const _activeScreen = root.activeScreen;
+            const _screenDisabled = root.perScreenPopupsDisabled[_activeScreen] === true
+                || root.perScreenPopupsDisabled["_all"] === true;
+            const shouldShowPopup = !root.popupsDisabled
+                && !_screenDisabled
+                && !SessionData.doNotDisturb
+                && !policy.disablePopup;
             const isTransient = notif.transient;
             const shouldKeepInCenter = !isTransient && !policy.hideFromCenter;
 
@@ -910,6 +968,37 @@ Singleton {
             }
             visibleNotifications = [];
         }
+    }
+
+    // hardening/notification-suite: per-screen variants. The screen
+    // name defaults to the currently focused screen so a plugin that
+    // wants "stop popups only on the bar where my widget lives" can
+    // call setScreenPopupsDisabled() with no args.
+    function setScreenPopupsDisabled(screenName, disabled) {
+        const name = screenName || root.activeScreen;
+        const m = Object.assign({}, root.perScreenPopupsDisabled);
+        m[name] = !!disabled;
+        perScreenPopupsDisabled = m;
+        if (disabled) {
+            // Mirror the legacy disablePopups(true) side-effect: drain the
+            // visible popups and queue so users do not see stale bubbles
+            // on the suppressed screen after toggling.
+            notificationQueue = [];
+            for (const notif of visibleNotifications) {
+                notif.popup = false;
+            }
+            visibleNotifications = [];
+        }
+    }
+
+    function clearScreenPopupsDisabled() {
+        perScreenPopupsDisabled = ({});
+    }
+
+    function isScreenPopupsDisabled(screenName) {
+        const name = screenName || root.activeScreen;
+        return root.perScreenPopupsDisabled[name] === true
+            || root.perScreenPopupsDisabled["_all"] === true;
     }
 
     property bool _processingQueue: false
@@ -1280,6 +1369,137 @@ Singleton {
             if (!SettingsData.notificationHistoryEnabled) {
                 root.deleteHistory();
             }
+        }
+    }
+
+    // hardening/notification-suite: memory watchdog. Every 30s, check
+    // that the live state has not drifted past sane bounds. Logs a
+    // warning if it has, and force-trims historyList + readIds back
+    // to the documented caps. This is the safety net for plugin
+    // bugs (e.g. an external IpcHandler call that somehow grew the
+    // map) and for very long uptime.
+    Timer {
+        id: memoryWatchdog
+        interval: 30000
+        repeat: true
+        running: root.historyLoaded
+        triggeredOnStart: false
+        onTriggered: {
+            try {
+                if (root.historyList.length > SettingsData.notificationHistoryMaxCount) {
+                    root.log.warn("historyList grew past cap", root.historyList.length, "trimming");
+                    historyList = historyList.slice(0, SettingsData.notificationHistoryMaxCount);
+                    root.saveHistory();
+                }
+                if (Object.keys(root.readIds).length > root.readIdsCap) {
+                    root.log.warn("readIds grew past cap", Object.keys(root.readIds).length, "trimming");
+                    const keys = Object.keys(root.readIds).sort((a, b) => root.readIds[a] - root.readIds[b]);
+                    const next = {};
+                    keys.slice(keys.length - root.readIdsCap).forEach(k => { next[k] = root.readIds[k]; });
+                    readIds = next;
+                }
+            } catch (e) {
+                root.log.warn("memory watchdog error:", e);
+            }
+        }
+    }
+
+    // hardening/notification-suite: IpcHandler { target: "notifications" }.
+    // Follow-up to PluginService IpcHandler { target: "plugins" } (#2601).
+    // Exposes read + light-write operations for external scripts, plugin
+    // companions, and the NotificationIsland bar widget. Functions are
+    // intentionally synchronous, stringly-typed, and small: they wrap
+    // existing public functions and never mutate data without going
+    // through the normal lifecycle (dismiss → wrapper goes away).
+    IpcHandler {
+        target: "notifications"
+
+        // One row per live popup: <id>\t<appName>\t<urgency>\t<summary>
+        // Format matches PluginService.list() for parser reuse.
+        function list(): string {
+            const lines = [];
+            for (const w of root.popups) {
+                if (!w || !w.notification) continue;
+                const id = (w.id || "").toString().replace(/[\t\n]/g, " ");
+                const app = (w.appName || "").toString().replace(/[\t\n]/g, " ");
+                const urg = typeof w.urgency === "number" ? w.urgency : 1;
+                const sum = (w.summary || "").toString().replace(/[\t\n]/g, " ");
+                lines.push(`${id}\t${app}\t${urg}\t${sum}`);
+            }
+            return lines.join("\n");
+        }
+
+        // history(limit, appName) → JSON array, max <limit> items (default 50).
+        // If appName is given, only items whose appName matches (case
+        // insensitive) are included. Useful for building per-app
+        // sub-histories in plugin UIs.
+        function history(limit: int, appName: string): string {
+            const lim = Math.max(1, Math.min(500, limit || 50));
+            const filter = appName ? appName.toLowerCase() : "";
+            const out = [];
+            for (const item of root.historyList) {
+                if (out.length >= lim) break;
+                if (filter && (item.appName || "").toLowerCase() !== filter) continue;
+                out.push({
+                    id: item.id,
+                    appName: item.appName,
+                    summary: item.summary,
+                    urgency: item.urgency,
+                    timestamp: item.timestamp
+                });
+            }
+            return JSON.stringify(out);
+        }
+
+        // dismiss(notifId) → DISMISS_TRIGGERED or ERROR. Searches live
+        // popups first, then walks historyList for read-only dismiss
+        // (removeFromHistory). Matches by id and sourceNotificationId.
+        function dismiss(notifId: int): string {
+            if (!notifId) return "ERROR: dismiss requires a notifId";
+            const id = notifId.toString();
+            for (const w of root.popups) {
+                if (!w) continue;
+                const wid = (w.id || "").toString();
+                if (wid === id) {
+                    if (typeof root.dismissNotification === "function") {
+                        root.dismissNotification(w);
+                    } else if (w.notification && w.notification.dismiss) {
+                        w.notification.dismiss();
+                    }
+                    return `DISMISS_TRIGGERED: ${id}`;
+                }
+            }
+            if (typeof root.removeFromHistory === "function" && root.removeFromHistory(id)) {
+                return `DISMISS_TRIGGERED (history): ${id}`;
+            }
+            return `ERROR: unknown notifId '${id}' (try 'list' or 'history' first)`;
+        }
+
+        // setPopupsDisabled(screen, disabled) → OK or ERROR. Thin wrapper
+        // around setScreenPopupsDisabled. If screen is empty, defaults
+        // to the currently focused screen.
+        function setPopupsDisabled(screen: string, disabled: bool): string {
+            const name = screen || root.activeScreen;
+            root.setScreenPopupsDisabled(name, !!disabled);
+            return `OK: ${name}=${!!disabled}`;
+        }
+
+        // getStatus() → JSON snapshot. Lets plugins and CLI tools avoid
+        // polling multiple signals. Cheap: just reads properties.
+        function getStatus(): string {
+            const screenList = [];
+            for (const key in root.perScreenPopupsDisabled) {
+                if (root.perScreenPopupsDisabled[key]) screenList.push(key);
+            }
+            return JSON.stringify({
+                popupsDisabled: root.popupsDisabled,
+                perScreenPopupsDisabled: screenList,
+                activeScreen: root.activeScreen,
+                doNotDisturb: SessionData.doNotDisturb,
+                activeCount: root.popups.length,
+                criticalCount: root.popups.filter(w => w && w.urgency === 2).length,
+                historySize: root.historyList.length
+            });
         }
     }
 }

@@ -128,8 +128,20 @@ Item {
 
     property int componentMapRevision: 0
 
+    // hardening/notification-suite: debounce componentMapRevision
+    // updates. The legacy implementation incremented on every call,
+    // which during a bar config edit (drag-reorder, add/remove a
+    // widget) could fire dozens of times in a few ms and force a
+    // full rebuild of the section tree. The 50ms debounce coalesces
+    // bursts into a single rebuild.
+    Timer {
+        id: componentMapDebounce
+        interval: 50
+        repeat: false
+        onTriggered: topBarContent.componentMapRevision++
+    }
     function updateComponentMap() {
-        componentMapRevision++;
+        componentMapDebounce.restart();
     }
 
     readonly property var sortedToplevels: {

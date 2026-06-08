@@ -71,6 +71,18 @@ PanelWindow {
     property bool _inlineGeometryReady: false
     readonly property bool directionalEffect: Theme.isDirectionalEffect
     readonly property bool depthEffect: Theme.isDepthEffect
+    // hardening/notification-suite: dynamic radius. When the body is
+    // collapsed (closed pill), the radius is fully rounded so the
+    // notification reads as a single line. When the body is expanded,
+    // the radius eases back toward Theme.cornerRadius so the
+    // multi-line body has straight edges and reads as a card.
+    // Connected frame mode keeps its own radius (no animation there).
+    readonly property real currentCardRadius: {
+        if (win.connectedFrameMode) return Theme.connectedSurfaceRadius;
+        const base = Theme.cornerRadius;
+        if (descriptionExpanded) return base;
+        return Math.min(width, height) / 2;
+    }
     readonly property real entryTravel: {
         const base = Math.abs(Theme.effectAnimOffset);
         if (directionalEffect) {
@@ -668,7 +680,12 @@ PanelWindow {
             sourceRect.y: content.shadowRenderPadding + content.cardInset
             sourceRect.width: Math.max(0, content.width - (content.cardInset * 2))
             sourceRect.height: Math.max(0, content.height - (content.cardInset * 2))
-            sourceRect.radius: win.connectedFrameMode ? Theme.connectedSurfaceRadius : Theme.cornerRadius
+            sourceRect.radius: win.currentCardRadius
+            // hardening/notification-suite: ease the radius when the body
+            // expands. Same easing as the inline expand animation.
+            Behavior on radius {
+                NumberAnimation { duration: Theme.shortDuration; easing.type: Theme.standardEasing }
+            }
             sourceRect.color: win.connectedFrameMode ? Theme.floatingSurface : Theme.readableSurface
             sourceRect.antialiasing: true
             sourceRect.layer.enabled: false
@@ -683,7 +700,8 @@ PanelWindow {
             y: content.cardInset
             width: Math.max(0, content.width - content.cardInset * 2)
             height: Math.max(0, content.height - content.cardInset * 2)
-            radius: win.connectedFrameMode ? Theme.connectedSurfaceRadius : Theme.cornerRadius
+            radius: win.currentCardRadius
+            Behavior on radius { NumberAnimation { duration: Theme.shortDuration; easing.type: Theme.standardEasing } }
             visible: win.notificationData && win.notificationData.urgency === NotificationUrgency.Critical
             opacity: 1
             clip: true
@@ -713,7 +731,8 @@ PanelWindow {
         Rectangle {
             anchors.fill: parent
             anchors.margins: content.cardInset
-            radius: win.connectedFrameMode ? Theme.connectedSurfaceRadius : Theme.cornerRadius
+            radius: win.currentCardRadius
+            Behavior on radius { NumberAnimation { duration: Theme.shortDuration; easing.type: Theme.standardEasing } }
             color: "transparent"
             border.color: win.connectedFrameMode ? "transparent" : BlurService.borderColor
             border.width: win.connectedFrameMode ? 0 : BlurService.borderWidth

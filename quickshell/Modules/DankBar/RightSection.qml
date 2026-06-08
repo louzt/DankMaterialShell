@@ -13,6 +13,9 @@ Item {
     property real barThickness: 48
     property real barSpacing: 4
     property var barConfig: null
+    // hardening/notification-suite: null guard on widgetsModel. See
+    // LeftSection.qml for the full rationale.
+    readonly property var safeModel: widgetsModel || []
     property var blurBarWindow: null
     property bool overrideAxisLayout: false
     property bool forceVerticalLayout: false
@@ -41,7 +44,7 @@ Item {
             anchors.right: parent ? parent.right : undefined
             Repeater {
                 id: rowRepeater
-                model: root.widgetsModel
+                model: root.safeModel
                 Item {
                     readonly property real rowSpacing: parent.widgetSpacing
                     property var itemData: modelData
@@ -86,7 +89,7 @@ Item {
             spacing: widgetSpacing
             Repeater {
                 id: columnRepeater
-                model: root.widgetsModel
+                model: root.safeModel
                 Item {
                     width: parent.width
                     readonly property real columnSpacing: parent.widgetSpacing

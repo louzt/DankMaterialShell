@@ -19,6 +19,13 @@ Item {
 
     readonly property bool isVertical: overrideAxisLayout ? forceVerticalLayout : (axis?.isVertical ?? false)
 
+    // hardening/notification-suite: null guard on widgetsModel. If the
+    // bar config does not provide a model for this section (mis-config),
+    // fall back to an empty array. Previously, a null model would
+    // throw "Cannot read property of null" inside the Repeater and
+    // make the whole bar unrenderable.
+    readonly property var safeModel: widgetsModel || []
+
     implicitHeight: layoutLoader.item ? layoutLoader.item.implicitHeight : 0
     implicitWidth: layoutLoader.item ? layoutLoader.item.implicitWidth : 0
 
@@ -39,7 +46,7 @@ Item {
             spacing: widgetSpacing
             Repeater {
                 id: rowRepeater
-                model: root.widgetsModel
+                model: root.safeModel
                 Item {
                     readonly property real rowSpacing: parent.widgetSpacing
                     property var itemData: modelData
@@ -84,7 +91,7 @@ Item {
             spacing: widgetSpacing
             Repeater {
                 id: columnRepeater
-                model: root.widgetsModel
+                model: root.safeModel
                 Item {
                     width: parent.width
                     readonly property real columnSpacing: parent.widgetSpacing
