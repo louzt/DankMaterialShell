@@ -871,6 +871,90 @@ PanelWindow {
                     }
                 }
 
+                // hardening/notification-suite: dedicated status dot.
+                // Sits to the LEFT of the app icon. NOT a reused icon —
+                // explicit Rectangle so it cannot collide with the
+                // weather/material icon family.
+                Item {
+                    id: statusDot
+                    // 10-12px hit area centered vertically on the icon
+                    width: 12
+                    height: 12
+                    anchors.left: iconContainer.left
+                    anchors.leftMargin: -6
+                    anchors.verticalCenter: iconContainer.verticalCenter
+                    visible: win.hasValidData
+                    z: 5
+
+                    readonly property bool isCriticalUnattended:
+                        notificationData
+                        && notificationData.urgency === NotificationUrgency.Critical
+                        && (!notificationData.isRead || !NotificationService.isRead(notificationData.notification?.id))
+                    readonly property bool isSnoozed:
+                        notificationData && (notificationData.snoozed === true || notificationData.isSnoozed === true)
+                    readonly property bool isUnread:
+                        notificationData
+                        && notificationData.urgency !== NotificationUrgency.Critical
+                        && !NotificationService.isRead(notificationData.notification?.id)
+
+                    readonly property color dotColor: {
+                        if (!notificationData)
+                            return "transparent"
+                        if (statusDot.isCriticalUnattended)
+                            return Theme.error
+                        if (statusDot.isSnoozed)
+                            return Theme.warning
+                        if (statusDot.isUnread)
+                            return Theme.primary
+                        return "transparent"
+                    }
+                    readonly property bool shouldPulse:
+                        statusDot.isCriticalUnattended || statusDot.isUnread
+                    readonly property real baseAlpha: statusDot.isCriticalUnattended
+                        ? 1.0
+                        : statusDot.isUnread ? 0.55 : 1.0
+
+                    Rectangle {
+                        id: dot
+                        anchors.centerIn: parent
+                        width: 7
+                        height: 7
+                        radius: width / 2
+                        visible: statusDot.dotColor.a > 0 || statusDot.dotColor !== "transparent"
+                        color: statusDot.dotColor
+                        opacity: statusDot.baseAlpha
+                        // Subtle ring to lift the dot off busy icons
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.margins: -1
+                            radius: width / 2
+                            color: "transparent"
+                            border.color: Qt.rgba(0, 0, 0, 0.35)
+                            border.width: 1
+                            z: -1
+                        }
+                    }
+
+                    SequentialAnimation {
+                        running: statusDot.shouldPulse
+                        loops: Animation.Infinite
+                        NumberAnimation {
+                            target: dot
+                            property: "opacity"
+                            to: statusDot.isCriticalUnattended ? 0.45 : 0.30
+                            duration: 1100
+                            easing.type: Easing.InOutSine
+                        }
+                        NumberAnimation {
+                            target: dot
+                            property: "opacity"
+                            to: statusDot.baseAlpha
+                            duration: 1100
+                            easing.type: Easing.InOutSine
+                        }
+                    }
+                }
+
                 Column {
                     id: textContainer
 
