@@ -788,7 +788,7 @@ Singleton {
             //   2. pluginWidgetComponents[pluginId] — same problem in
             //      reverse (widget → daemon).
             //   3. The in-memory QML compiled cache (Quickshell
-            //      .qmlls.ini VFS or ~/.cache/quickshell/qml-cache/).
+            //      .qmlls.ini VFS or ~/.cache/quickshell/qmlcache/).
             //      Qt.createComponent() with a cache buster timestamp
             //      (see loadPlugin's bustCache param) is the only
             //      reliable way to force a recompile.

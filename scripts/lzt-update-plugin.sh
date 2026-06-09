@@ -14,7 +14,10 @@
 #   manifest. Without that purge, a manifest type change (daemon ->
 #   widget) kept the old daemon PanelWindow alive on top of the new
 #   bar widget. With the purge, `qs ipc call plugins rescan <id>` is
-#   the canonical "reload this plugin completely" command.
+#   the canonical "reload this plugin completely" command. NOTE: the
+#   compiled QML cache at ~/.cache/quickshell/qmlcache/ is NOT purged
+#   by rescan — for type changes you also need `kill -9 $QS_PID &&
+#   rm -rf ~/.cache/quickshell/qmlcache/* && relaunch`.
 #
 #   This wrapper makes that command ergonomic, watchable, and CI-friendly.
 set -euo pipefail

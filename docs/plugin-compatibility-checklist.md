@@ -3,7 +3,12 @@
 For authors hardening or porting DMS plugins. Each item was a real bug
 encountered during `hardening/notification-suite` development
 (2026-06-08). Use `lzt-update-plugin.sh <id>` from
-`scripts/lzt-update-plugin.sh` to reload after each change.
+`scripts/lzt-update-plugin.sh` to reload after each change. When you're
+editing from inside Claude Code, the `post-tool-qml-reload.sh` hook
+(in `~/.claude/plugins/lzt-harness/hooks/`) auto-fires the rescan on
+`Edit`/`Write`/`MultiEdit` of any `*.qml`/`*.js`/`plugin.json` under
+`*/plugins/<id>/*` — no manual step needed. The hook only emits a
+hint (it never blocks), and warns you explicitly on manifest edits.
 
 ## 1. Settings persistence (the v0.3 bug)
 
@@ -69,7 +74,7 @@ maps + the live QObject instance) before re-reading the manifest.
 If you are on stock DMS and see "double bubbles" or "plugin loaded
 as both daemon and widget" in `qs log`, you hit this bug. Fix:
 1. `kill $(pgrep -f "qs -p" | grep -v zsh | head -1)` — full qs restart
-2. `rm -rf ~/.cache/quickshell/qml-cache/*` — clear compiled QML cache
+2. `rm -rf ~/.cache/quickshell/qmlcache/*` — clear compiled QML cache
 3. Relaunch `qs -p ~/.config/quickshell/dms &`
 
 ## 5. Bar widget placement (the in-bar vs on-top question)
@@ -129,3 +134,23 @@ slash command) to prepare a PR. The `change-batches` Makefile target
 in `~/Proyectos/Labs/Compliance-Verification-Harness/` groups commits
 by prefix and suggests a PR split. Stage-local-first rule applies —
 no push without explicit approval.
+
+## 11. Auto-reload loop (the in-editor dev cycle)
+
+There is a `PostToolUse` hook in `~/.claude/plugins/lzt-harness/hooks/post-tool-qml-reload.sh`
+that fires `qs ipc call plugins rescan <id>` automatically every time
+Claude Code (or you via the Edit/Write tools) saves a `.qml`, `.js`, or
+`plugin.json` inside a DMS plugin dir. So the loop becomes:
+
+1. Save `.qml` → hook rescan, you see the change in 200 ms.
+2. Manifest edit → hook warns, you decide whether to do the full
+   `kill -9 qs && rm -rf ~/.cache/quickshell/qmlcache/* && relaunch`
+   (manifest type changes always need this; setting additions don't).
+3. Subagent edit (Task tool spawning) → the hook also fires for
+   subagent file edits, so the reload happens automatically for any
+   file the agent touches. No special routing needed.
+
+Disable per-invocation: `LZT_QML_RELOAD_DISABLE=1 <your command>`.
+Dry-run: `LZT_QML_RELOAD_DRY_RUN=1 <command>` to log the would-be
+rescan without firing it (useful when debugging the hook itself).
+Self-test: `LZT_QML_RELOAD_SELF_TEST=1 $0 < /dev/null`.
