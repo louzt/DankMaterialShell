@@ -13,11 +13,6 @@ FloatingWindow {
 
     property bool disablePopupTransparency: true
     property int currentTab: 0
-    // Number of tabs in the tab bar — derived from the tab model array.
-    // Using array literal length (4) as a constant property; matches the
-    // inline Repeater model so the bound stays correct if tabs are added.
-    readonly property int tabCount: 4
-    readonly property int maxTabIndex: tabCount - 1
     property string searchText: ""
     property string expandedPid: ""
     property string processFilter: "all"
@@ -29,7 +24,7 @@ FloatingWindow {
     function clampTab(tabIndex) {
         if (tabIndex === undefined || tabIndex === null)
             return currentTab;
-        return Math.max(0, Math.min(maxTabIndex, tabIndex));
+        return Math.max(0, Math.min(3, tabIndex));
     }
 
     function show(tabIndex) {
@@ -38,13 +33,6 @@ FloatingWindow {
             return;
         }
         currentTab = clampTab(tabIndex);
-        // Restore sort state when navigating to Performance tab (tab 1).
-        // CpuMonitor and RamMonitor call setSortBy themselves; routing here
-        // from a thermal widget should also set the sort so the data is
-        // pre-sorted for the tab being opened.
-        if (currentTab === 1) {
-            DgopService.setSortBy("cpu");
-        }
         visible = true;
     }
 
@@ -59,13 +47,13 @@ FloatingWindow {
             log.warn("dgop is not available");
             return;
         }
-        // If already visible on the target tab, just hide.
-        // Otherwise delegate to show() which handles clampTab, sort state, and visibility.
-        if (visible && currentTab === clampTab(tabIndex)) {
+        const targetTab = clampTab(tabIndex);
+        if (visible && currentTab === targetTab) {
             hide();
             return;
         }
-        show(tabIndex);
+        currentTab = targetTab;
+        visible = true;
     }
 
     function focusOrToggle() {
@@ -100,11 +88,11 @@ FloatingWindow {
     }
 
     function nextTab() {
-        currentTab = (currentTab + 1) % tabCount;
+        currentTab = (currentTab + 1) % 4;
     }
 
     function previousTab() {
-        currentTab = (currentTab - 1 + tabCount) % tabCount;
+        currentTab = (currentTab - 1 + 4) % 4;
     }
 
     objectName: "processListModal"

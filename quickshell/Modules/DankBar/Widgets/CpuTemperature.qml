@@ -113,7 +113,6 @@ BasePill {
         acceptedButtons: Qt.LeftButton
         onPressed: mouse => {
             root.triggerRipple(this, mouse.x, mouse.y);
-            DgopService.setSortBy("cpu");
             cpuTempClicked();
         }
     }
