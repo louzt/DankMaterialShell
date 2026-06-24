@@ -13,6 +13,11 @@ FloatingWindow {
 
     property bool disablePopupTransparency: true
     property int currentTab: 0
+    // Number of tabs in the tab bar — derived from the tab model array.
+    // Using array literal length (4) as a constant property; matches the
+    // inline Repeater model so the bound stays correct if tabs are added.
+    readonly property int tabCount: 4
+    readonly property int maxTabIndex: tabCount - 1
     property string searchText: ""
     property string expandedPid: ""
     property string processFilter: "all"
@@ -21,10 +26,24 @@ FloatingWindow {
 
     signal closingModal
 
-    function show() {
+    function clampTab(tabIndex) {
+        if (tabIndex === undefined || tabIndex === null)
+            return currentTab;
+        return Math.max(0, Math.min(maxTabIndex, tabIndex));
+    }
+
+    function show(tabIndex) {
         if (!DgopService.dgopAvailable) {
             log.warn("dgop is not available");
             return;
+        }
+        currentTab = clampTab(tabIndex);
+        // Restore sort state when navigating to Performance tab (tab 1).
+        // CpuMonitor and RamMonitor call setSortBy themselves; routing here
+        // from a thermal widget should also set the sort so the data is
+        // pre-sorted for the tab being opened.
+        if (currentTab === 1) {
+            DgopService.setSortBy("cpu");
         }
         visible = true;
     }
@@ -35,12 +54,18 @@ FloatingWindow {
             processContextMenu.close();
     }
 
-    function toggle() {
+    function toggle(tabIndex) {
         if (!DgopService.dgopAvailable) {
             log.warn("dgop is not available");
             return;
         }
-        visible = !visible;
+        // If already visible on the target tab, just hide.
+        // Otherwise delegate to show() which handles clampTab, sort state, and visibility.
+        if (visible && currentTab === clampTab(tabIndex)) {
+            hide();
+            return;
+        }
+        show(tabIndex);
     }
 
     function focusOrToggle() {
@@ -48,22 +73,19 @@ FloatingWindow {
             log.warn("dgop is not available");
             return;
         }
-        if (!visible) {
-            show();
-            return;
-        }
-        const modalTitle = I18n.tr("System Monitor", "sysmon window title");
-        for (const toplevel of ToplevelManager.toplevels.values) {
-            if (toplevel.title !== "System Monitor" && toplevel.title !== modalTitle)
-                continue;
-            if (toplevel.activated) {
-                hide();
+        if (visible) {
+            const modalTitle = I18n.tr("System Monitor", "sysmon window title");
+            for (const toplevel of ToplevelManager.toplevels.values) {
+                if (toplevel.title !== "System Monitor" && toplevel.title !== modalTitle)
+                    continue;
+                if (toplevel.activated) {
+                    hide();
+                    return;
+                }
+                toplevel.activate();
                 return;
             }
-            toplevel.activate();
-            return;
         }
-        hide();
         show();
     }
 
@@ -78,11 +100,11 @@ FloatingWindow {
     }
 
     function nextTab() {
-        currentTab = (currentTab + 1) % 4;
+        currentTab = (currentTab + 1) % tabCount;
     }
 
     function previousTab() {
-        currentTab = (currentTab - 1 + 4) % 4;
+        currentTab = (currentTab - 1 + tabCount) % tabCount;
     }
 
     objectName: "processListModal"
@@ -92,8 +114,6 @@ FloatingWindow {
     implicitHeight: Math.round(Theme.fontSizeMedium * 51)
     color: Theme.surfaceContainer
     visible: false
-
-    onClosed: hide()
 
     onCurrentTabChanged: {
         if (visible && currentTab === 0 && searchField.visible)
@@ -200,7 +220,7 @@ FloatingWindow {
             width: 400
             height: 200
             radius: Theme.cornerRadius
-            color: Theme.errorHover
+            color: Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.1)
             border.color: Theme.error
             border.width: 2
             visible: !DgopService.dgopAvailable
@@ -305,7 +325,7 @@ FloatingWindow {
                 spacing: Theme.spacingM
 
                 Row {
-                    spacing: Theme.spacingXXS
+                    spacing: 2
 
                     Repeater {
                         model: [
@@ -331,8 +351,8 @@ FloatingWindow {
                             width: tabRowContent.implicitWidth + Theme.spacingM * 2
                             height: Math.round(Theme.fontSizeMedium * 3.1)
                             radius: Theme.cornerRadius
-                            color: currentTab === index ? Theme.primaryPressed : (tabMouseArea.containsMouse ? Theme.primaryHoverLight : Theme.withAlpha(Theme.primaryHoverLight, 0))
-                            border.color: currentTab === index ? Theme.primary : Theme.withAlpha(Theme.primary, 0)
+                            color: currentTab === index ? Theme.primaryPressed : (tabMouseArea.containsMouse ? Theme.primaryHoverLight : "transparent")
+                            border.color: currentTab === index ? Theme.primary : "transparent"
                             border.width: currentTab === index ? 1 : 0
 
                             Row {
