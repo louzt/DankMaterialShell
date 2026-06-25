@@ -2276,7 +2276,7 @@ Singleton {
             };
         case SettingsData.Position.Left:
             return {
-                "x": 0,
+                "x": leftOffset,
                 "y": topOffset,
                 "width": barThickness + wingSize,
                 "height": screenHeight - topOffset - bottomOffset,
@@ -2284,7 +2284,7 @@ Singleton {
             };
         case SettingsData.Position.Right:
             return {
-                "x": screenWidth - barThickness - wingSize,
+                "x": screenWidth - barThickness - wingSize - rightOffset,
                 "y": topOffset,
                 "width": barThickness + wingSize,
                 "height": screenHeight - topOffset - bottomOffset,
