@@ -37,28 +37,12 @@ BasePill {
                 DankIcon {
                     name: "device_thermostat"
                     size: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
-                    color: {
-                        if (DgopService.cpuTemperature > 85) {
-                            return Theme.tempDanger;
-                        }
-
-                        if (DgopService.cpuTemperature > 69) {
-                            return Theme.tempWarning;
-                        }
-
-                        return Theme.widgetIconColor;
-                    }
+                    color: DgopService.cpuTemperatureColor(Theme.widgetIconColor, Theme.tempWarning, Theme.tempDanger)
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
 
                 StyledText {
-                    text: {
-                        if (DgopService.cpuTemperature === undefined || DgopService.cpuTemperature === null || DgopService.cpuTemperature < 0) {
-                            return "--";
-                        }
-
-                        return Math.round(DgopService.cpuTemperature).toString();
-                    }
+                    text: DgopService.formatTemperature(DgopService.cpuTemperature, "", "--")
                     font.pixelSize: Theme.barTextSize(root.barThickness, root.barConfig?.fontScale, root.barConfig?.maximizeWidgetText)
                     color: Theme.widgetTextColor
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -75,17 +59,7 @@ BasePill {
                     id: cpuTempIcon
                     name: "device_thermostat"
                     size: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
-                    color: {
-                        if (DgopService.cpuTemperature > 85) {
-                            return Theme.tempDanger;
-                        }
-
-                        if (DgopService.cpuTemperature > 69) {
-                            return Theme.tempWarning;
-                        }
-
-                        return Theme.widgetIconColor;
-                    }
+                    color: DgopService.cpuTemperatureColor(Theme.widgetIconColor, Theme.tempWarning, Theme.tempDanger)
                     anchors.verticalCenter: parent.verticalCenter
                 }
 
@@ -107,13 +81,7 @@ BasePill {
 
                     StyledText {
                         id: cpuTempText
-                        text: {
-                            if (DgopService.cpuTemperature === undefined || DgopService.cpuTemperature === null || DgopService.cpuTemperature < 0) {
-                                return "--°";
-                            }
-
-                            return Math.round(DgopService.cpuTemperature) + "°";
-                        }
+                        text: DgopService.formatTemperature(DgopService.cpuTemperature)
                         font.pixelSize: Theme.barTextSize(root.barThickness, root.barConfig?.fontScale, root.barConfig?.maximizeWidgetText)
                         color: Theme.widgetTextColor
 
