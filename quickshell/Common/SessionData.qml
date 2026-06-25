@@ -115,6 +115,28 @@ Singleton {
     property var monitorWallpapersDark: ({})
     property var monitorWallpaperFillModes: ({})
 
+    // Map: screenName -> { backend, pid, since }
+    // Populated by the WallpaperHealthDaemon plugin by polling
+    // ~/.local/state/lzt/wallpaper-override.json (or $LZT_WALLPAPER_OVERRIDE_PATH).
+    // WallpaperBackground.qml yields its own rendering for monitors present here
+    // so the external backend (swww, linux-wallpaperengine, etc.) is the only
+    // wallpaper on that monitor. When the entry's PID dies, the plugin removes
+    // the entry and DMS re-renders its configured wallpaper as fallback.
+    property var externalWallpaperOverrides: ({})
+
+    function isMonitorExternallyOwned(screenName) {
+        if (!screenName)
+            return false;
+        return externalWallpaperOverrides[screenName] !== undefined
+            && externalWallpaperOverrides[screenName] !== null;
+    }
+
+    function getExternalOverride(screenName) {
+        if (!screenName)
+            return null;
+        return externalWallpaperOverrides[screenName] || null;
+    }
+
     // Map: screenName -> { scrollX, scrollY } (0-100 range, like workspace percentage)
     property var monitorScrollPositions: ({})
 

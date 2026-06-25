@@ -36,6 +36,27 @@ Variants {
 
         color: "transparent"
 
+        // Yield the Background layer to an external backend (swww,
+        // linux-wallpaperengine, mpvpaper, swaybg, gslapper, awww) when
+        // the user has routed one through waypaper. The health daemon
+        // populates SessionData.externalWallpaperOverrides from
+        // ~/.local/state/lzt/wallpaper-override.json, and we re-evaluate
+        // visibility on every change so the moment the external process
+        // dies we reclaim the layer and DMS re-renders its wallpaper.
+        visible: !SessionData.isMonitorExternallyOwned(modelData.name)
+
+        // Keep the PanelWindow updating when we re-claim the layer so the
+        // image swaps in without waiting for a screen / randr event.
+        onVisibleChanged: {
+            if (visible) {
+                Qt.callLater(() => {
+                    if (root) {
+                        root.invalidate();
+                    }
+                });
+            }
+        }
+
         updatesEnabled: root.renderActive || root._settleFrames > 0
 
         mask: Region {

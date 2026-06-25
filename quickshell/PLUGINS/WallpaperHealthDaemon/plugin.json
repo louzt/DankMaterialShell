@@ -1,0 +1,16 @@
+{
+    "id": "wallpaperHealthDaemon",
+    "name": "Wallpaper Health Daemon",
+    "description": "Monitors the LZT wallpaper override file and yields the Background layer to external backends (swww, linux-wallpaperengine, etc.) launched via waypaper. When the external process dies, DMS re-claims the layer and re-renders its configured wallpaper as a fallback.",
+    "version": "1.0.0",
+    "author": "LZT (Lou)",
+    "type": "daemon",
+    "capabilities": ["wallpaper", "monitoring"],
+    "component": "./WallpaperHealthDaemon.qml",
+    "icon": "wallpaper",
+    "settings": "./WallpaperHealthDaemonSettings.qml",
+    "permissions": [
+        "settings_read",
+        "settings_write"
+    ]
+}
