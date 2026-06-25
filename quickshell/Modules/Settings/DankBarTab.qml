@@ -19,6 +19,7 @@ Item {
     onSelectedBarIdChanged: {
         if (SettingsUiState.selectedBarId !== selectedBarId)
             SettingsUiState.selectedBarId = selectedBarId;
+        syncBarNameField();
     }
 
     Connections {
@@ -51,6 +52,42 @@ Item {
         return pos === SettingsData.Position.Left || pos === SettingsData.Position.Right;
     }
     readonly property bool connectedFrameModeActive: SettingsData.connectedFrameModeActive
+
+    function syncBarNameField() {
+        if (!barNameField)
+            return;
+        const currentName = selectedBarConfig?.name || "";
+        if (barNameField.text !== currentName)
+            barNameField.text = currentName;
+    }
+
+    function commitBarName() {
+        const config = SettingsData.getBarConfig(selectedBarId);
+        if (!config)
+            return;
+        const nextName = barNameField.text.trim();
+        const fallbackName = config.id === "default" ? I18n.tr("Main Bar") : I18n.tr("Bar");
+        const finalName = nextName.length > 0 ? nextName : fallbackName;
+        if ((config.name || "") === finalName) {
+            if (barNameField.text !== finalName)
+                barNameField.text = finalName;
+            return;
+        }
+        SettingsData.updateBarConfig(selectedBarId, {
+            name: finalName
+        });
+        barNameField.text = finalName;
+    }
+
+    Connections {
+        target: SettingsData
+
+        function onBarConfigsChanged() {
+            if (barNameField && barNameField.getActiveFocus())
+                return;
+            dankBarTab.syncBarNameField();
+        }
+    }
 
     // Bar Inset Padding: resolve the "auto" sentinel (stored < 0) to each mode's natural inset for the slider display.
     readonly property real insetPadAutoUI: SettingsData.connectedFrameModeActive ? SettingsData.frameThickness : (selectedBarIsVertical ? Theme.spacingXS : Math.max(Theme.spacingXS, (selectedBarConfig?.innerPadding ?? 4) * 0.8))
@@ -459,6 +496,31 @@ Item {
                             }
                         }
                     }
+                }
+            }
+
+            SettingsCard {
+                iconName: "edit"
+                title: I18n.tr("Bar Name")
+                settingKey: "barName"
+                visible: !dankBarTab.appearanceOnly && selectedBarConfig !== null
+
+                StyledText {
+                    width: parent.width
+                    text: I18n.tr("Set the label used across settings for this bar configuration.")
+                    font.pixelSize: Theme.fontSizeSmall
+                    color: Theme.surfaceVariantText
+                    wrapMode: Text.WordWrap
+                    horizontalAlignment: Text.AlignLeft
+                }
+
+                DankTextField {
+                    id: barNameField
+                    width: parent.width
+                    placeholderText: I18n.tr("Enter bar name")
+                    Component.onCompleted: dankBarTab.syncBarNameField()
+                    onAccepted: dankBarTab.commitBarName()
+                    onEditingFinished: dankBarTab.commitBarName()
                 }
             }
 
