@@ -1,3 +1,4 @@
+import QtCore
 import QtQuick
 import Quickshell
 import Quickshell.Io
@@ -13,8 +14,16 @@ PluginComponent {
         if (Quickshell.env("LZT_WALLPAPER_OVERRIDE_PATH")) {
             return Quickshell.env("LZT_WALLPAPER_OVERRIDE_PATH");
         }
-        return StandardPaths.writableLocation(StandardPaths.GenericStateLocation)
-            + "/lzt/wallpaper-override.json";
+        // StandardPaths.writableLocation returns a QML `url` (which is its
+        // own type with no string methods). Concatenation with a string
+        // coerces it via toString(), which yields `file:///path`. We slice
+        // off the `file://` prefix to feed /usr/bin/cat a real path.
+        let raw = "" + StandardPaths.writableLocation(StandardPaths.GenericStateLocation);
+        const prefix = "file://";
+        if (raw.indexOf(prefix) === 0) {
+            raw = raw.substring(prefix.length);
+        }
+        return raw + "/lzt/wallpaper-override.json";
     }
 
     readonly property int pollIntervalMs: (pluginData && pluginData.pollIntervalMs) || 10000
@@ -34,14 +43,21 @@ PluginComponent {
 
     Process {
         id: readProcess
-        command: ["cat", root.overridePath]
+        command: ["/usr/bin/cat", root.overridePath]
         stdout: StdioCollector {
             id: readCollector
             onStreamFinished: {
                 root.handleRawJson(text);
             }
         }
-        stderr: StdioCollector {}
+        stderr: StdioCollector {
+            id: readStderr
+            onStreamFinished: {
+                if (text && text.trim()) {
+                    console.warn("WallpaperHealthDaemon: cat stderr:", text.trim().slice(0, 200));
+                }
+            }
+        }
         onExited: (exitCode) => {
             if (exitCode !== 0) {
                 // File missing or unreadable — treat as empty (no overrides).
@@ -75,6 +91,7 @@ PluginComponent {
         }
         if (pids.length === 0) {
             SessionData.externalWallpaperOverrides = {};
+            console.info("WallpaperHealthDaemon: yielding nothing (DMS owns all layers)");
             return;
         }
         // Hand off to the liveness check. Build the command directly so we
@@ -101,12 +118,17 @@ PluginComponent {
                     aliveSet[pid] = true;
                 }
                 const live = {};
+                const droppedMonitors = [];
                 for (const monitor in livenessCheck.candidates) {
                     const entry = livenessCheck.candidates[monitor];
                     if (entry && aliveSet[String(entry.pid)]) {
                         live[monitor] = entry;
+                    } else {
+                        droppedMonitors.push(`${monitor}(${entry ? entry.pid : "?"})`);
                     }
                 }
+                console.info("WallpaperHealthDaemon: alive=", Object.keys(live).join(",") || "(none)",
+                    "dropped=", droppedMonitors.join(",") || "(none)");
                 SessionData.externalWallpaperOverrides = live;
             }
         }
