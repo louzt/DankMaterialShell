@@ -17,8 +17,6 @@ on:
         description: "Release number for rebuilds (e.g., 2, 3, 4 for ppa2, ppa3, ppa4)"
         required: false
         default: ""
-  schedule:
-    - cron: "0 2,5,14,17,20,23 * * *" # 9am, 12pm, 3pm, 6pm, 9pm, 12am EST (UTC times shown)
 
 jobs:
   check-updates:
