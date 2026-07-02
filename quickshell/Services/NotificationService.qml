@@ -1063,6 +1063,85 @@ Singleton {
             || root.perScreenPopupsDisabled["_all"] === true;
     }
 
+    // resolveRouteForNotification(notif) → screenName | undefined
+    // Determines which screen a notification should route to based on:
+    //   1. DND: if enabled (global or within schedule window), block all
+    //   2. "all" mode: undefined (fan-out to every screen)
+    //   3. "focused" mode: the currently focused screen
+    //   4. "per_app" mode: explicit app route → active-window screen → focused screen
+    // Each NotificationPopupManager filters by comparing this against its modelData.name.
+    function resolveRouteForNotification(notif) {
+        // --- DND check ---
+        if (SettingsData.notificationDndEnabled) {
+            return undefined; // DND blocks all popups; history still receives it
+        }
+        const now = new Date();
+        const curH = now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0");
+        const startT = SettingsData.notificationDndScheduleStart || "22:00";
+        const endT = SettingsData.notificationDndScheduleEnd || "08:00";
+        const inWindow = startT > endT
+            ? (curH >= startT || curH < endT)
+            : (curH >= startT && curH < endT);
+        if (inWindow) return undefined;
+
+        // --- Routing modes ---
+        const mode = SettingsData.notificationRoutingMode || "all";
+
+        if (mode === "all") {
+            return undefined; // fan-out: every screen gets it
+        }
+
+        if (mode === "focused") {
+            const focused = CompositorService.getFocusedScreen();
+            return focused ? focused.name : undefined;
+        }
+
+        // "per_app" — explicit route first
+        if (mode === "per_app") {
+            const appId = (notif && notif.appId) ? notif.appId.toString() : "";
+            const desktopEntry = (notif && notif.desktopEntry) ? notif.desktopEntry.toString() : "";
+            const explicit = SettingsData.notificationAppRoutes || {};
+            let route = explicit[appId] || explicit[desktopEntry] || undefined;
+            if (route) return route;
+
+            // Fall back to the screen where the app's top-level window is focused
+            const appWindow = _findTopLevelForApp(appId || desktopEntry);
+            if (appWindow) {
+                const winScreen = _screenOfToplevel(appWindow);
+                if (winScreen) return winScreen;
+            }
+
+            // Final fallback: focused screen
+            const focused2 = CompositorService.getFocusedScreen();
+            return focused2 ? focused2.name : undefined;
+        }
+
+        return undefined;
+    }
+
+    // Internal: find a top-level window whose appId or desktopEntry matches.
+    function _findTopLevelForApp(appId) {
+        if (!appId || !ToplevelManager.toplevels || !ToplevelManager.toplevels.values)
+            return null;
+        for (const tl of ToplevelManager.toplevels.values) {
+            if (!tl) continue;
+            const tlApp = (tl.appId || "").toString();
+            const tlDe = (tl.desktopEntry || "").toString();
+            if (tlApp === appId || tlDe === appId) return tl;
+        }
+        return null;
+    }
+
+    // Internal: return the screen name a toplevel is on, or null.
+    function _screenOfToplevel(tl) {
+        if (!tl || !tl.screens) return null;
+        for (let i = 0; i < tl.screens.length; i++) {
+            if (tl.screens[i] && tl.screens[i].name)
+                return tl.screens[i].name;
+        }
+        return null;
+    }
+
     property bool _processingQueue: false
 
     function processQueue() {

@@ -611,7 +611,18 @@ Item {
     }
 
     Variants {
-        model: SettingsData.notificationFocusedMonitor ? Quickshell.screens : SettingsData.getFilteredScreens("notifications")
+        // Routing modes:
+        // "all"       → every screen gets notifications (fan-out)
+        // "focused"   → only the focused screen
+        // "per_app"   → per-app routes resolved via NotificationService.resolveRouteForNotification
+        model: {
+            const mode = SettingsData.notificationRoutingMode || "all";
+            if (mode === "focused") {
+                const focused = CompositorService.getFocusedScreen();
+                return focused ? [focused] : SettingsData.getFilteredScreens("notifications");
+            }
+            return SettingsData.getFilteredScreens("notifications");
+        }
 
         delegate: NotificationPopupManager {
             modelData: item

@@ -2077,4 +2077,47 @@ Item {
 
         target: "powerprofile"
     }
+
+    IpcHandler {
+        // pickAppRoute(appId) → JSON array of screen names where notifs for
+        // this app would land under the current routing mode. Used by the
+        // settings UI to populate the per-app screen picker.
+        function pickAppRoute(appId: string): string {
+            if (!appId) return "[]";
+            // Simulate a minimal notif object to pass to resolveRouteForNotification
+            const fakeNotif = { appId: appId, desktopEntry: appId };
+            const route = NotificationService.resolveRouteForNotification(fakeNotif);
+            const screens = [];
+            if (route === undefined) {
+                // fan-out: app would show on all notification-eligible screens
+                const all = SettingsData.getFilteredScreens("notifications");
+                for (const s of all) screens.push(s.name || s);
+            } else {
+                screens.push(route);
+            }
+            return JSON.stringify(screens);
+        }
+
+        // setAppRoute(appId, screenName) → OK
+        function setAppRoute(appId: string, screenName: string): string {
+            if (!appId) return "ERROR: appId required";
+            SettingsData.setAppRoute(appId, screenName || "");
+            return "OK";
+        }
+
+        // setNotificationDndEnabled(val: bool) → OK
+        function setNotificationDndEnabled(val: bool): string {
+            SettingsData.notificationDndEnabled = !!val;
+            return "OK: dnd=" + !!val;
+        }
+
+        // setNotificationRoutingMode(mode: string) → OK
+        function setNotificationRoutingMode(mode: string): string {
+            if (!mode) return "ERROR: mode required (all|focused|per_app)";
+            SettingsData.notificationRoutingMode = mode;
+            return "OK: mode=" + mode;
+        }
+
+        target: "notification-routing"
+    }
 }

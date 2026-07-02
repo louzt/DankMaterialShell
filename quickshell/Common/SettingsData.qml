@@ -922,6 +922,43 @@ Singleton {
     property var notificationRules: []
     property bool notificationFocusedMonitor: false
 
+    // Notification routing (replaces notificationFocusedMonitor)
+    // Mode: "all" | "focused" | "per_app"
+    property string notificationRoutingMode: Spec.SPEC.notificationRoutingMode.def
+    // App routing map: { "discord": "DP-2", "spotify": "DP-1", ... }
+    property var notificationAppRoutes: Spec.SPEC.notificationAppRoutes.def
+    property bool notificationDndEnabled: Spec.SPEC.notificationDndEnabled.def
+    property string notificationDndScheduleStart: Spec.SPEC.notificationDndScheduleStart.def
+    property string notificationDndScheduleEnd: Spec.SPEC.notificationDndScheduleEnd.def
+
+    // Migration shim: convert legacy notificationFocusedMonitor bool to new mode.
+    // Idempotent — safe to call on every startup.
+    function migrateNotificationRouting() {
+        // If the new mode key is absent from settings, we are on first boot post-migration.
+        // If it exists (including empty string), the shim has already run.
+        if (notificationRoutingMode !== undefined && notificationRoutingMode !== "")
+            return;
+        if (notificationFocusedMonitor === true) {
+            notificationRoutingMode = "focused";
+        } else {
+            notificationRoutingMode = "all";
+        }
+        notificationFocusedMonitor = undefined;
+        root._persist();
+    }
+
+    // Set a per-app notification route. Pass screenName = "" to remove.
+    function setAppRoute(appId, screenName) {
+        const routes = Object.assign({}, notificationAppRoutes);
+        if (!screenName || screenName === "") {
+            delete routes[appId];
+        } else {
+            routes[appId] = screenName;
+        }
+        notificationAppRoutes = routes;
+        root._persist();
+    }
+
     property bool osdAlwaysShowValue: false
     property int osdPosition: SettingsData.Position.BottomCenter
     property bool osdVolumeEnabled: true
@@ -1437,6 +1474,7 @@ Singleton {
             initializeListModels();
             refreshAuthAvailability();
             Processes.checkPluginSettings();
+            migrateNotificationRouting();
         }
     }
 
