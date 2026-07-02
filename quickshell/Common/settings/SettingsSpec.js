@@ -457,7 +457,11 @@ var SPEC = {
     notificationHistorySaveNormal: { def: true },
     notificationHistorySaveCritical: { def: true },
     notificationRules: { def: [] },
-    notificationFocusedMonitor: { def: false },
+    notificationRoutingMode: { def: "all" },
+    notificationAppRoutes: { def: {} },
+    notificationDndEnabled: { def: false },
+    notificationDndScheduleStart: { def: "22:00" },
+    notificationDndScheduleEnd: { def: "08:00" },
 
     osdAlwaysShowValue: { def: false },
     osdPosition: { def: 5 },
