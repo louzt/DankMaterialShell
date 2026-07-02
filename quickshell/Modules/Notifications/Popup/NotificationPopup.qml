@@ -71,6 +71,18 @@ PanelWindow {
     property bool _inlineGeometryReady: false
     readonly property bool directionalEffect: Theme.isDirectionalEffect
     readonly property bool depthEffect: Theme.isDepthEffect
+    // hardening/notification-suite: dynamic radius. When the body is
+    // collapsed (closed pill), the radius is fully rounded so the
+    // notification reads as a single line. When the body is expanded,
+    // the radius eases back toward Theme.cornerRadius so the
+    // multi-line body has straight edges and reads as a card.
+    // Connected frame mode keeps its own radius (no animation there).
+    readonly property real currentCardRadius: {
+        if (win.connectedFrameMode) return Theme.connectedSurfaceRadius;
+        const base = Theme.cornerRadius;
+        if (descriptionExpanded) return base;
+        return Math.min(width, height) / 2;
+    }
     readonly property real entryTravel: {
         const base = Math.abs(Theme.effectAnimOffset);
         if (directionalEffect) {
@@ -642,14 +654,23 @@ PanelWindow {
             shadowColor: content.shadowsAllowed && content.elevLevel ? Theme.elevationShadowColor(content.elevLevel) : "transparent"
             shadowEnabled: !win._isDestroying && win.screenValid && content.shadowsAllowed && !win.connectedFrameMode
 
-            sourceX: content.shadowRenderPadding + content.cardInset
-            sourceY: content.shadowRenderPadding + content.cardInset
-            sourceWidth: Math.max(0, content.width - (content.cardInset * 2))
-            sourceHeight: Math.max(0, content.height - (content.cardInset * 2))
-            targetRadius: win.connectedFrameMode ? Theme.connectedSurfaceRadius : Theme.cornerRadius
-            targetColor: win.connectedFrameMode ? Theme.floatingSurface : Theme.readableSurface
-            borderColor: win.notificationData && win.notificationData.urgency === NotificationUrgency.Critical ? Theme.withAlpha(Theme.primary, 0.3) : Theme.withAlpha(Theme.outline, 0.08)
-            borderWidth: win.notificationData && win.notificationData.urgency === NotificationUrgency.Critical ? 2 : 0
+            sourceRect.anchors.fill: undefined
+            sourceRect.x: content.shadowRenderPadding + content.cardInset
+            sourceRect.y: content.shadowRenderPadding + content.cardInset
+            sourceRect.width: Math.max(0, content.width - (content.cardInset * 2))
+            sourceRect.height: Math.max(0, content.height - (content.cardInset * 2))
+            sourceRect.radius: win.currentCardRadius
+            // hardening/notification-suite: ease the radius when the body
+            // expands. Same easing as the inline expand animation.
+            Behavior on radius {
+                NumberAnimation { duration: Theme.shortDuration; easing.type: Theme.standardEasing }
+            }
+            sourceRect.color: win.connectedFrameMode ? Theme.floatingSurface : Theme.readableSurface
+            sourceRect.antialiasing: true
+            sourceRect.layer.enabled: false
+            sourceRect.layer.textureSize: Qt.size(0, 0)
+            sourceRect.border.color: notificationData && notificationData.urgency === NotificationUrgency.Critical ? Theme.withAlpha(Theme.primary, 0.3) : Theme.withAlpha(Theme.outline, 0.08)
+            sourceRect.border.width: notificationData && notificationData.urgency === NotificationUrgency.Critical ? 2 : 0
         }
 
         // Keep critical accent outside shadow rendering so connected mode still shows it.
@@ -658,7 +679,8 @@ PanelWindow {
             y: content.cardInset
             width: Math.max(0, content.width - content.cardInset * 2)
             height: Math.max(0, content.height - content.cardInset * 2)
-            radius: win.connectedFrameMode ? Theme.connectedSurfaceRadius : Theme.cornerRadius
+            radius: win.currentCardRadius
+            Behavior on radius { NumberAnimation { duration: Theme.shortDuration; easing.type: Theme.standardEasing } }
             visible: win.notificationData && win.notificationData.urgency === NotificationUrgency.Critical
             opacity: 1
             clip: true
@@ -688,7 +710,8 @@ PanelWindow {
         Rectangle {
             anchors.fill: parent
             anchors.margins: content.cardInset
-            radius: win.connectedFrameMode ? Theme.connectedSurfaceRadius : Theme.cornerRadius
+            radius: win.currentCardRadius
+            Behavior on radius { NumberAnimation { duration: Theme.shortDuration; easing.type: Theme.standardEasing } }
             color: "transparent"
             border.color: win.connectedFrameMode ? "transparent" : BlurService.borderColor
             border.width: win.connectedFrameMode ? 0 : BlurService.borderWidth
@@ -870,6 +893,90 @@ PanelWindow {
                         const wrapperId = notificationData.notification?.id?.toString() || "";
                         if (wrapperId)
                             NotificationService.updateHistoryImage(wrapperId, filePath);
+                    }
+                }
+
+                // hardening/notification-suite: dedicated status dot.
+                // Sits to the LEFT of the app icon. NOT a reused icon —
+                // explicit Rectangle so it cannot collide with the
+                // weather/material icon family.
+                Item {
+                    id: statusDot
+                    // 10-12px hit area centered vertically on the icon
+                    width: 12
+                    height: 12
+                    anchors.left: iconContainer.left
+                    anchors.leftMargin: -6
+                    anchors.verticalCenter: iconContainer.verticalCenter
+                    visible: win.hasValidData
+                    z: 5
+
+                    readonly property bool isCriticalUnattended:
+                        notificationData
+                        && notificationData.urgency === NotificationUrgency.Critical
+                        && (!notificationData.isRead || !NotificationService.isRead(notificationData.notification?.id))
+                    readonly property bool isSnoozed:
+                        notificationData && (notificationData.snoozed === true || notificationData.isSnoozed === true)
+                    readonly property bool isUnread:
+                        notificationData
+                        && notificationData.urgency !== NotificationUrgency.Critical
+                        && !NotificationService.isRead(notificationData.notification?.id)
+
+                    readonly property color dotColor: {
+                        if (!notificationData)
+                            return "transparent"
+                        if (statusDot.isCriticalUnattended)
+                            return Theme.error
+                        if (statusDot.isSnoozed)
+                            return Theme.warning
+                        if (statusDot.isUnread)
+                            return Theme.primary
+                        return "transparent"
+                    }
+                    readonly property bool shouldPulse:
+                        statusDot.isCriticalUnattended || statusDot.isUnread
+                    readonly property real baseAlpha: statusDot.isCriticalUnattended
+                        ? 1.0
+                        : statusDot.isUnread ? 0.55 : 1.0
+
+                    Rectangle {
+                        id: dot
+                        anchors.centerIn: parent
+                        width: 7
+                        height: 7
+                        radius: width / 2
+                        visible: statusDot.dotColor.a > 0 || statusDot.dotColor !== "transparent"
+                        color: statusDot.dotColor
+                        opacity: statusDot.baseAlpha
+                        // Subtle ring to lift the dot off busy icons
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.margins: -1
+                            radius: width / 2
+                            color: "transparent"
+                            border.color: Qt.rgba(0, 0, 0, 0.35)
+                            border.width: 1
+                            z: -1
+                        }
+                    }
+
+                    SequentialAnimation {
+                        running: statusDot.shouldPulse
+                        loops: Animation.Infinite
+                        NumberAnimation {
+                            target: dot
+                            property: "opacity"
+                            to: statusDot.isCriticalUnattended ? 0.45 : 0.30
+                            duration: 1100
+                            easing.type: Easing.InOutSine
+                        }
+                        NumberAnimation {
+                            target: dot
+                            property: "opacity"
+                            to: statusDot.baseAlpha
+                            duration: 1100
+                            easing.type: Easing.InOutSine
+                        }
                     }
                 }
 
