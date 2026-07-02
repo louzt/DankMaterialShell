@@ -942,11 +942,64 @@ Singleton {
         if (plugin && plugin.manifestPath) {
             const manifestPath = plugin.manifestPath;
             const source = plugin.source || "user";
+            // hardening/notification-suite: full purge before rescan.
+            // The legacy implementation only deleted the manifest
+            // cache entry and the availablePlugins slot. It did NOT
+            // purge:
+            //   1. pluginDaemonComponents[pluginId] — the compiled
+            //      daemon Component. If the new manifest type is
+            //      "widget" but the old type was "daemon", the old
+            //      daemon Component was still mounted as a PanelWindow
+            //      via Variants (one per screen), which is exactly the
+            //      "double bubble" bug observed in
+            //      hardening/notification-suite dev.
+            //   2. pluginWidgetComponents[pluginId] — same problem in
+            //      reverse (widget → daemon).
+            //   3. The in-memory QML compiled cache (Quickshell
+            //      .qmlls.ini VFS or ~/.cache/quickshell/qmlcache/).
+            //      Qt.createComponent() with a cache buster timestamp
+            //      (see loadPlugin's bustCache param) is the only
+            //      reliable way to force a recompile.
+            // The fix: drop all the per-plugin in-memory state, then
+            // re-load the manifest and force a loadPlugin() with
+            // bustCache=true so the new type's Component is built from
+            // scratch.
+            if (pluginDaemonComponents[pluginId]) {
+                const newDaemons = Object.assign({}, pluginDaemonComponents);
+                delete newDaemons[pluginId];
+                pluginDaemonComponents = newDaemons;
+            }
+            if (pluginWidgetComponents[pluginId]) {
+                const newComponents = Object.assign({}, pluginWidgetComponents);
+                delete newComponents[pluginId];
+                pluginWidgetComponents = newComponents;
+            }
+            if (pluginLauncherComponents[pluginId]) {
+                const newLaunchers = Object.assign({}, pluginLauncherComponents);
+                delete newLaunchers[pluginId];
+                pluginLauncherComponents = newLaunchers;
+            }
+            if (pluginDesktopComponents && pluginDesktopComponents[pluginId]) {
+                const newDesktops = Object.assign({}, pluginDesktopComponents);
+                delete newDesktops[pluginId];
+                pluginDesktopComponents = newDesktops;
+            }
+            if (pluginInstances[pluginId]) {
+                try { pluginInstances[pluginId].destroy(); } catch (e) {}
+                const newInstances = Object.assign({}, pluginInstances);
+                delete newInstances[pluginId];
+                pluginInstances = newInstances;
+            }
             delete knownManifests[manifestPath];
             const newMap = Object.assign({}, availablePlugins);
             delete newMap[pluginId];
             availablePlugins = newMap;
-            loadPluginManifestFile(manifestPath, source, Date.now());
+            const manifest = loadPluginManifestFile(manifestPath, source, Date.now());
+            // Re-load the plugin with bustCache so the new type's
+            // Component is rebuilt and the old one is gone.
+            // loadPluginManifestFile is synchronous, so by this point
+            // availablePlugins[pluginId] is the fresh entry.
+            loadPlugin(pluginId, true);
         }
     }
 

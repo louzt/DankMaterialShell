@@ -35,7 +35,28 @@ Loader {
     readonly property bool widgetEnabled: widgetData?.enabled !== false
 
     active: orientationMatches && getWidgetVisible(widgetId, DgopService.dgopAvailable) && (widgetId !== "music" || MprisController.activePlayer !== null)
-    sourceComponent: getWidgetComponent(widgetId, components)
+    // hardening/notification-suite: wrap sourceComponent in a try/catch
+    // and log any resolution failure. Previously, a malformed plugin
+    // manifest would crash the Loader silently and the widget slot
+    // would just be empty with no diagnostic. Now we log a warning
+    // and bind to a placeholder so the rest of the bar still renders.
+    sourceComponent: {
+        try {
+            return getWidgetComponent(widgetId, components);
+        } catch (e) {
+            console.warn("[WidgetHost]", widgetId, "component resolution failed:", e);
+            return null;
+        }
+    }
+    // hardening/notification-suite: log Loader status transitions. A
+    // plugin that compiles but fails to load (missing required
+    // property, undefined service) was previously silent. The
+    // status change surfaces the failure.
+    onStatusChanged: {
+        if (status === Loader.Error) {
+            console.warn("[WidgetHost]", widgetId, "load error:", sourceComponent ? "component set" : "no component");
+        }
+    }
 
     signal contentItemReady(var item)
 

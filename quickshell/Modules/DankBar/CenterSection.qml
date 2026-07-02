@@ -13,6 +13,9 @@ Item {
     property real widgetThickness: 30
     property real barThickness: 48
     property real barSpacing: 4
+    // hardening/notification-suite: null guard on widgetsModel. See
+    // LeftSection.qml for the full rationale.
+    readonly property var safeModel: widgetsModel || []
     property var barConfig: null
     property var blurBarWindow: null
     property real sectionAvailablePrimarySize: 0
@@ -327,7 +330,7 @@ Item {
 
     Repeater {
         id: centerRepeater
-        model: root.widgetsModel
+        model: root.safeModel
 
         onCountChanged: layoutTimer.restart()
 
