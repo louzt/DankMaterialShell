@@ -1827,19 +1827,21 @@ Singleton {
                         const storedLight = isGreeterMode ? (GreetdSettings.registryThemeVariants[themeId]?.light || lightDefaults) : (typeof SettingsData !== "undefined" ? SettingsData.getRegistryThemeMultiVariant(themeId, lightDefaults, "light") : lightDefaults);
                         const darkFlavorId = storedDark.flavor || darkDefaults.flavor || "";
                         const lightFlavorId = storedLight.flavor || lightDefaults.flavor || "";
-                        const accentId = storedDark.accent || darkDefaults.accent || "";
+                        const darkAccentId = storedDark.accent || darkDefaults.accent || "";
+                        const lightAccentId = storedLight.accent || lightDefaults.accent || "";
                         const darkFlavor = findVariant(customThemeRawData.variants.flavors, darkFlavorId);
                         const lightFlavor = findVariant(customThemeRawData.variants.flavors, lightFlavorId);
-                        const accent = findAccent(customThemeRawData.variants.accents, accentId);
+                        const darkAccent = findAccent(customThemeRawData.variants.accents, darkAccentId);
+                        const lightAccent = findAccent(customThemeRawData.variants.accents, lightAccentId);
                         if (darkFlavor) {
                             darkTheme = mergeColors(darkTheme, darkFlavor.dark || {});
-                            if (accent)
-                                darkTheme = mergeColors(darkTheme, accent[darkFlavor.id] || {});
+                            if (darkAccent)
+                                darkTheme = mergeColors(darkTheme, darkAccent[darkFlavor.id] || {});
                         }
                         if (lightFlavor) {
                             lightTheme = mergeColors(lightTheme, lightFlavor.light || {});
-                            if (accent)
-                                lightTheme = mergeColors(lightTheme, accent[lightFlavor.id] || {});
+                            if (lightAccent)
+                                lightTheme = mergeColors(lightTheme, lightAccent[lightFlavor.id] || {});
                         }
                     } else if (customThemeRawData.variants.options) {
                         const isGreeterMode = typeof SessionData !== "undefined" && SessionData.isGreeterMode;
