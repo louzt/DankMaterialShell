@@ -61,7 +61,6 @@ install whichever features you want:
 | `cava` | audio visualiser widget |
 | `qt6-multimedia` | system sound feedback |
 | `qt6ct` | Qt app theming |
-| `wtype` | virtual keyboard input |
 | `power-profiles-daemon` | power profile control |
 | `cups-pk-helper` | printer management |
 | `NetworkManager` | network control |

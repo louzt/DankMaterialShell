@@ -396,7 +396,7 @@ Item {
         }
 
         sourceComponent: ClipboardKeyboardHints {
-            wtypeAvailable: modal.wtypeAvailable
+            pasteAvailable: modal.pasteAvailable
             enterToPaste: SettingsData.clipboardEnterToPaste
         }
     }

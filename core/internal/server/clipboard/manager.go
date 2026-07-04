@@ -31,6 +31,7 @@ import (
 	clipboardstore "github.com/AvengeMedia/DankMaterialShell/core/internal/clipboard"
 	"github.com/AvengeMedia/DankMaterialShell/core/internal/log"
 	"github.com/AvengeMedia/DankMaterialShell/core/internal/proto/ext_data_control"
+	"github.com/AvengeMedia/DankMaterialShell/core/internal/proto/virtual_keyboard"
 	"github.com/AvengeMedia/DankMaterialShell/core/internal/server/wlcontext"
 	wlclient "github.com/AvengeMedia/DankMaterialShell/core/pkg/go-wayland/wayland/client"
 )
@@ -164,6 +165,8 @@ func (m *Manager) setupRegistry() error {
 			m.seat = seat
 			m.seatName = e.Name
 			log.Info("Bound wl_seat")
+		case virtual_keyboard.ZwpVirtualKeyboardManagerV1InterfaceName:
+			m.pasteSupported = true
 		}
 	})
 
@@ -1054,6 +1057,13 @@ func (m *Manager) SetClipboard(data []byte, mimeType string) error {
 	dataCopy := make([]byte, len(data))
 	copy(dataCopy, data)
 
+	m.takeSelection(clipboardstore.ExpandOffers(dataCopy, mimeType))
+	return nil
+}
+
+// takeSelection makes the daemon the selection owner, serving the given
+// offers until another client claims the clipboard.
+func (m *Manager) takeSelection(offers []clipboardstore.Offer) {
 	m.post(func() {
 		if m.dataControlMgr == nil || m.dataDevice == nil {
 			log.Error("Data control manager or device not initialized")
@@ -1068,9 +1078,13 @@ func (m *Manager) SetClipboard(data []byte, mimeType string) error {
 			return
 		}
 
-		if err := source.Offer(mimeType); err != nil {
-			log.Errorf("Failed to offer mime type: %v", err)
-			return
+		offerData := make(map[string][]byte, len(offers))
+		for _, offer := range offers {
+			if err := source.Offer(offer.MimeType); err != nil {
+				log.Errorf("Failed to offer %s: %v", offer.MimeType, err)
+				return
+			}
+			offerData[offer.MimeType] = offer.Data
 		}
 
 		source.SetSendHandler(func(e ext_data_control.ExtDataControlSourceV1SendEvent) {
@@ -1080,7 +1094,11 @@ func (m *Manager) SetClipboard(data []byte, mimeType string) error {
 			file := os.NewFile(uintptr(fd), "clipboard-pipe")
 			defer file.Close()
 
-			if _, err := file.Write(dataCopy); err != nil {
+			data, ok := offerData[e.MimeType]
+			if !ok {
+				return
+			}
+			if _, err := file.Write(data); err != nil {
 				log.Errorf("Failed to write clipboard data: %v", err)
 			}
 		})
@@ -1093,9 +1111,6 @@ func (m *Manager) SetClipboard(data []byte, mimeType string) error {
 
 		m.releaseCurrentSource()
 		m.currentSource = source
-		m.sourceMutex.Lock()
-		m.sourceMimeTypes = []string{mimeType}
-		m.sourceMutex.Unlock()
 
 		m.ownerLock.Lock()
 		m.isOwner = true
@@ -1106,8 +1121,6 @@ func (m *Manager) SetClipboard(data []byte, mimeType string) error {
 			log.Errorf("Failed to set selection: %v", err)
 		}
 	})
-
-	return nil
 }
 
 func (m *Manager) CopyText(text string) error {
@@ -1779,74 +1792,16 @@ func (m *Manager) CopyFile(filePath string) error {
 	m.updateState()
 	m.notifySubscribers()
 
-	_, imgMime, imgErr := image.DecodeConfig(bytes.NewReader(fileData))
+	offers := []clipboardstore.Offer{
+		{MimeType: "x-special/gnome-copied-files", Data: []byte("copy\n" + fileURI)},
+		{MimeType: "text/uri-list", Data: []byte(fileURI + "\r\n")},
+		{MimeType: "text/plain", Data: []byte(filePath)},
+	}
+	if _, imgMime, err := image.DecodeConfig(bytes.NewReader(fileData)); err == nil {
+		offers = append(offers, clipboardstore.Offer{MimeType: "image/" + imgMime, Data: fileData})
+	}
 
-	m.post(func() {
-		if m.dataControlMgr == nil || m.dataDevice == nil {
-			log.Error("Data control manager or device not initialized")
-			return
-		}
-
-		dataMgr := m.dataControlMgr.(*ext_data_control.ExtDataControlManagerV1)
-		source, err := dataMgr.CreateDataSource()
-		if err != nil {
-			log.Errorf("Failed to create data source: %v", err)
-			return
-		}
-
-		type offer struct {
-			mime string
-			data []byte
-		}
-		offers := []offer{
-			{"x-special/gnome-copied-files", []byte("copy\n" + fileURI)},
-			{"text/uri-list", []byte(fileURI + "\r\n")},
-			{"text/plain", []byte(filePath)},
-		}
-
-		if imgErr == nil {
-			imgMimeType := "image/" + imgMime
-			offers = append(offers, offer{imgMimeType, fileData})
-		}
-
-		offerData := make(map[string][]byte)
-		for _, o := range offers {
-			if err := source.Offer(o.mime); err != nil {
-				log.Errorf("Failed to offer %s: %v", o.mime, err)
-				return
-			}
-			offerData[o.mime] = o.data
-		}
-
-		source.SetSendHandler(func(e ext_data_control.ExtDataControlSourceV1SendEvent) {
-			fd := e.Fd
-			defer syscall.Close(fd)
-			file := os.NewFile(uintptr(fd), "clipboard-pipe")
-			defer file.Close()
-			if data, ok := offerData[e.MimeType]; ok {
-				file.Write(data)
-			}
-		})
-
-		source.SetCancelledHandler(func(e ext_data_control.ExtDataControlSourceV1CancelledEvent) {
-			m.ownerLock.Lock()
-			m.isOwner = false
-			m.ownerLock.Unlock()
-		})
-
-		m.releaseCurrentSource()
-		m.currentSource = source
-
-		m.ownerLock.Lock()
-		m.isOwner = true
-		m.ownerLock.Unlock()
-
-		device := m.dataDevice.(*ext_data_control.ExtDataControlDeviceV1)
-		if err := device.SetSelection(source); err != nil {
-			log.Errorf("Failed to set selection: %v", err)
-		}
-	})
-
+	m.takeSelection(offers)
 	return nil
 }
 

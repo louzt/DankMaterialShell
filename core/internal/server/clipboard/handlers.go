@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 
+	clipboardstore "github.com/AvengeMedia/DankMaterialShell/core/internal/clipboard"
 	"github.com/AvengeMedia/DankMaterialShell/core/internal/server/models"
 	"github.com/AvengeMedia/DankMaterialShell/core/internal/server/params"
 )
@@ -28,6 +29,10 @@ func HandleRequest(conn net.Conn, req models.Request, m *Manager) {
 		handleCopyEntry(conn, req, m)
 	case "clipboard.paste":
 		handlePaste(conn, req, m)
+	case "clipboard.sendPaste":
+		handleSendPaste(conn, req)
+	case "clipboard.pasteSupported":
+		models.Respond(conn, req.ID, map[string]bool{"supported": m.pasteSupported})
 	case "clipboard.subscribe":
 		handleSubscribe(conn, req, m)
 	case "clipboard.search":
@@ -174,6 +179,17 @@ func handlePaste(conn net.Conn, req models.Request, m *Manager) {
 	}
 
 	models.Respond(conn, req.ID, map[string]string{"text": text})
+}
+
+func handleSendPaste(conn net.Conn, req models.Request) {
+	shift, _ := models.Get[bool](req, "shift")
+
+	if err := clipboardstore.SendPasteKeystroke(shift); err != nil {
+		models.RespondError(conn, req.ID, err.Error())
+		return
+	}
+
+	models.Respond(conn, req.ID, models.SuccessResult{Success: true, Message: "paste sent"})
 }
 
 func handleSubscribe(conn net.Conn, req models.Request, m *Manager) {

@@ -5,10 +5,10 @@ import qs.Widgets
 Rectangle {
     id: keyboardHints
 
-    property bool wtypeAvailable: false
+    property bool pasteAvailable: false
     property bool enterToPaste: false
     readonly property string hintsText: {
-        if (!wtypeAvailable)
+        if (!pasteAvailable)
             return I18n.tr("Ctrl+Tab: Switch Tab • Ctrl+S: Pin/Unpin • Shift+Del: Clear All • Esc: Close");
         return enterToPaste ? I18n.tr("Ctrl+Tab: Switch Tabs • Ctrl+S: Pin/Unpin • Shift+Enter: Copy • Shift+Del: Clear All • F10: Help • Esc: Close", "Keyboard hints when enter-to-paste is enabled") : I18n.tr("Ctrl+Tab: Switch Tabs • Ctrl+S: Pin/Unpin • Shift+Enter: Paste • Shift+Del: Clear All • F10: Help • Esc: Close");
     }

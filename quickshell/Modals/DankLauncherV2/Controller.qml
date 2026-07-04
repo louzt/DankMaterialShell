@@ -146,12 +146,6 @@ Item {
     }
 
     Process {
-        id: wtypeProcess
-        command: ["wtype", "-M", "ctrl", "-P", "v", "-p", "v", "-m", "ctrl"]
-        running: false
-    }
-
-    Process {
         id: copyProcess
         running: false
         onExited: pasteTimer.start()
@@ -161,7 +155,7 @@ Item {
         id: pasteTimer
         interval: 200
         repeat: false
-        onTriggered: wtypeProcess.running = true
+        onTriggered: ClipboardService.sendPasteKeystroke()
     }
 
     function pasteSelected() {
@@ -177,10 +171,6 @@ Item {
                     root.itemExecuted();
                 });
             }
-            return;
-        }
-        if (!SessionService.wtypeAvailable) {
-            ToastService.showError(I18n.tr("wtype not available - install wtype for paste support"));
             return;
         }
 

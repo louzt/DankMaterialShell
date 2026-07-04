@@ -76,7 +76,7 @@ in
     enableClipboardPaste = lib.mkOption {
       type = types.bool;
       default = true;
-      description = "Adds needed dependencies for directly pasting items from the clipboard history.";
+      description = "Deprecated: paste is built into dms; no extra dependencies needed. Kept as a no-op for compatibility.";
     };
 
     quickshell = {

@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Io
+import Quickshell.Wayland
 import qs.Common
 import qs.Services
 
@@ -14,7 +14,10 @@ Singleton {
     readonly property int longTextThreshold: 200
 
     readonly property bool clipboardAvailable: DMSService.isConnected && (DMSService.capabilities.length === 0 || DMSService.capabilities.includes("clipboard"))
-    readonly property bool wtypeAvailable: SessionService.wtypeAvailable
+    property bool pasteSupported: false
+    readonly property bool pasteAvailable: clipboardAvailable && pasteSupported
+
+    readonly property var terminalAppIds: ["kitty", "foot", "footclient", "alacritty", "st", "org.wezfurlong.wezterm", "com.mitchellh.ghostty", "ghostty", "org.kde.konsole", "konsole", "org.gnome.terminal", "gnome-terminal-server", "org.gnome.console", "kgx", "com.gexperts.tilix", "tilix", "terminator", "xfce4-terminal", "lxterminal", "deepin-terminal", "io.elementary.terminal", "rio", "contour", "wayst", "urxvt", "rxvt"]
 
     property var internalEntries: []
     property var clipboardEntries: []
@@ -37,38 +40,62 @@ Singleton {
     signal historyCleared
     signal launcherSearchReady(string query)
 
-    Process {
-        id: wtypeProcess
-        // TODO: This is only a paste shortcut fallback. It assumes the target
-        // application accepts Ctrl+V, which is false for many terminals.
-        // Replace with a more reliable target-aware paste strategy.
-        command: ["wtype", "-M", "ctrl", "-P", "v", "-p", "v", "-m", "ctrl"]
-        running: false
-    }
-
     Timer {
         id: pasteTimer
         interval: 200
         repeat: false
-        onTriggered: wtypeProcess.running = true
+        onTriggered: root.sendPasteKeystroke()
+    }
+
+    Connections {
+        target: DMSService
+        function onIsConnectedChanged() {
+            root.refreshPasteSupport();
+        }
+    }
+
+    Component.onCompleted: refreshPasteSupport()
+
+    function refreshPasteSupport() {
+        if (!DMSService.isConnected) {
+            pasteSupported = false;
+            return;
+        }
+        DMSService.sendRequest("clipboard.pasteSupported", null, function (response) {
+            root.pasteSupported = !response.error && response.result && response.result.supported === true;
+        });
+    }
+
+    function isTerminalFocused() {
+        const appId = (ToplevelManager.activeToplevel?.appId ?? "").toLowerCase();
+        if (!appId) {
+            return false;
+        }
+        return terminalAppIds.includes(appId) || appId.endsWith("term") || appId.includes("terminal");
+    }
+
+    function sendPasteKeystroke() {
+        DMSService.sendRequest("clipboard.sendPaste", {
+            "shift": isTerminalFocused()
+        }, function (response) {
+            if (response.error) {
+                ToastService.showError(I18n.tr("Paste failed: %1").arg(response.error));
+            }
+        });
     }
 
     function updateFilteredModel() {
         let filtered = internalEntries;
 
         if (activeFilter !== "all") {
-            filtered = filtered.filter(entry =>
-                getEntryType(entry) === activeFilter
-            );
+            filtered = filtered.filter(entry => getEntryType(entry) === activeFilter);
         }
 
         const query = searchText.trim();
 
         if (query.length > 0) {
             const lowerQuery = query.toLowerCase();
-            filtered = filtered.filter(entry =>
-                entry.preview.toLowerCase().includes(lowerQuery)
-            );
+            filtered = filtered.filter(entry => entry.preview.toLowerCase().includes(lowerQuery));
         }
 
         filtered.sort((a, b) => {
@@ -256,19 +283,17 @@ Singleton {
     }
 
     function pasteClipboard(closeCallback) {
-        if (!wtypeAvailable) {
-            ToastService.showError(I18n.tr("wtype not available - install wtype for paste support"));
-            return;
-        }
         if (closeCallback) {
             closeCallback();
         }
-        pasteTimer.start();
+        if (pasteAvailable) {
+            pasteTimer.start();
+        }
     }
 
     function pasteEntry(entry, closeCallback) {
-        if (!wtypeAvailable) {
-            ToastService.showError(I18n.tr("wtype not available - install wtype for paste support"));
+        if (!pasteAvailable) {
+            copyEntry(entry, closeCallback);
             return;
         }
         DMSService.sendRequest("clipboard.copyEntry", {

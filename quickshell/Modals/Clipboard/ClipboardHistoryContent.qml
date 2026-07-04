@@ -21,7 +21,7 @@ FocusScope {
     property string activeFilter: SettingsData.clipboardRememberTypeFilter ? SettingsData.clipboardTypeFilter : "all"
 
     readonly property bool clipboardAvailable: ClipboardService.clipboardAvailable
-    readonly property bool wtypeAvailable: ClipboardService.wtypeAvailable
+    readonly property bool pasteAvailable: ClipboardService.pasteAvailable
     readonly property int totalCount: ClipboardService.totalCount
     readonly property var clipboardEntries: ClipboardService.clipboardEntries
     readonly property var pinnedEntries: ClipboardService.pinnedEntries
