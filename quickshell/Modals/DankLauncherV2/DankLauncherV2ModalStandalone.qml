@@ -364,11 +364,11 @@ Item {
         WindowBlur {
             targetWindow: launcherWindow
             readonly property real s: Math.min(1, modalContainer.publishedScale)
-            readonly property real op: Math.max(0, Math.min(1, (modalContainer.publishedOpacity - 0.06) * 2))
-            blurX: modalContainer.x + modalContainer.width * (1 - s * op) * 0.5
-            blurY: modalContainer.y + modalContainer.height * (1 - s * op) * 0.5
-            blurWidth: contentVisible ? modalContainer.width * s * op : 0
-            blurHeight: contentVisible ? modalContainer.height * s * op : 0
+            // Blur tracks the surface's scaled rect
+            blurX: modalContainer.x + modalContainer.width * (1 - s) * 0.5
+            blurY: modalContainer.y + modalContainer.height * (1 - s) * 0.5
+            blurWidth: contentVisible ? modalContainer.width * s : 0
+            blurHeight: contentVisible ? modalContainer.height * s : 0
             blurRadius: root.cornerRadius
         }
 

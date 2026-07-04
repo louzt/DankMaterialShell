@@ -244,11 +244,11 @@ Item {
         WindowBlur {
             targetWindow: contentWindow
             readonly property real s: Math.min(1, modalContainer.scaleValue)
-            readonly property real op: Math.max(0, Math.min(1, (morph.openProgress - 0.06) * 2))
-            blurX: modalContainer.x + modalContainer.width * (1 - s * op) * 0.5 + Theme.snap(modalContainer.animX, root.dpr)
-            blurY: modalContainer.y + modalContainer.height * (1 - s * op) * 0.5 + Theme.snap(modalContainer.animY, root.dpr)
-            blurWidth: root.shouldBeVisible ? modalContainer.width * s * op : 0
-            blurHeight: root.shouldBeVisible ? modalContainer.height * s * op : 0
+            // Blur tracks the surface's scaled rect, matching the connected backend.
+            blurX: modalContainer.x + modalContainer.width * (1 - s) * 0.5 + Theme.snap(modalContainer.animX, root.dpr)
+            blurY: modalContainer.y + modalContainer.height * (1 - s) * 0.5 + Theme.snap(modalContainer.animY, root.dpr)
+            blurWidth: root.shouldBeVisible ? modalContainer.width * s : 0
+            blurHeight: root.shouldBeVisible ? modalContainer.height * s : 0
             blurRadius: root.cornerRadius
         }
 

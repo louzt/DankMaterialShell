@@ -99,8 +99,9 @@ Item {
                 root._clear();
         }
         function onResourcesLost() {
-            lifecycleKickAction.cancel();
             root._clear();
+            // Re-arm so blur self-heals since instances are no longer recreated per open
+            root._scheduleLifecycleKick();
         }
         function onWindowConnected() {
             root._scheduleLifecycleKick();

@@ -162,37 +162,16 @@ Item {
         _publishModalChromeState();
     }
 
-    property bool _animSyncQueued: false
-    property bool _bodySyncQueued: false
-
     function _queueFullSync() {
         _fullSyncPending = true;
         if (!_syncTimer.running)
             _syncTimer.restart();
     }
-    function _queueAnimSync() {
-        _animSyncQueued = true;
-        if (!_syncTimer.running)
-            _syncTimer.restart();
-    }
-    function _queueBodySync() {
-        _bodySyncQueued = true;
-        if (!_syncTimer.running)
-            _syncTimer.restart();
-    }
     function _flushSync() {
-        const fullDirty = _fullSyncPending;
-        const animDirty = _animSyncQueued;
-        const bodyDirty = _bodySyncQueued;
+        if (!_fullSyncPending)
+            return;
         _fullSyncPending = false;
-        _animSyncQueued = false;
-        _bodySyncQueued = false;
-        if (fullDirty)
-            _syncModalChromeState();
-        if (animDirty)
-            _syncModalAnim();
-        if (bodyDirty)
-            _syncModalBody();
+        _syncModalChromeState();
     }
 
     function _syncModalAnim() {
@@ -216,10 +195,11 @@ Item {
     onFrameOwnsConnectedChromeChanged: _syncModalChromeState()
     onResolvedConnectedBarSideChanged: _queueFullSync()
     onShouldBeVisibleChanged: _queueFullSync()
-    onAlignedXChanged: _queueBodySync()
-    onAlignedYChanged: _queueBodySync()
-    onAlignedWidthChanged: _queueBodySync()
-    onAlignedHeightChanged: _queueBodySync()
+    // Low resource scalar writes: publish synchronously to stay in the same frame
+    onAlignedXChanged: _syncModalBody()
+    onAlignedYChanged: _syncModalBody()
+    onAlignedWidthChanged: _syncModalBody()
+    onAlignedHeightChanged: _syncModalBody()
 
     Connections {
         target: contentWindow
@@ -613,9 +593,9 @@ Item {
                 readonly property real scaleValue: computedScaleCollapsed + (1.0 - computedScaleCollapsed) * morph.openProgress
 
                 onAnimXChanged: if (root.frameOwnsConnectedChrome)
-                    root._queueAnimSync()
+                    root._syncModalAnim()
                 onAnimYChanged: if (root.frameOwnsConnectedChrome)
-                    root._queueAnimSync()
+                    root._syncModalAnim()
 
                 Item {
                     id: contentContainer
