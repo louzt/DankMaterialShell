@@ -2261,6 +2261,13 @@
     "comment": ""
   },
   {
+    "term": "Available Updates (%1)",
+    "translation": "",
+    "context": "",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Available in Detailed and Forecast view modes",
     "translation": "",
     "context": "",
@@ -2920,6 +2927,13 @@
   },
   {
     "term": "Button Color",
+    "translation": "",
+    "context": "",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "By %1",
     "translation": "",
     "context": "",
     "reference": "",
@@ -5579,6 +5593,13 @@
     "comment": ""
   },
   {
+    "term": "Diff",
+    "translation": "",
+    "context": "",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Digital",
     "translation": "",
     "context": "",
@@ -7476,6 +7497,13 @@
     "comment": ""
   },
   {
+    "term": "Failed to update %1: %2",
+    "translation": "",
+    "context": "",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Failed to update VPN",
     "translation": "",
     "context": "",
@@ -9348,6 +9376,13 @@
     "term": "Identical alerts stack as separate notification cards",
     "translation": "",
     "context": "",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Identify",
+    "translation": "",
+    "context": "button for identifying monitor positions",
     "reference": "",
     "comment": ""
   },
@@ -12496,6 +12531,13 @@
   },
   {
     "term": "No trigger",
+    "translation": "",
+    "context": "",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "No updates available.",
     "translation": "",
     "context": "",
     "reference": "",
@@ -19530,6 +19572,20 @@
     "comment": ""
   },
   {
+    "term": "Updating %1...",
+    "translation": "",
+    "context": "",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "Updating plugins...",
+    "translation": "",
+    "context": "",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Upgrading...",
     "translation": "",
     "context": "",
@@ -21318,6 +21374,13 @@
     "term": "source",
     "translation": "",
     "context": "source code link",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "the Qt 6 Multimedia QML module",
+    "translation": "",
+    "context": "",
     "reference": "",
     "comment": ""
   },

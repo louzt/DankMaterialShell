@@ -1,9 +1,13 @@
 import QtQuick
 import qs.Common
 import qs.Services
+import qs.Widgets
 
 Rectangle {
     id: root
+
+    property string draggingOutput: ""
+    readonly property bool identifyActive: draggingOutput !== "" || identifyButton.pressed
 
     property var filteredOutputs: {
         void (DisplayConfigState.pendingHyprlandChanges);
@@ -87,7 +91,26 @@ Rectangle {
                 outputData: DisplayConfigState.allOutputs[modelData]
                 canvasScaleFactor: canvas.scaleFactor
                 canvasOffset: canvas.offset
+                onIsDraggingChanged: {
+                    if (isDragging) {
+                        root.draggingOutput = outputName;
+                        return;
+                    }
+                    if (root.draggingOutput === outputName)
+                        root.draggingOutput = "";
+                }
             }
         }
+    }
+
+    DankActionButton {
+        id: identifyButton
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.margins: Theme.spacingS
+        iconName: "badge"
+        iconColor: pressed ? Theme.primary : Theme.surfaceVariantText
+        tooltipText: I18n.tr("Identify", "button for identifying monitor positions")
+        z: 200
     }
 }

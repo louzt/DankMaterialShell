@@ -25,7 +25,7 @@ Recommends:     danksearch
 Recommends:     matugen
 Recommends:     quickshell-git
 Recommends:     NetworkManager
-Recommends:     qt6-qtmultimedia
+Recommends:     qt6-multimedia-imports
 Suggests:       cups-pk-helper
 Suggests:       qt6ct
 

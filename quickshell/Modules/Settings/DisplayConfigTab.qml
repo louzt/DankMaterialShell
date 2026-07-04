@@ -535,6 +535,7 @@ Item {
                     }
 
                     MonitorCanvas {
+                        id: monitorCanvas
                         width: parent.width
                     }
 
@@ -642,7 +643,7 @@ Item {
     }
 
     Loader {
-        active: root.visible && root.identifyConfigured
+        active: root.visible && root.identifyConfigured && monitorCanvas.identifyActive
         sourceComponent: MonitorIdentifyOverlay {}
     }
 }
