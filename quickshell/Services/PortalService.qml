@@ -97,7 +97,7 @@ Singleton {
         return typeof Theme !== "undefined";
     }
 
-    // Only follow values stable for the settle window — the GTK4-refresh toggle reverts within ~50ms and following it would loop.
+    // Only follow values stable for the settle window — the opt-in GTK4-refresh toggle reverts within ~400ms and following it would loop.
     function evaluateColorScheme() {
         if (!canSyncColorScheme())
             return;
@@ -111,7 +111,7 @@ Singleton {
 
     Timer {
         id: colorSchemeSettleTimer
-        interval: 750
+        interval: 1000
         onTriggered: {
             if (!root.canSyncColorScheme())
                 return;

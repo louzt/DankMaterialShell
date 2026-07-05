@@ -928,7 +928,14 @@ func expectColorSchemeEcho(scheme string) {
 	}
 }
 
+// The color-scheme round trip is the only mechanism that makes running GTK4
+// apps reload ~/.config/gtk-4.0 CSS (a gtk-theme flip does not). But apps
+// following the portal color-scheme (Chromium) can drop the restore signal
+// mid-repaint and latch the wrong mode, so this is opt-in.
 func refreshGTK4() {
+	if os.Getenv("DMS_ENABLE_GTK4_REFRESH") != "1" {
+		return
+	}
 	output, err := utils.GsettingsGet("org.gnome.desktop.interface", "color-scheme")
 	if err != nil {
 		return
@@ -947,7 +954,7 @@ func refreshGTK4() {
 		log.Warnf("Failed to toggle color-scheme for GTK4 refresh: %v", err)
 		return
 	}
-	time.Sleep(50 * time.Millisecond)
+	time.Sleep(400 * time.Millisecond)
 	expectColorSchemeEcho(current)
 	if err := utils.GsettingsSet("org.gnome.desktop.interface", "color-scheme", current); err != nil {
 		log.Warnf("Failed to restore color-scheme for GTK4 refresh: %v", err)
