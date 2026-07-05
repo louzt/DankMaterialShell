@@ -863,13 +863,17 @@ func (b *NetworkManagerBackend) saveVPNCredentials(creds *pendingVPNCredentials)
 		log.Infof("[saveVPNCredentials] Saving username")
 	}
 
-	// Save password if requested
+	// Save secrets if requested
 	if creds.SavePassword {
-		data["password-flags"] = "0"
-		secs := make(map[string]string)
-		secs["password"] = creds.Password
+		secs := creds.Secrets
+		if len(secs) == 0 {
+			secs = map[string]string{"password": creds.Password}
+		}
+		for field := range secs {
+			data[field+"-flags"] = "0"
+		}
 		vpn["secrets"] = dbus.MakeVariant(secs)
-		log.Infof("[saveVPNCredentials] Saving password with password-flags=0")
+		log.Infof("[saveVPNCredentials] Saving %d secret field(s) with flags=0", len(secs))
 	}
 
 	vpn["data"] = dbus.MakeVariant(data)

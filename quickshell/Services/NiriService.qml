@@ -1189,19 +1189,18 @@ Singleton {
         const gaps = gapsOverride >= 0 ? gapsOverride : defaultGaps;
         const borderSize = (typeof SettingsData !== "undefined" && SettingsData.niriLayoutBorderSize >= 0) ? SettingsData.niriLayoutBorderSize : defaultBorderSize;
         const frameEnabled = typeof SettingsData !== "undefined" && SettingsData.frameEnabled;
-        const frameConnectedMode = frameEnabled && SettingsData.frameMode === "connected";
-        // Connected frame mode has no separate bar/frame surface to target
-        const barFrameTargetNamespace = !frameEnabled ? (SettingsData.standaloneBarXrayAvailable ? "dms:bar" : null) : (frameConnectedMode ? null : "dms:frame");
+        // dms:frame only in separate mode — connected-mode frame blur overlaps windows via popouts/arcs
+        const excludeNamespaces = ["dms:bar"];
+        if (frameEnabled && SettingsData.frameMode !== "connected")
+            excludeNamespaces.push("dms:frame");
 
         // Xray is niri's default blur, so only the off state needs a rule.
-        // A single rule excluding the bar/frame keeps its blur on the wallpaper
-        // without a second namespace-matched override rule.
         let xrayRules = "";
         if (!layoutXrayEnabled) {
-            const excludeLine = (layoutBarXrayEnabled && barFrameTargetNamespace) ? `\n    exclude namespace="^${barFrameTargetNamespace}$"` : "";
+            const excludeLines = layoutBarXrayEnabled ? excludeNamespaces.map(ns => `\n    exclude namespace="^${ns}$"`).join("") : "";
             xrayRules += `
 
-layer-rule {${excludeLine}
+layer-rule {${excludeLines}
     background-effect {
         xray false
     }

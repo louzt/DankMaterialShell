@@ -90,7 +90,10 @@ type pendingVPNCredentials struct {
 	ConnectionPath string
 	Username       string
 	Password       string
-	SavePassword   bool
+	// Secrets holds all VPN secret fields keyed by name (e.g. "cert-pass");
+	// falls back to Password under the "password" key when empty.
+	Secrets      map[string]string
+	SavePassword bool
 }
 
 type cachedVPNCredentials struct {

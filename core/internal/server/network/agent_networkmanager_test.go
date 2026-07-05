@@ -315,6 +315,44 @@ func TestInferVPNFields_GPSaml(t *testing.T) {
 			expectedLen: 1,
 			shouldHave:  []string{"password"},
 		},
+		{
+			name:       "OpenVPN cert auth (tls) - private-key passphrase",
+			vpnService: "org.freedesktop.NetworkManager.openvpn",
+			dataMap: map[string]string{
+				"connection-type": "tls",
+			},
+			expectedLen: 1,
+			shouldHave:  []string{"cert-pass"},
+		},
+		{
+			name:       "OpenVPN cert auth (tls) with passphrase-less key",
+			vpnService: "org.freedesktop.NetworkManager.openvpn",
+			dataMap: map[string]string{
+				"connection-type": "tls",
+				"cert-pass-flags": "4",
+			},
+			expectedLen: 0,
+		},
+		{
+			name:       "OpenVPN password-tls no username",
+			vpnService: "org.freedesktop.NetworkManager.openvpn",
+			dataMap: map[string]string{
+				"connection-type": "password-tls",
+			},
+			expectedLen: 3,
+			shouldHave:  []string{"username", "password", "cert-pass"},
+		},
+		{
+			name:       "OpenVPN password-tls with username, passphrase-less key",
+			vpnService: "org.freedesktop.NetworkManager.openvpn",
+			dataMap: map[string]string{
+				"connection-type": "password-tls",
+				"username":        "john",
+				"cert-pass-flags": "4",
+			},
+			expectedLen: 1,
+			shouldHave:  []string{"password"},
+		},
 	}
 
 	for _, tt := range tests {
