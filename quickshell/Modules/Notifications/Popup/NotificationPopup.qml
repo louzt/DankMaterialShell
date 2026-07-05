@@ -168,6 +168,19 @@ PanelWindow {
         popupContextMenuLoader.active = false;
     }
 
+    function dismissPopupReliably() {
+        if (!notificationData || win.exiting || win._isDestroying)
+            return;
+        if (notificationData.timer)
+            notificationData.timer.stop();
+        notificationData.popup = false;
+        // Fallback if wrapperConn.onPopupChanged doesn't reach startExit.
+        Qt.callLater(() => {
+            if (!win.exiting && !win._isDestroying)
+                startExit();
+        });
+    }
+
     visible: !_finalized
     WlrLayershell.layer: {
         const shouldUseOverlay = notificationData && (SettingsData.notificationOverlayEnabled || notificationData.urgency === NotificationUrgency.Critical);
@@ -1007,8 +1020,7 @@ PanelWindow {
                 z: 15
 
                 onClicked: {
-                    if (notificationData && !win.exiting)
-                        notificationData.popup = false;
+                    dismissPopupReliably();
                 }
             }
 
@@ -1080,8 +1092,7 @@ PanelWindow {
                             onClicked: {
                                 if (modelData && modelData.invoke)
                                     modelData.invoke();
-                                if (notificationData && !win.exiting)
-                                    notificationData.popup = false;
+                                dismissPopupReliably();
                             }
                         }
                     }
@@ -1163,7 +1174,7 @@ PanelWindow {
                             notificationData.actions[0].invoke();
                             NotificationService.dismissNotification(notificationData);
                         } else {
-                            notificationData.popup = false;
+                            dismissPopupReliably();
                         }
                     }
                 }
