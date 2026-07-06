@@ -1056,6 +1056,9 @@ func closestAdwaitaAccent(primaryHex string) string {
 
 func syncAccentColor(primaryHex string) {
 	accent := closestAdwaitaAccent(primaryHex)
+	if cur, err := utils.GsettingsGet("org.gnome.desktop.interface", "accent-color"); err == nil && strings.Trim(cur, "'") == accent {
+		return
+	}
 	log.Infof("Setting GNOME accent color: %s", accent)
 	if err := utils.GsettingsSet("org.gnome.desktop.interface", "accent-color", accent); err != nil {
 		log.Warnf("Failed to set accent-color: %v", err)
