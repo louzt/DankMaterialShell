@@ -39,6 +39,8 @@ Singleton {
     property var powerMenuModal: null
     property var processListModal: null
     property var processListModalLoader: null
+    // Pending tab index for async Loader path — consumed by Connections when modal loads
+    property int pendingProcessTab: -1
     property var colorPickerModal: null
     property var notificationModal: null
     property var wifiPasswordModal: null
@@ -58,65 +60,6 @@ Singleton {
     property string pendingThemeInstall: ""
     property string pendingPluginInstall: ""
 
-    // Deferred unload: keep popouts warm while the session is active and reclaim them on lock/monitors-off.
-    property var _pendingUnloads: ({})
-
-    Connections {
-        target: SessionService
-        function onSessionLocked() {
-            root._flushPendingUnloads();
-        }
-    }
-
-    Connections {
-        target: IdleService
-        function onMonitorsOffChanged() {
-            if (IdleService.monitorsOff)
-                root._flushPendingUnloads();
-        }
-    }
-
-    function _scheduleUnload(key) {
-        _pendingUnloads[key] = true;
-    }
-
-    function _flushPendingUnloads() {
-        const keys = Object.keys(_pendingUnloads);
-        _pendingUnloads = ({});
-        for (let i = 0; i < keys.length; i++) {
-            const unload = _deferredUnloaders[keys[i]];
-            if (unload)
-                unload();
-        }
-    }
-
-    function _popoutStillPresented(popout) {
-        return !!popout && (popout.shouldBeVisible === true || popout.isClosing === true);
-    }
-
-    function _unloadPopoutNow(popoutName, loaderName) {
-        const loader = root[loaderName];
-        if (!loader)
-            return;
-        if (_popoutStillPresented(root[popoutName]))
-            return;
-        root[popoutName] = null;
-        loader.active = false;
-    }
-
-    readonly property var _deferredUnloaders: ({
-            "controlCenter": () => _unloadPopoutNow("controlCenterPopout", "controlCenterLoader"),
-            "notificationCenter": () => _unloadPopoutNow("notificationCenterPopout", "notificationCenterLoader"),
-            "appDrawer": () => _unloadPopoutNow("appDrawerPopout", "appDrawerLoader"),
-            "processList": () => _unloadPopoutNow("processListPopout", "processListPopoutLoader"),
-            "battery": () => _unloadPopoutNow("batteryPopout", "batteryPopoutLoader"),
-            "vpn": () => _unloadPopoutNow("vpnPopout", "vpnPopoutLoader"),
-            "systemUpdate": () => _unloadPopoutNow("systemUpdatePopout", "systemUpdateLoader"),
-            "layout": () => _unloadPopoutNow("layoutPopout", "layoutPopoutLoader"),
-            "clipboardHistory": () => _unloadPopoutNow("clipboardHistoryPopout", "clipboardHistoryPopoutLoader"),
-            "settings": () => _unloadSettingsNow()
-        })
-
     function setPosition(popout, x, y, width, section, screen) {
         if (popout && popout.setTriggerPosition && arguments.length >= 6) {
             popout.setTriggerPosition(x, y, width, section, screen);
@@ -135,7 +78,10 @@ Singleton {
     }
 
     function unloadControlCenter() {
-        _scheduleUnload("controlCenter");
+        if (!controlCenterLoader)
+            return;
+        controlCenterPopout = null;
+        controlCenterLoader.active = false;
     }
 
     function toggleControlCenter(x, y, width, section, screen) {
@@ -157,7 +103,10 @@ Singleton {
     }
 
     function unloadNotificationCenter() {
-        _scheduleUnload("notificationCenter");
+        if (!notificationCenterLoader)
+            return;
+        notificationCenterPopout = null;
+        notificationCenterLoader.active = false;
     }
 
     function toggleNotificationCenter(x, y, width, section, screen) {
@@ -179,7 +128,10 @@ Singleton {
     }
 
     function unloadAppDrawer() {
-        _scheduleUnload("appDrawer");
+        if (!appDrawerLoader)
+            return;
+        appDrawerPopout = null;
+        appDrawerLoader.active = false;
     }
 
     function toggleAppDrawer(x, y, width, section, screen) {
@@ -201,7 +153,10 @@ Singleton {
     }
 
     function unloadProcessListPopout() {
-        _scheduleUnload("processList");
+        if (!processListPopoutLoader)
+            return;
+        processListPopout = null;
+        processListPopoutLoader.active = false;
     }
 
     function toggleProcessList(x, y, width, section, screen) {
@@ -315,7 +270,10 @@ Singleton {
     }
 
     function unloadBattery() {
-        _scheduleUnload("battery");
+        if (!batteryPopoutLoader)
+            return;
+        batteryPopout = null;
+        batteryPopoutLoader.active = false;
     }
 
     function toggleBattery(x, y, width, section, screen) {
@@ -337,7 +295,10 @@ Singleton {
     }
 
     function unloadVpn() {
-        _scheduleUnload("vpn");
+        if (!vpnPopoutLoader)
+            return;
+        vpnPopout = null;
+        vpnPopoutLoader.active = false;
     }
 
     function toggleVpn(x, y, width, section, screen) {
@@ -360,7 +321,10 @@ Singleton {
     }
 
     function unloadSystemUpdate() {
-        _scheduleUnload("systemUpdate");
+        if (!systemUpdateLoader)
+            return;
+        systemUpdatePopout = null;
+        systemUpdateLoader.active = false;
     }
 
     function toggleSystemUpdate(x, y, width, section, screen) {
@@ -479,16 +443,10 @@ Singleton {
     }
 
     function unloadSettings() {
-        _scheduleUnload("settings");
-    }
-
-    function _unloadSettingsNow() {
-        if (!settingsModalLoader)
-            return;
-        if (settingsModal && settingsModal.visible)
-            return;
-        settingsModal = null;
-        settingsModalLoader.active = false;
+        if (settingsModalLoader) {
+            settingsModal = null;
+            settingsModalLoader.active = false;
+        }
     }
 
     function _onSettingsModalLoaded() {
@@ -528,11 +486,17 @@ Singleton {
     }
 
     function unloadClipboardHistoryPopout() {
-        _scheduleUnload("clipboardHistory");
+        if (!clipboardHistoryPopoutLoader)
+            return;
+        clipboardHistoryPopout = null;
+        clipboardHistoryPopoutLoader.active = false;
     }
 
     function unloadLayoutPopout() {
-        _scheduleUnload("layout");
+        if (!layoutPopoutLoader)
+            return;
+        layoutPopout = null;
+        layoutPopoutLoader.active = false;
     }
 
     property bool _dankLauncherV2WantsOpen: false
@@ -540,26 +504,15 @@ Singleton {
     property string _dankLauncherV2PendingQuery: ""
     property string _dankLauncherV2PendingMode: ""
     property bool _dankLauncherV2TriggerUsesOverlayLayer: false
-    property bool _dankLauncherV2EdgeHoverManaged: false
 
     function _setDankLauncherV2TriggerUsesOverlayLayer(value) {
         _dankLauncherV2TriggerUsesOverlayLayer = value === true;
-        // Disable edge-hover by default on every open/toggle path unless explicitly enabled.
-        _setDankLauncherV2EdgeHoverManaged(false);
         if (dankLauncherV2Modal)
             dankLauncherV2Modal.triggerUsesOverlayLayer = _dankLauncherV2TriggerUsesOverlayLayer;
     }
 
-    // Set edgeHoverManaged to enable hover retraction for edge-hover triggered launcher sessions.
-    function _setDankLauncherV2EdgeHoverManaged(value) {
-        _dankLauncherV2EdgeHoverManaged = value === true;
-        if (dankLauncherV2Modal)
-            dankLauncherV2Modal.edgeHoverManaged = _dankLauncherV2EdgeHoverManaged;
-    }
-
-    function openDankLauncherV2(triggerUsesOverlayLayer, edgeHoverManaged) {
+    function openDankLauncherV2(triggerUsesOverlayLayer) {
         _setDankLauncherV2TriggerUsesOverlayLayer(triggerUsesOverlayLayer);
-        _setDankLauncherV2EdgeHoverManaged(edgeHoverManaged);
         if (dankLauncherV2Modal) {
             dankLauncherV2Modal.show();
         } else if (dankLauncherV2ModalLoader) {
@@ -640,10 +593,8 @@ Singleton {
     }
 
     function _onDankLauncherV2ModalLoaded() {
-        if (dankLauncherV2Modal) {
+        if (dankLauncherV2Modal)
             dankLauncherV2Modal.triggerUsesOverlayLayer = _dankLauncherV2TriggerUsesOverlayLayer;
-            dankLauncherV2Modal.edgeHoverManaged = _dankLauncherV2EdgeHoverManaged;
-        }
         if (_dankLauncherV2WantsOpen) {
             _dankLauncherV2WantsOpen = false;
             if (_dankLauncherV2PendingQuery) {
@@ -759,12 +710,12 @@ Singleton {
         }
     }
 
-    function showProcessListModal() {
+    function showProcessListModal(tabIndex) {
         if (processListModal) {
-            processListModal.show();
+            processListModal.show(tabIndex);
         } else if (processListModalLoader) {
+            pendingProcessTab = (tabIndex !== undefined && tabIndex !== null) ? tabIndex : -1;
             processListModalLoader.active = true;
-            Qt.callLater(() => processListModal?.show());
         }
     }
 
@@ -779,12 +730,26 @@ Singleton {
         }
     }
 
-    function toggleProcessListModal() {
+    function toggleProcessListModal(tabIndex) {
         if (processListModal) {
-            processListModal.toggle();
+            processListModal.toggle(tabIndex);
         } else if (processListModalLoader) {
+            pendingProcessTab = (tabIndex !== undefined && tabIndex !== null) ? tabIndex : -1;
             processListModalLoader.active = true;
-            Qt.callLater(() => processListModal?.show());
+        }
+    }
+
+    // Reactive async path: when Loader finishes loading, show modal at pending tab.
+    // Avoids Qt.callLater race condition where the lambda fires before modal is ready.
+    Connections {
+        target: processListModalLoader
+        function onStatusChanged() {
+            if (!processListModalLoader)
+                return;
+            if (processListModalLoader.status === Loader.Ready && pendingProcessTab !== -1) {
+                processListModal?.show(pendingProcessTab);
+                pendingProcessTab = -1;
+            }
         }
     }
 
@@ -909,7 +874,6 @@ Singleton {
     property var notepadPopout: null
     property var notepadPopoutLoader: null
     property bool _notepadPopoutWantsOpen: false
-    property string _notepadPendingOpenFilePath: ""
 
     function openNotepadPopout() {
         closeNotepadSlideouts();
@@ -921,27 +885,10 @@ Singleton {
         }
     }
 
-    function openNotepadPopoutWithFile(path) {
-        closeNotepadSlideouts();
-        if (notepadPopout) {
-            notepadPopout.show();
-            notepadPopout.notepad?.openExternalFile(path);
-        } else if (notepadPopoutLoader) {
-            _notepadPendingOpenFilePath = path;
-            _notepadPopoutWantsOpen = true;
-            notepadPopoutLoader.active = true;
-        }
-    }
-
     function _onNotepadPopoutLoaded() {
         if (_notepadPopoutWantsOpen && notepadPopout) {
             _notepadPopoutWantsOpen = false;
             notepadPopout.show();
-            if (_notepadPendingOpenFilePath) {
-                const pendingPath = _notepadPendingOpenFilePath;
-                _notepadPendingOpenFilePath = "";
-                notepadPopout.notepad?.openExternalFile(pendingPath);
-            }
         }
     }
 
