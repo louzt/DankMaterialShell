@@ -50,15 +50,15 @@ Item {
     }
 
     onActiveChanged: {
-        if (!active) {
-            SessionData.addLauncherHistory(searchQuery);
+        ClipboardService.invalidateLauncherSearchCache();
+        if (active)
+            return;
 
-            sections = [];
-            flatModel = [];
-            selectedItem = null;
-            _clearModeCache();
-            ClipboardService.invalidateLauncherSearchCache();
-        }
+        SessionData.addLauncherHistory(searchQuery);
+        sections = [];
+        flatModel = [];
+        selectedItem = null;
+        _clearModeCache();
     }
 
     onSearchModeChanged: {
@@ -276,9 +276,23 @@ Item {
     property string appCategory: ""
     property var appCategories: []
 
+    function builtInSectionViewPref(sectionId) {
+        switch (sectionId) {
+        case "clipboard":
+            return getPluginViewPref("dms_clipboard_search");
+        case "settings":
+            return getPluginViewPref("dms_settings_search");
+        default:
+            return null;
+        }
+    }
+
     function getSectionViewMode(sectionId) {
         if (sectionId === "browse_plugins")
             return "list";
+        var builtInPref = builtInSectionViewPref(sectionId);
+        if (builtInPref?.enforced)
+            return builtInPref.mode;
         if (pluginViewPreferences[sectionId]?.enforced)
             return pluginViewPreferences[sectionId].mode;
         if (sectionViewModes[sectionId])
@@ -302,6 +316,8 @@ Item {
     function setSectionViewMode(sectionId, mode) {
         if (sectionId === "browse_plugins")
             return;
+        if (builtInSectionViewPref(sectionId)?.enforced)
+            return;
         if (pluginViewPreferences[sectionId]?.enforced)
             return;
         sectionViewModes = Object.assign({}, sectionViewModes, {
@@ -324,6 +340,8 @@ Item {
 
     function canChangeSectionViewMode(sectionId) {
         if (sectionId === "browse_plugins")
+            return false;
+        if (builtInSectionViewPref(sectionId)?.enforced)
             return false;
         return !pluginViewPreferences[sectionId]?.enforced;
     }
@@ -713,6 +731,7 @@ Item {
             if (triggerMatch.isBuiltIn) {
                 var builtInItems = AppSearchService.getBuiltInLauncherItems(triggerMatch.pluginId, triggerMatch.query);
                 for (var j = 0; j < builtInItems.length; j++) {
+                    builtInItems[j]._preScored = 1000 - j;
                     allItems.push(transformBuiltInSearchItem(builtInItems[j], triggerMatch.pluginId));
                 }
             }
@@ -1217,8 +1236,12 @@ Item {
     }
 
     function transformBuiltInSearchItem(item, pluginId) {
-        if (pluginId === "dms_clipboard_search" || item.type === "clipboard")
-            return transformClipboardEntry(item.data || item);
+        if (pluginId === "dms_clipboard_search" || item.type === "clipboard") {
+            var transformed = transformClipboardEntry(item.data || item);
+            if (item._preScored !== undefined)
+                transformed._preScored = item._preScored;
+            return transformed;
+        }
         return transformBuiltInLauncherItem(item, pluginId);
     }
 

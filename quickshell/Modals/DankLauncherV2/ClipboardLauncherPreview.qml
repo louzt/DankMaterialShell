@@ -60,17 +60,22 @@ Rectangle {
         }, function (response) {
             if (_requestedEntryId !== entryId)
                 return;
-            if (response.error)
+            if (response.error) {
+                _requestedEntryId = null;
                 return;
+            }
             if (!response.result) {
+                _requestedEntryId = null;
                 ClipboardService.refresh();
                 return;
             }
             const result = response.result;
             const mimeType = (result.mimeType ?? entry?.mimeType ?? "").toString();
             const data = (result.data ?? "").toString();
-            if (data.length === 0 || !resolvedSourceUrl(data, mimeType))
+            if (data.length === 0 || !resolvedSourceUrl(data, mimeType)) {
+                _requestedEntryId = null;
                 return;
+            }
             cachedMimeType = mimeType;
             cachedImageData = data;
         });
