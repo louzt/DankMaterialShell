@@ -50,9 +50,6 @@
   "%1 displays": {
     "%1 displays": "%1 ディスプレイ"
   },
-  "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": {
-    "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": "%1 は存在しますが、設定に含まれていません。これが修正されるまでカスタムキーバインドは動作しません。"
-  },
   "%1 exists but is not included. Window rules won't apply.": {
     "%1 exists but is not included. Window rules won't apply.": "%1 は存在しますが、含まれていません。ウィンドウルールは適用されません。"
   },
@@ -142,9 +139,6 @@
   },
   "1 day before": {
     "1 day before": "1日前"
-  },
-  "1 device connected": {
-    "1 device connected": "1台接続済み"
   },
   "1 hour": {
     "1 hour": "1時間"
@@ -401,9 +395,6 @@
   "Active Color": {
     "Active Color": "アクティブカラー"
   },
-  "Active Lock Screen Monitor": {
-    "Active Lock Screen Monitor": "アクティブなロック画面モニター"
-  },
   "Active VPN": {
     "Active VPN": "アクティブ VPN"
   },
@@ -520,9 +511,6 @@
   },
   "All": {
     "All": "全て"
-  },
-  "All Monitors": {
-    "All Monitors": "すべてのモニター"
   },
   "All checks passed": {
     "All checks passed": "すべてのチェックに成功しました"
@@ -977,6 +965,9 @@
   "Available Screens (%1)": {
     "Available Screens (%1)": "利用可能な画面（%1）"
   },
+  "Available Updates (%1)": {
+    "Available Updates (%1)": ""
+  },
   "Available in Detailed and Forecast view modes": {
     "Available in Detailed and Forecast view modes": "詳細表示と予報表示で利用可能"
   },
@@ -1073,6 +1064,9 @@
   "Battery %1": {
     "Battery %1": "バッテリー %1"
   },
+  "Battery Alerts": {
+    "Battery Alerts": ""
+  },
   "Battery Charge Limit": {
     "Battery Charge Limit": "バッテリー充電上限"
   },
@@ -1081,6 +1075,9 @@
   },
   "Battery Power": {
     "Battery Power": "バッテリー駆動"
+  },
+  "Battery Protection": {
+    "Battery Protection": ""
   },
   "Battery Protection & Charging": {
     "Battery Protection & Charging": "バッテリー保護と充電"
@@ -1277,6 +1274,9 @@
   "Button Color": {
     "Button Color": "ボタンカラー"
   },
+  "By %1": {
+    "By %1": ""
+  },
   "CPU": {
     "CPU": "CPU"
   },
@@ -1466,6 +1466,15 @@
   "Choose how to be notified about battery alerts.": {
     "Choose how to be notified about battery alerts.": "バッテリーアラートの通知方法を選択します。"
   },
+  "Choose how to be notified about critical battery alerts.": {
+    "Choose how to be notified about critical battery alerts.": ""
+  },
+  "Choose how to be notified about low battery alerts.": {
+    "Choose how to be notified about low battery alerts.": ""
+  },
+  "Choose how to be notified when charge limit is reached.": {
+    "Choose how to be notified when charge limit is reached.": ""
+  },
   "Choose icon": {
     "Choose icon": "アイコンを選ぶ"
   },
@@ -1502,8 +1511,8 @@
   "Choose which displays show this widget": {
     "Choose which displays show this widget": "このウィジェットを表示するディスプレイを選ぶ"
   },
-  "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
-    "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": "ロック画面インターフェースを表示するモニターを選びます。ほかのモニターには OLED 焼き付き防止のため単色を表示します。"
+  "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
+    "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": ""
   },
   "Chroma Style": {
     "Chroma Style": "彩度スタイル"
@@ -1540,9 +1549,6 @@
   },
   "Clear at Startup": {
     "Clear at Startup": "起動時にクリア"
-  },
-  "Click 'Setup' to create %1 and add include to config.": {
-    "Click 'Setup' to create %1 and add include to config.": "「Setup」をクリックして %1 を作成し、config に include を追加します。"
   },
   "Click 'Setup' to create %1 and add include to your compositor config.": {
     "Click 'Setup' to create %1 and add include to your compositor config.": "「Setup」をクリックして %1 を作成し、コンポジター設定に include を追加します。"
@@ -1618,6 +1624,9 @@
   },
   "Close Window": {
     "Close Window": "ウィンドウを閉じる"
+  },
+  "Codec switching is unavailable because pactl was not found": {
+    "Codec switching is unavailable because pactl was not found": ""
   },
   "Color": {
     "Color": "色"
@@ -2084,12 +2093,6 @@
   "Current: %1": {
     "Current: %1": "現在: %1"
   },
-  "Cursor Config Not Configured": {
-    "Cursor Config Not Configured": "カーソル設定が構成されていません"
-  },
-  "Cursor Include Missing": {
-    "Cursor Include Missing": "カーソル include が不足"
-  },
   "Cursor Size": {
     "Cursor Size": "カーソルサイズ"
   },
@@ -2449,6 +2452,9 @@
   },
   "Device unpaired": {
     "Device unpaired": "デバイスのペアリングを解除しました"
+  },
+  "Diff": {
+    "Diff": ""
   },
   "Digital": {
     "Digital": "デジタル"
@@ -2894,9 +2900,6 @@
   "Enter URI or text to share": {
     "Enter URI or text to share": "共有する URI またはテキストを入力"
   },
-  "Enter URL or text to share": {
-    "Enter URL or text to share": "共有する URL またはテキストを入力"
-  },
   "Enter a new name for session \"%1": {
     "Enter a new name for session \"%1\"": "セッション \"%1\" の新しい名前を入力"
   },
@@ -3272,6 +3275,9 @@
   "Failed to unpin entry": {
     "Failed to unpin entry": "項目の固定解除に失敗しました"
   },
+  "Failed to update %1: %2": {
+    "Failed to update %1: %2": ""
+  },
   "Failed to update VPN": {
     "Failed to update VPN": "VPN の更新に失敗しました"
   },
@@ -3355,6 +3361,9 @@
   },
   "Fill": {
     "Fill": "埋める"
+  },
+  "Fill Mode": {
+    "Fill Mode": ""
   },
   "Filter": {
     "Filter": "フィルター"
@@ -3875,9 +3884,6 @@
   "Hidden Apps": {
     "Hidden Apps": "非表示のアプリ"
   },
-  "Hidden Network": {
-    "Hidden Network": "非表示のネットワーク"
-  },
   "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": {
     "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": "非表示のアプリはランチャーに表示されません。アプリを右クリックして「Hide App」を選択すると非表示にできます。"
   },
@@ -4016,6 +4022,9 @@
   "How the background image is scaled": {
     "How the background image is scaled": "背景画像の拡大縮小方法"
   },
+  "How the wallpaper is scaled to fit the screen": {
+    "How the wallpaper is scaled to fit the screen": ""
+  },
   "Humidity": {
     "Humidity": "湿度"
   },
@@ -4078,6 +4087,9 @@
   },
   "Identical alerts stack as separate notification cards": {
     "Identical alerts stack as separate notification cards": "同一アラートを別々の通知カードとして積み重ねる"
+  },
+  "Identify": {
+    "Identify": ""
   },
   "Idle": {
     "Idle": "アイドル"
@@ -4715,6 +4727,9 @@
   "Material": {
     "Material": "材料"
   },
+  "Material Battery Style": {
+    "Material Battery Style": ""
+  },
   "Material Colors": {
     "Material Colors": "Material Colors"
   },
@@ -5270,14 +5285,14 @@
   "No checks passed": {
     "No checks passed": "通過したチェックはありません"
   },
+  "No codecs found": {
+    "No codecs found": ""
+  },
   "No custom theme file": {
     "No custom theme file": "カスタムテーマファイルなし"
   },
   "No devices": {
     "No devices": "デバイスなし"
-  },
-  "No devices connected": {
-    "No devices connected": "接続されたデバイスはありません"
   },
   "No devices found": {
     "No devices found": "デバイスが見つかりませんでした"
@@ -5434,6 +5449,9 @@
   },
   "No trigger": {
     "No trigger": "トリガーなし"
+  },
+  "No updates available.": {
+    "No updates available.": ""
   },
   "No user specified": {
     "No user specified": "ユーザーが指定されていません"
@@ -5675,9 +5693,6 @@
   "Open From": {
     "Open From": "開く元"
   },
-  "Open KDE Connect on your phone": {
-    "Open KDE Connect on your phone": "スマートフォンで KDE Connect を開く"
-  },
   "Open Notepad File": {
     "Open Notepad File": "メモ帳ファイルを開く"
   },
@@ -5717,17 +5732,11 @@
   "Open with...": {
     "Open with...": "別のアプリで開く..."
   },
-  "Opening SMS": {
-    "Opening SMS": "SMS を開いています"
-  },
   "Opening SMS app": {
     "Opening SMS app": "SMS アプリを開いています"
   },
   "Opening file browser": {
     "Opening file browser": "ファイルブラウザーを開いています"
-  },
-  "Opening files": {
-    "Opening files": "ファイルを開いています"
   },
   "Opening terminal to update greetd": {
     "Opening terminal to update greetd": "greetd 更新用の端末を開いています"
@@ -5806,9 +5815,6 @@
   },
   "Override Corner Radius": {
     "Override Corner Radius": "コーナー半径を上書き"
-  },
-  "Override Gaps": {
-    "Override Gaps": "ギャップを上書き"
   },
   "Override global layout settings for this output": {
     "Override global layout settings for this output": "この出力用にグローバルレイアウト設定を上書き"
@@ -5930,6 +5936,9 @@
   "Paste": {
     "Paste": "貼り付け"
   },
+  "Paste failed: %1": {
+    "Paste failed: %1": ""
+  },
   "Path copied to clipboard": {
     "Path copied to clipboard": "パスをクリップボードにコピーしました"
   },
@@ -6010,9 +6019,6 @@
   },
   "Ping": {
     "Ping": "Ping"
-  },
-  "Ping sent": {
-    "Ping sent": "Ping を送信しました"
   },
   "Ping sent to": {
     "Ping sent to": "Ping の送信先"
@@ -6193,6 +6199,9 @@
   },
   "Power Profile Degradation": {
     "Power Profile Degradation": "電源プロファイルの劣化"
+  },
+  "Power Profiles & Saving": {
+    "Power Profiles & Saving": ""
   },
   "Power Profiles Auto-Switching": {
     "Power Profiles Auto-Switching": "電源プロファイル自動切替"
@@ -7217,9 +7226,6 @@
   "Share Text": {
     "Share Text": "テキストを共有"
   },
-  "Share URL": {
-    "Share URL": "URL を共有"
-  },
   "Shared": {
     "Shared": "共有済み"
   },
@@ -8123,8 +8129,14 @@
   "Tile H": {
     "Tile H": "横にタイル"
   },
+  "Tile Horizontally": {
+    "Tile Horizontally": ""
+  },
   "Tile V": {
     "Tile V": "縦にタイル"
+  },
+  "Tile Vertically": {
+    "Tile Vertically": ""
   },
   "Tiled": {
     "Tiled": "タイル化"
@@ -8429,6 +8441,9 @@
   "Unknown GPU": {
     "Unknown GPU": "不明な GPU"
   },
+  "Unknown Model": {
+    "Unknown Model": ""
+  },
   "Unknown Monitor": {
     "Unknown Monitor": "不明なモニター"
   },
@@ -8507,6 +8522,12 @@
   "Update failed: %1": {
     "Update failed: %1": "更新に失敗しました: %1"
   },
+  "Updating %1...": {
+    "Updating %1...": ""
+  },
+  "Updating plugins...": {
+    "Updating plugins...": ""
+  },
   "Upgrading...": {
     "Upgrading...": "アップグレード中..."
   },
@@ -8584,9 +8605,6 @@
   },
   "Use custom border/focus-ring width": {
     "Use custom border/focus-ring width": "カスタムの境界線/フォーカスリング幅を使用"
-  },
-  "Use custom gaps instead of bar spacing": {
-    "Use custom gaps instead of bar spacing": "バー間隔の代わりにカスタムギャップを使用"
   },
   "Use custom window radius instead of theme radius": {
     "Use custom window radius instead of theme radius": "テーマ半径の代わりにカスタムウィンドウ半径を使用"
@@ -9137,9 +9155,6 @@
   "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": {
     "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": "dms は、<a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">Material 3 に着想を得た</a>デザインを持つ、高度にカスタマイズ可能なモダンなデスクトップシェルです。<br /><br/>デスクトップシェルを構築するための QT6 フレームワークである <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a> と、静的型付けのコンパイル言語である <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a> で構築されています。"
   },
-  "dms/cursor config exists but is not included. Cursor settings won't apply.": {
-    "dms/cursor config exists but is not included. Cursor settings won't apply.": "dms/cursor 設定は存在しますが、読み込まれていません。カーソル設定は適用されません。"
-  },
   "e.g. /usr/bin/my-script --flag": {
     "e.g. /usr/bin/my-script --flag": "例: /usr/bin/my-script --flag"
   },
@@ -9290,6 +9305,9 @@
   "source": {
     "source": "ソース"
   },
+  "the Qt 6 Multimedia QML module": {
+    "the Qt 6 Multimedia QML module": ""
+  },
   "this app": {
     "this app": "このアプリ"
   },
@@ -9319,9 +9337,6 @@
   },
   "verified": {
     "verified": "検証済み"
-  },
-  "wtype not available - install wtype for paste support": {
-    "wtype not available - install wtype for paste support": "wtype は利用できません - 貼り付け対応には wtype をインストールしてください"
   },
   "• Install only from trusted sources": {
     "• Install only from trusted sources": "• 信頼できるソースからのみインストールする"

@@ -50,9 +50,6 @@
   "%1 displays": {
     "%1 displays": "%1 ekranoj"
   },
-  "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": {
-    "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": "%1 ekzistas sed mankas en la agordo. Propraj klavkombinoj ne funkcios ĝis vi riparos tion."
-  },
   "%1 exists but is not included. Window rules won't apply.": {
     "%1 exists but is not included. Window rules won't apply.": "%1 ekzistas sed ne inkluziviĝas. Fenestraj reguloj ne aplikiĝos."
   },
@@ -142,9 +139,6 @@
   },
   "1 day before": {
     "1 day before": "1 tagon antaŭe"
-  },
-  "1 device connected": {
-    "1 device connected": "1 aparato konektita"
   },
   "1 hour": {
     "1 hour": "1 horo"
@@ -401,9 +395,6 @@
   "Active Color": {
     "Active Color": "Aktivkoloro"
   },
-  "Active Lock Screen Monitor": {
-    "Active Lock Screen Monitor": "Aktiva ŝlosekrana ekrano"
-  },
   "Active VPN": {
     "Active VPN": "Aktiva VPN"
   },
@@ -520,9 +511,6 @@
   },
   "All": {
     "All": "Ĉio"
-  },
-  "All Monitors": {
-    "All Monitors": "Ĉiuj ekranoj"
   },
   "All checks passed": {
     "All checks passed": "Ĉiuj kontroloj sukcesis"
@@ -977,6 +965,9 @@
   "Available Screens (%1)": {
     "Available Screens (%1)": "Disponeblaj ekranoj (%1)"
   },
+  "Available Updates (%1)": {
+    "Available Updates (%1)": ""
+  },
   "Available in Detailed and Forecast view modes": {
     "Available in Detailed and Forecast view modes": "Havebla en Detala kaj Prognoza vidreĝimoj"
   },
@@ -1073,6 +1064,9 @@
   "Battery %1": {
     "Battery %1": "Baterio %1"
   },
+  "Battery Alerts": {
+    "Battery Alerts": ""
+  },
   "Battery Charge Limit": {
     "Battery Charge Limit": "Baterioŝarga limigo"
   },
@@ -1081,6 +1075,9 @@
   },
   "Battery Power": {
     "Battery Power": ""
+  },
+  "Battery Protection": {
+    "Battery Protection": ""
   },
   "Battery Protection & Charging": {
     "Battery Protection & Charging": ""
@@ -1277,6 +1274,9 @@
   "Button Color": {
     "Button Color": "Butonkoloro"
   },
+  "By %1": {
+    "By %1": ""
+  },
   "CPU": {
     "CPU": "ĉefprocesoro"
   },
@@ -1466,6 +1466,15 @@
   "Choose how to be notified about battery alerts.": {
     "Choose how to be notified about battery alerts.": ""
   },
+  "Choose how to be notified about critical battery alerts.": {
+    "Choose how to be notified about critical battery alerts.": ""
+  },
+  "Choose how to be notified about low battery alerts.": {
+    "Choose how to be notified about low battery alerts.": ""
+  },
+  "Choose how to be notified when charge limit is reached.": {
+    "Choose how to be notified when charge limit is reached.": ""
+  },
   "Choose icon": {
     "Choose icon": "Elekti piktogramon"
   },
@@ -1502,8 +1511,8 @@
   "Choose which displays show this widget": {
     "Choose which displays show this widget": "Elekti kiuj ekranoj montras ĉi tiun fenestraĵon"
   },
-  "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
-    "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": "Elekti kiun ekranon montras la ŝlosekrana fasado. Aliaj ekranoj montros solidan koloron por protekto kontraŭ OLED-brulvundo."
+  "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
+    "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": ""
   },
   "Chroma Style": {
     "Chroma Style": "Kroma Stilo"
@@ -1540,9 +1549,6 @@
   },
   "Clear at Startup": {
     "Clear at Startup": "Viŝi dum lanĉo"
-  },
-  "Click 'Setup' to create %1 and add include to config.": {
-    "Click 'Setup' to create %1 and add include to config.": "Klaku «Agordi» por krei %1 kaj aldoni inkluzivon al la agordo."
   },
   "Click 'Setup' to create %1 and add include to your compositor config.": {
     "Click 'Setup' to create %1 and add include to your compositor config.": "Klaku «Agordi» por krei %1 kaj aldoni inkluzivon al via komponila agordo."
@@ -1618,6 +1624,9 @@
   },
   "Close Window": {
     "Close Window": "Fermi fenestron"
+  },
+  "Codec switching is unavailable because pactl was not found": {
+    "Codec switching is unavailable because pactl was not found": ""
   },
   "Color": {
     "Color": "Koloro"
@@ -2084,12 +2093,6 @@
   "Current: %1": {
     "Current: %1": "Aktuala: %1"
   },
-  "Cursor Config Not Configured": {
-    "Cursor Config Not Configured": "Kursora agordo ne estas agordita"
-  },
-  "Cursor Include Missing": {
-    "Cursor Include Missing": "Kursora inkluzivo mankas"
-  },
   "Cursor Size": {
     "Cursor Size": "Grando de kursoroj"
   },
@@ -2449,6 +2452,9 @@
   },
   "Device unpaired": {
     "Device unpaired": "Aparato malparigita"
+  },
+  "Diff": {
+    "Diff": ""
   },
   "Digital": {
     "Digital": "Cifereca"
@@ -2894,9 +2900,6 @@
   "Enter URI or text to share": {
     "Enter URI or text to share": ""
   },
-  "Enter URL or text to share": {
-    "Enter URL or text to share": "Enigu URL-on aŭ tekston por kunhavigi"
-  },
   "Enter a new name for session \"%1": {
     "Enter a new name for session \"%1\"": "Enigu novan nomon por seanco \"%1\""
   },
@@ -3272,6 +3275,9 @@
   "Failed to unpin entry": {
     "Failed to unpin entry": "Malsukcesis malkonekti eron"
   },
+  "Failed to update %1: %2": {
+    "Failed to update %1: %2": ""
+  },
   "Failed to update VPN": {
     "Failed to update VPN": "Malsukcesis ĝisdatigi VPN"
   },
@@ -3355,6 +3361,9 @@
   },
   "Fill": {
     "Fill": "Plenigi"
+  },
+  "Fill Mode": {
+    "Fill Mode": ""
   },
   "Filter": {
     "Filter": "filtri"
@@ -3875,9 +3884,6 @@
   "Hidden Apps": {
     "Hidden Apps": "Kaŝitaj aplikaĵoj"
   },
-  "Hidden Network": {
-    "Hidden Network": "Kaŝita reto"
-  },
   "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": {
     "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": "Kaŝitaj aplikaĵoj ne aperos en la lanĉilo. Dekstre-klaku aplikaĵon kaj elektu 'Kaŝi aplikaĵon' por kaŝi ĝin."
   },
@@ -4016,6 +4022,9 @@
   "How the background image is scaled": {
     "How the background image is scaled": "Kiel la fona bildo estas skalita"
   },
+  "How the wallpaper is scaled to fit the screen": {
+    "How the wallpaper is scaled to fit the screen": ""
+  },
   "Humidity": {
     "Humidity": "Humideco"
   },
@@ -4078,6 +4087,9 @@
   },
   "Identical alerts stack as separate notification cards": {
     "Identical alerts stack as separate notification cards": "Identaj atentigoj stakiĝas kiel apartaj sciigaj kartoj"
+  },
+  "Identify": {
+    "Identify": ""
   },
   "Idle": {
     "Idle": "Senokupa"
@@ -4715,6 +4727,9 @@
   "Material": {
     "Material": "ŝtofo"
   },
+  "Material Battery Style": {
+    "Material Battery Style": ""
+  },
   "Material Colors": {
     "Material Colors": "Materiaj koloroj"
   },
@@ -5270,14 +5285,14 @@
   "No checks passed": {
     "No checks passed": "Neniuj kontroloj sukcesis"
   },
+  "No codecs found": {
+    "No codecs found": ""
+  },
   "No custom theme file": {
     "No custom theme file": "Neniu propra etosa dosiero"
   },
   "No devices": {
     "No devices": "Neniuj aparatoj"
-  },
-  "No devices connected": {
-    "No devices connected": "Neniuj aparatoj konektitaj"
   },
   "No devices found": {
     "No devices found": "Neniuj aparatoj estis trovitaj"
@@ -5434,6 +5449,9 @@
   },
   "No trigger": {
     "No trigger": "Neniu ekigilo"
+  },
+  "No updates available.": {
+    "No updates available.": ""
   },
   "No user specified": {
     "No user specified": "Neniu uzanto specifita"
@@ -5675,9 +5693,6 @@
   "Open From": {
     "Open From": "Malfermu De"
   },
-  "Open KDE Connect on your phone": {
-    "Open KDE Connect on your phone": "Malfermu KDE Connect en via telefono"
-  },
   "Open Notepad File": {
     "Open Notepad File": "Malfermi notlibran dosieron"
   },
@@ -5717,17 +5732,11 @@
   "Open with...": {
     "Open with...": "Malfermi per..."
   },
-  "Opening SMS": {
-    "Opening SMS": "Malfermante SMS-on"
-  },
   "Opening SMS app": {
     "Opening SMS app": "Malfermante SMS-aplikaĵon"
   },
   "Opening file browser": {
     "Opening file browser": "Malfermante dosierfoliumilon"
-  },
-  "Opening files": {
-    "Opening files": "Malfermante dosierojn"
   },
   "Opening terminal to update greetd": {
     "Opening terminal to update greetd": "Malferma terminalo por ĝisdatigi greetd"
@@ -5806,9 +5815,6 @@
   },
   "Override Corner Radius": {
     "Override Corner Radius": "Preterpasi angulan radiuson"
-  },
-  "Override Gaps": {
-    "Override Gaps": "Preterpasi breĉojn"
   },
   "Override global layout settings for this output": {
     "Override global layout settings for this output": "Preterpasi globalajn aranĝajn agordojn por ĉi tiu eligo"
@@ -5930,6 +5936,9 @@
   "Paste": {
     "Paste": "Alglui"
   },
+  "Paste failed: %1": {
+    "Paste failed: %1": ""
+  },
   "Path copied to clipboard": {
     "Path copied to clipboard": "Vojo kopiita al tondujo"
   },
@@ -6010,9 +6019,6 @@
   },
   "Ping": {
     "Ping": "Ping"
-  },
-  "Ping sent": {
-    "Ping sent": "Ping sendita"
   },
   "Ping sent to": {
     "Ping sent to": "Ping sendita al"
@@ -6193,6 +6199,9 @@
   },
   "Power Profile Degradation": {
     "Power Profile Degradation": "Malpliboniĝo de elektra profilo"
+  },
+  "Power Profiles & Saving": {
+    "Power Profiles & Saving": ""
   },
   "Power Profiles Auto-Switching": {
     "Power Profiles Auto-Switching": ""
@@ -7217,9 +7226,6 @@
   "Share Text": {
     "Share Text": "Kunhavigi Tekston"
   },
-  "Share URL": {
-    "Share URL": "Kunhavigi URL-on"
-  },
   "Shared": {
     "Shared": "Kunhavita"
   },
@@ -8123,8 +8129,14 @@
   "Tile H": {
     "Tile H": "Kaheli H"
   },
+  "Tile Horizontally": {
+    "Tile Horizontally": ""
+  },
   "Tile V": {
     "Tile V": "Kaheli V"
+  },
+  "Tile Vertically": {
+    "Tile Vertically": ""
   },
   "Tiled": {
     "Tiled": "Kaheligita"
@@ -8429,6 +8441,9 @@
   "Unknown GPU": {
     "Unknown GPU": "Nekonata GPU"
   },
+  "Unknown Model": {
+    "Unknown Model": ""
+  },
   "Unknown Monitor": {
     "Unknown Monitor": "Nekonata ekrano"
   },
@@ -8507,6 +8522,12 @@
   "Update failed: %1": {
     "Update failed: %1": "Ĝisdatigo malsukcesis: %1"
   },
+  "Updating %1...": {
+    "Updating %1...": ""
+  },
+  "Updating plugins...": {
+    "Updating plugins...": ""
+  },
   "Upgrading...": {
     "Upgrading...": "Ĝisdatigante..."
   },
@@ -8584,9 +8605,6 @@
   },
   "Use custom border/focus-ring width": {
     "Use custom border/focus-ring width": "Uzi propran larĝon por bordo/fokus-ringo"
-  },
-  "Use custom gaps instead of bar spacing": {
-    "Use custom gaps instead of bar spacing": "Uzi proprajn breĉojn anstataŭ bretan interspacon"
   },
   "Use custom window radius instead of theme radius": {
     "Use custom window radius instead of theme radius": "Uzi propran fenestran radiuson anstataŭ la etosan radiuson"
@@ -9137,9 +9155,6 @@
   "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": {
     "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": "dms estas tre agordebla, moderna labortabla ŝelo kun dezajno <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">inspirita de material 3</a>.<br /><br/>Ĝi estas konstruita per <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, QT6-kadro por konstrui labortablajn ŝelojn, kaj <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, statike tipita, kompilita programlingvo."
   },
-  "dms/cursor config exists but is not included. Cursor settings won't apply.": {
-    "dms/cursor config exists but is not included. Cursor settings won't apply.": "dms/cursor-agordo ekzistas sed ne estas inkluzivita. Kursoraj agordoj ne aplikiĝos."
-  },
   "e.g. /usr/bin/my-script --flag": {
     "e.g. /usr/bin/my-script --flag": "ekz. "
   },
@@ -9290,6 +9305,9 @@
   "source": {
     "source": "fonto"
   },
+  "the Qt 6 Multimedia QML module": {
+    "the Qt 6 Multimedia QML module": ""
+  },
   "this app": {
     "this app": "ĉi tiu aplikaĵo"
   },
@@ -9319,9 +9337,6 @@
   },
   "verified": {
     "verified": ""
-  },
-  "wtype not available - install wtype for paste support": {
-    "wtype not available - install wtype for paste support": "wtype ne disponeblas - instalu wtype por alglua subteno"
   },
   "• Install only from trusted sources": {
     "• Install only from trusted sources": "• Instalu nur el fidindaj fontoj"

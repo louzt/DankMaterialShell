@@ -50,9 +50,6 @@
   "%1 displays": {
     "%1 displays": "%1 نمایشگر"
   },
-  "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": {
-    "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": "%1 وجود دارد اما در فایل پیکربندی شامل نشده است. نگاشت‌کلیدهای سفارشی تا زمانی که این مشکل برطرف نشده باشد کار نخواهند کرد."
-  },
   "%1 exists but is not included. Window rules won't apply.": {
     "%1 exists but is not included. Window rules won't apply.": "%1 وجود دارد اما وارد نشده است. قواعد پنجره اعمال نخواهند شد."
   },
@@ -142,9 +139,6 @@
   },
   "1 day before": {
     "1 day before": ""
-  },
-  "1 device connected": {
-    "1 device connected": "1 دستگاه متصل"
   },
   "1 hour": {
     "1 hour": "۱ ساعت"
@@ -401,9 +395,6 @@
   "Active Color": {
     "Active Color": "رنگ فعال"
   },
-  "Active Lock Screen Monitor": {
-    "Active Lock Screen Monitor": "مانیتور فعال صفحه قفل"
-  },
   "Active VPN": {
     "Active VPN": "VPN فعال"
   },
@@ -520,9 +511,6 @@
   },
   "All": {
     "All": "همه"
-  },
-  "All Monitors": {
-    "All Monitors": "همه مانیتورها"
   },
   "All checks passed": {
     "All checks passed": "همه بررسی‌ها با موفقیت انجام شد"
@@ -977,6 +965,9 @@
   "Available Screens (%1)": {
     "Available Screens (%1)": "نمایشگر‌های در دسترس (%1)"
   },
+  "Available Updates (%1)": {
+    "Available Updates (%1)": ""
+  },
   "Available in Detailed and Forecast view modes": {
     "Available in Detailed and Forecast view modes": "در حالت‌های نمایش با جزئیات و پیش‌بینی در دسترس است"
   },
@@ -1073,6 +1064,9 @@
   "Battery %1": {
     "Battery %1": "باتری %1"
   },
+  "Battery Alerts": {
+    "Battery Alerts": ""
+  },
   "Battery Charge Limit": {
     "Battery Charge Limit": "محدودیت شارژ باتری"
   },
@@ -1081,6 +1075,9 @@
   },
   "Battery Power": {
     "Battery Power": ""
+  },
+  "Battery Protection": {
+    "Battery Protection": ""
   },
   "Battery Protection & Charging": {
     "Battery Protection & Charging": ""
@@ -1277,6 +1274,9 @@
   "Button Color": {
     "Button Color": "رنگ دکمه‌"
   },
+  "By %1": {
+    "By %1": ""
+  },
   "CPU": {
     "CPU": "CPU"
   },
@@ -1466,6 +1466,15 @@
   "Choose how to be notified about battery alerts.": {
     "Choose how to be notified about battery alerts.": ""
   },
+  "Choose how to be notified about critical battery alerts.": {
+    "Choose how to be notified about critical battery alerts.": ""
+  },
+  "Choose how to be notified about low battery alerts.": {
+    "Choose how to be notified about low battery alerts.": ""
+  },
+  "Choose how to be notified when charge limit is reached.": {
+    "Choose how to be notified when charge limit is reached.": ""
+  },
   "Choose icon": {
     "Choose icon": "انتخاب آیکون"
   },
@@ -1502,8 +1511,8 @@
   "Choose which displays show this widget": {
     "Choose which displays show this widget": "انتخاب کنید که کدام نمایشگر‌ها این ابزارک را نشان دهند"
   },
-  "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
-    "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": "انتخاب کنید که کدام مانیتور رابط صفحه قفل را نشان دهد. مانیتورهای دیگر برای محافظت در برابر سوختگی OLED، رنگ ثابتی را نمایش می‌دهند."
+  "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
+    "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": ""
   },
   "Chroma Style": {
     "Chroma Style": "استایل رنگی"
@@ -1540,9 +1549,6 @@
   },
   "Clear at Startup": {
     "Clear at Startup": "پاک‌کردن در هنگام راه‌اندازی"
-  },
-  "Click 'Setup' to create %1 and add include to config.": {
-    "Click 'Setup' to create %1 and add include to config.": "برای ایجاد %1 و افزودن include به پیکربندی، روی «راه‌اندازی» کلیک کنید."
   },
   "Click 'Setup' to create %1 and add include to your compositor config.": {
     "Click 'Setup' to create %1 and add include to your compositor config.": "برای ایجاد %1 و افزودن include به پیکربندی کامپازیتور خود، روی «راه‌اندازی» کلیک کنید."
@@ -1618,6 +1624,9 @@
   },
   "Close Window": {
     "Close Window": "بستن پنجره"
+  },
+  "Codec switching is unavailable because pactl was not found": {
+    "Codec switching is unavailable because pactl was not found": ""
   },
   "Color": {
     "Color": "رنگ"
@@ -2084,12 +2093,6 @@
   "Current: %1": {
     "Current: %1": "کنونی: %1"
   },
-  "Cursor Config Not Configured": {
-    "Cursor Config Not Configured": "پیکربندی اشاره‌گر موس تنظیم نشده"
-  },
-  "Cursor Include Missing": {
-    "Cursor Include Missing": "دستور include اشاره‌گر موس یافت نشد"
-  },
   "Cursor Size": {
     "Cursor Size": "اندازه اشاره‌گر موس"
   },
@@ -2449,6 +2452,9 @@
   },
   "Device unpaired": {
     "Device unpaired": "دستگاه جفت نشده"
+  },
+  "Diff": {
+    "Diff": ""
   },
   "Digital": {
     "Digital": "دیجیتال"
@@ -2894,9 +2900,6 @@
   "Enter URI or text to share": {
     "Enter URI or text to share": ""
   },
-  "Enter URL or text to share": {
-    "Enter URL or text to share": "متن یا URL برای اشتراک‌گذاری وارد کنید"
-  },
   "Enter a new name for session \"%1": {
     "Enter a new name for session \"%1\"": "یک نام جدید برای نشست «%1» وارد کنید"
   },
@@ -3272,6 +3275,9 @@
   "Failed to unpin entry": {
     "Failed to unpin entry": "برداشتن سنجاق مدخل ناموفق بود"
   },
+  "Failed to update %1: %2": {
+    "Failed to update %1: %2": ""
+  },
   "Failed to update VPN": {
     "Failed to update VPN": "بروزرسانی VPN ناموفق بود"
   },
@@ -3355,6 +3361,9 @@
   },
   "Fill": {
     "Fill": "پُر"
+  },
+  "Fill Mode": {
+    "Fill Mode": ""
   },
   "Filter": {
     "Filter": ""
@@ -3875,9 +3884,6 @@
   "Hidden Apps": {
     "Hidden Apps": "برنامه‌های پنهان"
   },
-  "Hidden Network": {
-    "Hidden Network": "شبکه پنهان"
-  },
   "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": {
     "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": "برنامه‌های پنهان در لانچر ظاهر نمی‌شوند. روی یک برنامه راست‌کلیک کرده و «پنهان کردن برنامه» را برای پنهان کردن آن انتخاب کنید."
   },
@@ -4016,6 +4022,9 @@
   "How the background image is scaled": {
     "How the background image is scaled": "تصویر پس‌زمینه چگونه مقیاس شود"
   },
+  "How the wallpaper is scaled to fit the screen": {
+    "How the wallpaper is scaled to fit the screen": ""
+  },
   "Humidity": {
     "Humidity": "رطوبت"
   },
@@ -4078,6 +4087,9 @@
   },
   "Identical alerts stack as separate notification cards": {
     "Identical alerts stack as separate notification cards": "هشدارهای یکسان به صورت کارت‌های اعلان جداگانه روی هم قرار می‌گیرند"
+  },
+  "Identify": {
+    "Identify": ""
   },
   "Idle": {
     "Idle": "بیکار"
@@ -4715,6 +4727,9 @@
   "Material": {
     "Material": "متریال"
   },
+  "Material Battery Style": {
+    "Material Battery Style": ""
+  },
   "Material Colors": {
     "Material Colors": "رنگ‌های Material"
   },
@@ -5270,14 +5285,14 @@
   "No checks passed": {
     "No checks passed": "هیچ‌یک از بررسی‌ها موفق نبود"
   },
+  "No codecs found": {
+    "No codecs found": ""
+  },
   "No custom theme file": {
     "No custom theme file": "هیچ تم سفارشی یافت نشد"
   },
   "No devices": {
     "No devices": "بدون دستگاه"
-  },
-  "No devices connected": {
-    "No devices connected": "بدون دستگاه متصل"
   },
   "No devices found": {
     "No devices found": "دستگاهی یافت نشد"
@@ -5434,6 +5449,9 @@
   },
   "No trigger": {
     "No trigger": "بدون راه‌انداز"
+  },
+  "No updates available.": {
+    "No updates available.": ""
   },
   "No user specified": {
     "No user specified": "هیچ کاربری مشخص نشده است"
@@ -5675,9 +5693,6 @@
   "Open From": {
     "Open From": ""
   },
-  "Open KDE Connect on your phone": {
-    "Open KDE Connect on your phone": "برنامه KDE Connect را در گوشی خود باز کنید"
-  },
   "Open Notepad File": {
     "Open Notepad File": "باز‌ کردن فایل دفترچه یادداشت"
   },
@@ -5717,17 +5732,11 @@
   "Open with...": {
     "Open with...": "باز کردن با..."
   },
-  "Opening SMS": {
-    "Opening SMS": "باز کردن SMS"
-  },
   "Opening SMS app": {
     "Opening SMS app": "باز کردن برنامه SMS"
   },
   "Opening file browser": {
     "Opening file browser": "باز کردن مرورگر فایل"
-  },
-  "Opening files": {
-    "Opening files": "باز کردن فایل‌ها"
   },
   "Opening terminal to update greetd": {
     "Opening terminal to update greetd": ""
@@ -5806,9 +5815,6 @@
   },
   "Override Corner Radius": {
     "Override Corner Radius": "جایگزینی شعاع گوشه‌ها"
-  },
-  "Override Gaps": {
-    "Override Gaps": "جایگزینی فاصله‌ها"
   },
   "Override global layout settings for this output": {
     "Override global layout settings for this output": "تنظیمات چیدمان سراسری را برای این خروجی جایگزین کن"
@@ -5930,6 +5936,9 @@
   "Paste": {
     "Paste": "الصاق"
   },
+  "Paste failed: %1": {
+    "Paste failed: %1": ""
+  },
   "Path copied to clipboard": {
     "Path copied to clipboard": ""
   },
@@ -6010,9 +6019,6 @@
   },
   "Ping": {
     "Ping": "پینگ"
-  },
-  "Ping sent": {
-    "Ping sent": "پینگ فرستاده شد"
   },
   "Ping sent to": {
     "Ping sent to": "پینگ فرستاده شد به"
@@ -6193,6 +6199,9 @@
   },
   "Power Profile Degradation": {
     "Power Profile Degradation": "تنزل‌دادن پروفایل پاور"
+  },
+  "Power Profiles & Saving": {
+    "Power Profiles & Saving": ""
   },
   "Power Profiles Auto-Switching": {
     "Power Profiles Auto-Switching": ""
@@ -7217,9 +7226,6 @@
   "Share Text": {
     "Share Text": "اشتراک‌گذاری متن"
   },
-  "Share URL": {
-    "Share URL": "اشتراک‌گذاری URL"
-  },
   "Shared": {
     "Shared": "به اشتراک گذاشته شد"
   },
@@ -8123,8 +8129,14 @@
   "Tile H": {
     "Tile H": "کاشی‌وار افقی"
   },
+  "Tile Horizontally": {
+    "Tile Horizontally": ""
+  },
   "Tile V": {
     "Tile V": "کاشی‌وار عمودی"
+  },
+  "Tile Vertically": {
+    "Tile Vertically": ""
   },
   "Tiled": {
     "Tiled": "کاشی‌شده"
@@ -8429,6 +8441,9 @@
   "Unknown GPU": {
     "Unknown GPU": "کارت گرافیک ناشناخته"
   },
+  "Unknown Model": {
+    "Unknown Model": ""
+  },
   "Unknown Monitor": {
     "Unknown Monitor": "مانیتور ناشناخته"
   },
@@ -8507,6 +8522,12 @@
   "Update failed: %1": {
     "Update failed: %1": "بروزرسانی ناموفق: %1"
   },
+  "Updating %1...": {
+    "Updating %1...": ""
+  },
+  "Updating plugins...": {
+    "Updating plugins...": ""
+  },
   "Upgrading...": {
     "Upgrading...": "درحال بروزرسانی..."
   },
@@ -8584,9 +8605,6 @@
   },
   "Use custom border/focus-ring width": {
     "Use custom border/focus-ring width": "از طول حاشیه/focus-ring سفارشی استفاده کن"
-  },
-  "Use custom gaps instead of bar spacing": {
-    "Use custom gaps instead of bar spacing": "از فاصله سفارشی به جای فاصله نوار استفاده کن"
   },
   "Use custom window radius instead of theme radius": {
     "Use custom window radius instead of theme radius": "استفاده از شعاع پنجره سفارشی به جای شعاع تم"
@@ -9137,9 +9155,6 @@
   "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": {
     "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": ""
   },
-  "dms/cursor config exists but is not included. Cursor settings won't apply.": {
-    "dms/cursor config exists but is not included. Cursor settings won't apply.": "پیکربندی dms/cursor وجود دارد اما وارد نشده است. تنظیمات اشاره‌گر موس اعمال نخواهند شد."
-  },
   "e.g. /usr/bin/my-script --flag": {
     "e.g. /usr/bin/my-script --flag": ""
   },
@@ -9290,6 +9305,9 @@
   "source": {
     "source": "منبع"
   },
+  "the Qt 6 Multimedia QML module": {
+    "the Qt 6 Multimedia QML module": ""
+  },
   "this app": {
     "this app": "این برنامه"
   },
@@ -9319,9 +9337,6 @@
   },
   "verified": {
     "verified": ""
-  },
-  "wtype not available - install wtype for paste support": {
-    "wtype not available - install wtype for paste support": "wtype در دسترس نیست - wtype را برای پشتیبانی از الصاق نصب کنید"
   },
   "• Install only from trusted sources": {
     "• Install only from trusted sources": "نصب فقط از منابع معتبر"

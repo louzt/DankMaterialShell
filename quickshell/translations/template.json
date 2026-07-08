@@ -3731,6 +3731,13 @@
     "comment": ""
   },
   {
+    "term": "Codec switching is unavailable because pactl was not found",
+    "translation": "",
+    "context": "",
+    "reference": "",
+    "comment": ""
+  },
+  {
     "term": "Color",
     "translation": "",
     "context": "border color",
@@ -12183,6 +12190,13 @@
     "term": "No checks passed",
     "translation": "",
     "context": "greeter doctor page empty state",
+    "reference": "",
+    "comment": ""
+  },
+  {
+    "term": "No codecs found",
+    "translation": "",
+    "context": "",
     "reference": "",
     "comment": ""
   },

@@ -50,9 +50,6 @@
   "%1 displays": {
     "%1 displays": ""
   },
-  "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": {
-    "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": ""
-  },
   "%1 exists but is not included. Window rules won't apply.": {
     "%1 exists but is not included. Window rules won't apply.": ""
   },
@@ -142,9 +139,6 @@
   },
   "1 day before": {
     "1 day before": ""
-  },
-  "1 device connected": {
-    "1 device connected": "1 dispositivo conectado"
   },
   "1 hour": {
     "1 hour": ""
@@ -393,16 +387,13 @@
     "Activate the DMS greeter? A terminal will open for sudo authentication. Run Sync after activation to apply your settings.": ""
   },
   "Activation": {
-    "Activation": ""
+    "Activation": "Activación"
   },
   "Active": {
     "Active": "Activo"
   },
   "Active Color": {
     "Active Color": ""
-  },
-  "Active Lock Screen Monitor": {
-    "Active Lock Screen Monitor": "Monitor de pantalla de bloqueo activo"
   },
   "Active VPN": {
     "Active VPN": ""
@@ -520,9 +511,6 @@
   },
   "All": {
     "All": "Todo"
-  },
-  "All Monitors": {
-    "All Monitors": "Todos los monitores"
   },
   "All checks passed": {
     "All checks passed": "Todas las comprobaciones fueron exitosas"
@@ -977,6 +965,9 @@
   "Available Screens (%1)": {
     "Available Screens (%1)": "Pantallas disponibles (%1)"
   },
+  "Available Updates (%1)": {
+    "Available Updates (%1)": ""
+  },
   "Available in Detailed and Forecast view modes": {
     "Available in Detailed and Forecast view modes": "Disponible en modo detallado y pronóstico"
   },
@@ -1073,6 +1064,9 @@
   "Battery %1": {
     "Battery %1": ""
   },
+  "Battery Alerts": {
+    "Battery Alerts": ""
+  },
   "Battery Charge Limit": {
     "Battery Charge Limit": "Limite de carga de bateria"
   },
@@ -1081,6 +1075,9 @@
   },
   "Battery Power": {
     "Battery Power": ""
+  },
+  "Battery Protection": {
+    "Battery Protection": ""
   },
   "Battery Protection & Charging": {
     "Battery Protection & Charging": ""
@@ -1277,6 +1274,9 @@
   "Button Color": {
     "Button Color": ""
   },
+  "By %1": {
+    "By %1": ""
+  },
   "CPU": {
     "CPU": "CPU"
   },
@@ -1466,6 +1466,15 @@
   "Choose how to be notified about battery alerts.": {
     "Choose how to be notified about battery alerts.": ""
   },
+  "Choose how to be notified about critical battery alerts.": {
+    "Choose how to be notified about critical battery alerts.": ""
+  },
+  "Choose how to be notified about low battery alerts.": {
+    "Choose how to be notified about low battery alerts.": ""
+  },
+  "Choose how to be notified when charge limit is reached.": {
+    "Choose how to be notified when charge limit is reached.": ""
+  },
   "Choose icon": {
     "Choose icon": "Elegir icono"
   },
@@ -1502,8 +1511,8 @@
   "Choose which displays show this widget": {
     "Choose which displays show this widget": "Elija qué pantallas muestran este widget"
   },
-  "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
-    "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": "Escoger en cuál monitor se muestra la interfaz de la pantalla de bloqueo. Otros mostrarán un color sólido para proteger las pantallas OLED contra quemaduras."
+  "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
+    "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": ""
   },
   "Chroma Style": {
     "Chroma Style": ""
@@ -1540,9 +1549,6 @@
   },
   "Clear at Startup": {
     "Clear at Startup": "Limpiar al inicio"
-  },
-  "Click 'Setup' to create %1 and add include to config.": {
-    "Click 'Setup' to create %1 and add include to config.": ""
   },
   "Click 'Setup' to create %1 and add include to your compositor config.": {
     "Click 'Setup' to create %1 and add include to your compositor config.": ""
@@ -1618,6 +1624,9 @@
   },
   "Close Window": {
     "Close Window": ""
+  },
+  "Codec switching is unavailable because pactl was not found": {
+    "Codec switching is unavailable because pactl was not found": ""
   },
   "Color": {
     "Color": "Color"
@@ -1938,7 +1947,7 @@
     "Copied!": "¡Copiado!"
   },
   "Copy": {
-    "Copy": ""
+    "Copy": "Copiar"
   },
   "Copy Content": {
     "Copy Content": ""
@@ -2083,12 +2092,6 @@
   },
   "Current: %1": {
     "Current: %1": "Actual: %1"
-  },
-  "Cursor Config Not Configured": {
-    "Cursor Config Not Configured": ""
-  },
-  "Cursor Include Missing": {
-    "Cursor Include Missing": ""
   },
   "Cursor Size": {
     "Cursor Size": "Tamaño del cursor"
@@ -2449,6 +2452,9 @@
   },
   "Device unpaired": {
     "Device unpaired": ""
+  },
+  "Diff": {
+    "Diff": ""
   },
   "Digital": {
     "Digital": "Digital"
@@ -2894,9 +2900,6 @@
   "Enter URI or text to share": {
     "Enter URI or text to share": ""
   },
-  "Enter URL or text to share": {
-    "Enter URL or text to share": ""
-  },
   "Enter a new name for session \"%1": {
     "Enter a new name for session \"%1\"": ""
   },
@@ -3272,6 +3275,9 @@
   "Failed to unpin entry": {
     "Failed to unpin entry": ""
   },
+  "Failed to update %1: %2": {
+    "Failed to update %1: %2": ""
+  },
   "Failed to update VPN": {
     "Failed to update VPN": "Error al actualizar VPN"
   },
@@ -3355,6 +3361,9 @@
   },
   "Fill": {
     "Fill": ""
+  },
+  "Fill Mode": {
+    "Fill Mode": ""
   },
   "Filter": {
     "Filter": ""
@@ -3867,16 +3876,13 @@
     "Hibernate failed": ""
   },
   "Hidden": {
-    "Hidden": ""
+    "Hidden": "Oculto"
   },
   "Hidden (%1)": {
     "Hidden (%1)": ""
   },
   "Hidden Apps": {
     "Hidden Apps": ""
-  },
-  "Hidden Network": {
-    "Hidden Network": ""
   },
   "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": {
     "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": ""
@@ -3906,7 +3912,7 @@
     "Hide When Windows Open": "Ocultar opciones cuando hay ventanas abiertas"
   },
   "Hide cursor after inactivity (0 = disabled)": {
-    "Hide cursor after inactivity (0 = disabled)": ""
+    "Hide cursor after inactivity (0 = disabled)": "Ocultar cursor despues de inactividad (0=desactivado)"
   },
   "Hide cursor when pressing keyboard keys": {
     "Hide cursor when pressing keyboard keys": "Ocultar cursor cuando se presionan teclas"
@@ -3927,7 +3933,7 @@
     "Hide notification content until expanded; popups show collapsed by default": ""
   },
   "Hide on Touch": {
-    "Hide on Touch": ""
+    "Hide on Touch": "Ocultar al tocar"
   },
   "Hide the bar when the pointer leaves even if a popout is still open": {
     "Hide the bar when the pointer leaves even if a popout is still open": ""
@@ -4016,6 +4022,9 @@
   "How the background image is scaled": {
     "How the background image is scaled": ""
   },
+  "How the wallpaper is scaled to fit the screen": {
+    "How the wallpaper is scaled to fit the screen": ""
+  },
   "Humidity": {
     "Humidity": "Humedad"
   },
@@ -4078,6 +4087,9 @@
   },
   "Identical alerts stack as separate notification cards": {
     "Identical alerts stack as separate notification cards": ""
+  },
+  "Identify": {
+    "Identify": ""
   },
   "Idle": {
     "Idle": "Inactivo"
@@ -4575,7 +4587,7 @@
     "Lock screen font": ""
   },
   "Locked": {
-    "Locked": ""
+    "Locked": "Bloqueado"
   },
   "Log Out": {
     "Log Out": "Cerrar sesión"
@@ -4714,6 +4726,9 @@
   },
   "Material": {
     "Material": ""
+  },
+  "Material Battery Style": {
+    "Material Battery Style": ""
   },
   "Material Colors": {
     "Material Colors": "Colores Material"
@@ -5073,7 +5088,7 @@
     "Network Information": "Información de red"
   },
   "Network Name (SSID)": {
-    "Network Name (SSID)": ""
+    "Network Name (SSID)": "Nombre de la Red (SSID)"
   },
   "Network Speed Monitor": {
     "Network Speed Monitor": "Monitor de velocidad de red"
@@ -5270,14 +5285,14 @@
   "No checks passed": {
     "No checks passed": ""
   },
+  "No codecs found": {
+    "No codecs found": ""
+  },
   "No custom theme file": {
     "No custom theme file": "Ningún archivo de tema personalizado"
   },
   "No devices": {
     "No devices": ""
-  },
-  "No devices connected": {
-    "No devices connected": "No hay dispositivos conectados"
   },
   "No devices found": {
     "No devices found": "No se encontraron dispositivos"
@@ -5435,6 +5450,9 @@
   "No trigger": {
     "No trigger": ""
   },
+  "No updates available.": {
+    "No updates available.": ""
+  },
   "No user specified": {
     "No user specified": ""
   },
@@ -5586,7 +5604,7 @@
     "Numeric (M/D)": ""
   },
   "OK": {
-    "OK": ""
+    "OK": "Ok"
   },
   "OS Logo": {
     "OS Logo": "OS Logo"
@@ -5675,9 +5693,6 @@
   "Open From": {
     "Open From": ""
   },
-  "Open KDE Connect on your phone": {
-    "Open KDE Connect on your phone": ""
-  },
   "Open Notepad File": {
     "Open Notepad File": "Abrir archivo de Notas"
   },
@@ -5717,17 +5732,11 @@
   "Open with...": {
     "Open with...": "Abrir con..."
   },
-  "Opening SMS": {
-    "Opening SMS": ""
-  },
   "Opening SMS app": {
     "Opening SMS app": ""
   },
   "Opening file browser": {
     "Opening file browser": ""
-  },
-  "Opening files": {
-    "Opening files": ""
   },
   "Opening terminal to update greetd": {
     "Opening terminal to update greetd": ""
@@ -5806,9 +5815,6 @@
   },
   "Override Corner Radius": {
     "Override Corner Radius": "Anular radio de esquina"
-  },
-  "Override Gaps": {
-    "Override Gaps": "Anular lagunas"
   },
   "Override global layout settings for this output": {
     "Override global layout settings for this output": "Anular la configuración de diseño global para esta salida"
@@ -5930,6 +5936,9 @@
   "Paste": {
     "Paste": ""
   },
+  "Paste failed: %1": {
+    "Paste failed: %1": ""
+  },
   "Path copied to clipboard": {
     "Path copied to clipboard": ""
   },
@@ -6010,9 +6019,6 @@
   },
   "Ping": {
     "Ping": ""
-  },
-  "Ping sent": {
-    "Ping sent": ""
   },
   "Ping sent to": {
     "Ping sent to": ""
@@ -6193,6 +6199,9 @@
   },
   "Power Profile Degradation": {
     "Power Profile Degradation": "Perfil de Energía Degradada"
+  },
+  "Power Profiles & Saving": {
+    "Power Profiles & Saving": ""
   },
   "Power Profiles Auto-Switching": {
     "Power Profiles Auto-Switching": ""
@@ -6492,7 +6501,7 @@
     "Related: %1": ""
   },
   "Release": {
-    "Release": ""
+    "Release": "Lanzamiento"
   },
   "Reload From Disk": {
     "Reload From Disk": ""
@@ -7217,9 +7226,6 @@
   "Share Text": {
     "Share Text": ""
   },
-  "Share URL": {
-    "Share URL": ""
-  },
   "Shared": {
     "Shared": ""
   },
@@ -7623,7 +7629,7 @@
     "Skip confirmation": ""
   },
   "Skip setup": {
-    "Skip setup": ""
+    "Skip setup": "Omitir configuración"
   },
   "Skip the greeter password after boot until you sign out. Lock screen unlock is unchanged. Takes effect on the next reboot after sync.": {
     "Skip the greeter password after boot until you sign out. Lock screen unlock is unchanged. Takes effect on the next reboot after sync.": ""
@@ -7710,7 +7716,7 @@
     "Stacked": "Apilado"
   },
   "Standard": {
-    "Standard": ""
+    "Standard": "Estandar"
   },
   "Standard: Classic Material Design 3 — panels rise from below with a subtle scale. The DMS default.": {
     "Standard: Classic Material Design 3 — panels rise from below with a subtle scale. The DMS default.": ""
@@ -7881,7 +7887,7 @@
     "System App Theming": "Tematización de aplicaciones"
   },
   "System Check": {
-    "System Check": ""
+    "System Check": "Chequeo del Sistema"
   },
   "System Default": {
     "System Default": ""
@@ -8040,7 +8046,7 @@
     "Theme Color": "Color del tema"
   },
   "Theme Registry": {
-    "Theme Registry": ""
+    "Theme Registry": "Registro de Temas"
   },
   "Theme color used for the border": {
     "Theme color used for the border": ""
@@ -8123,8 +8129,14 @@
   "Tile H": {
     "Tile H": ""
   },
+  "Tile Horizontally": {
+    "Tile Horizontally": ""
+  },
   "Tile V": {
     "Tile V": ""
+  },
+  "Tile Vertically": {
+    "Tile Vertically": ""
   },
   "Tiled": {
     "Tiled": ""
@@ -8429,6 +8441,9 @@
   "Unknown GPU": {
     "Unknown GPU": "GPU desconocida"
   },
+  "Unknown Model": {
+    "Unknown Model": ""
+  },
   "Unknown Monitor": {
     "Unknown Monitor": "Monitor desconocido"
   },
@@ -8507,6 +8522,12 @@
   "Update failed: %1": {
     "Update failed: %1": ""
   },
+  "Updating %1...": {
+    "Updating %1...": ""
+  },
+  "Updating plugins...": {
+    "Updating plugins...": ""
+  },
   "Upgrading...": {
     "Upgrading...": ""
   },
@@ -8584,9 +8605,6 @@
   },
   "Use custom border/focus-ring width": {
     "Use custom border/focus-ring width": ""
-  },
-  "Use custom gaps instead of bar spacing": {
-    "Use custom gaps instead of bar spacing": "Utilizar espacios personalizados en lugar de espaciado entre barras"
   },
   "Use custom window radius instead of theme radius": {
     "Use custom window radius instead of theme radius": "Usar radio de ventana personalizado en lugar del radio del tema"
@@ -8778,7 +8796,7 @@
     "Videos": ""
   },
   "View Mode": {
-    "View Mode": ""
+    "View Mode": "Modo de vista"
   },
   "Visibility": {
     "Visibility": "Visibilidad"
@@ -8859,7 +8877,7 @@
     "Welcome": "Bienvenido"
   },
   "Welcome to DankMaterialShell": {
-    "Welcome to DankMaterialShell": ""
+    "Welcome to DankMaterialShell": "Bienvenido a DankMaterialShell"
   },
   "When clicking a dock window in a Hyprland special workspace, bring that special workspace back before focusing the window": {
     "When clicking a dock window in a Hyprland special workspace, bring that special workspace back before focusing the window": ""
@@ -9081,7 +9099,7 @@
     "You'll skip the greeter password after the next reboot. The lock screen and signing out still require your password.": ""
   },
   "You're All Set!": {
-    "You're All Set!": ""
+    "You're All Set!": "¡Esta todo listo!"
   },
   "Your compositor does not support background blur (ext-background-effect-v1)": {
     "Your compositor does not support background blur (ext-background-effect-v1)": ""
@@ -9136,9 +9154,6 @@
   },
   "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": {
     "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": ""
-  },
-  "dms/cursor config exists but is not included. Cursor settings won't apply.": {
-    "dms/cursor config exists but is not included. Cursor settings won't apply.": ""
   },
   "e.g. /usr/bin/my-script --flag": {
     "e.g. /usr/bin/my-script --flag": ""
@@ -9290,6 +9305,9 @@
   "source": {
     "source": "fuente"
   },
+  "the Qt 6 Multimedia QML module": {
+    "the Qt 6 Multimedia QML module": ""
+  },
   "this app": {
     "this app": ""
   },
@@ -9319,9 +9337,6 @@
   },
   "verified": {
     "verified": ""
-  },
-  "wtype not available - install wtype for paste support": {
-    "wtype not available - install wtype for paste support": "wtype no disponible - instala wtype para soporte de pegado"
   },
   "• Install only from trusted sources": {
     "• Install only from trusted sources": "• Instalar solo desde fuentes confiables"

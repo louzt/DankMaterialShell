@@ -50,9 +50,6 @@
   "%1 displays": {
     "%1 displays": "%1 個顯示器"
   },
-  "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": {
-    "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": "%1 存在但未包含在設定中。自訂快捷鍵在修正此問題前將無法運作。"
-  },
   "%1 exists but is not included. Window rules won't apply.": {
     "%1 exists but is not included. Window rules won't apply.": "%1 存在但未納入。視窗規則將不適用。"
   },
@@ -142,9 +139,6 @@
   },
   "1 day before": {
     "1 day before": ""
-  },
-  "1 device connected": {
-    "1 device connected": "已連接 1 個裝置"
   },
   "1 hour": {
     "1 hour": "1 小時"
@@ -401,9 +395,6 @@
   "Active Color": {
     "Active Color": "活動顏色"
   },
-  "Active Lock Screen Monitor": {
-    "Active Lock Screen Monitor": "活動鎖定畫面監視器"
-  },
   "Active VPN": {
     "Active VPN": "啟用中的 VPN"
   },
@@ -520,9 +511,6 @@
   },
   "All": {
     "All": "所有"
-  },
-  "All Monitors": {
-    "All Monitors": "所有監視器"
   },
   "All checks passed": {
     "All checks passed": "所有檢查皆通過"
@@ -977,6 +965,9 @@
   "Available Screens (%1)": {
     "Available Screens (%1)": "可用螢幕 (%1)"
   },
+  "Available Updates (%1)": {
+    "Available Updates (%1)": ""
+  },
   "Available in Detailed and Forecast view modes": {
     "Available in Detailed and Forecast view modes": "可於詳細和預報檢視模式中顯示"
   },
@@ -1073,6 +1064,9 @@
   "Battery %1": {
     "Battery %1": "電量 %1"
   },
+  "Battery Alerts": {
+    "Battery Alerts": ""
+  },
   "Battery Charge Limit": {
     "Battery Charge Limit": "電池充電上限"
   },
@@ -1081,6 +1075,9 @@
   },
   "Battery Power": {
     "Battery Power": ""
+  },
+  "Battery Protection": {
+    "Battery Protection": ""
   },
   "Battery Protection & Charging": {
     "Battery Protection & Charging": ""
@@ -1277,6 +1274,9 @@
   "Button Color": {
     "Button Color": "按鈕顏色"
   },
+  "By %1": {
+    "By %1": ""
+  },
   "CPU": {
     "CPU": "CPU"
   },
@@ -1466,6 +1466,15 @@
   "Choose how to be notified about battery alerts.": {
     "Choose how to be notified about battery alerts.": ""
   },
+  "Choose how to be notified about critical battery alerts.": {
+    "Choose how to be notified about critical battery alerts.": ""
+  },
+  "Choose how to be notified about low battery alerts.": {
+    "Choose how to be notified about low battery alerts.": ""
+  },
+  "Choose how to be notified when charge limit is reached.": {
+    "Choose how to be notified when charge limit is reached.": ""
+  },
   "Choose icon": {
     "Choose icon": "選擇圖示"
   },
@@ -1502,8 +1511,8 @@
   "Choose which displays show this widget": {
     "Choose which displays show this widget": "選擇哪些顯示器顯示此小工具"
   },
-  "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
-    "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": "選擇哪個監視器顯示鎖定畫面介面。其他監視器將顯示純色以保護 OLED 燒屏。"
+  "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
+    "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": ""
   },
   "Chroma Style": {
     "Chroma Style": "色度樣式"
@@ -1540,9 +1549,6 @@
   },
   "Clear at Startup": {
     "Clear at Startup": "啟動時清除"
-  },
-  "Click 'Setup' to create %1 and add include to config.": {
-    "Click 'Setup' to create %1 and add include to config.": "點擊「設定」以建立 %1 並新增到設定中。"
   },
   "Click 'Setup' to create %1 and add include to your compositor config.": {
     "Click 'Setup' to create %1 and add include to your compositor config.": "點擊「設定」以建立 %1 並將其納入您的合成器設定中。"
@@ -1618,6 +1624,9 @@
   },
   "Close Window": {
     "Close Window": "關閉視窗"
+  },
+  "Codec switching is unavailable because pactl was not found": {
+    "Codec switching is unavailable because pactl was not found": ""
   },
   "Color": {
     "Color": "顏色"
@@ -2084,12 +2093,6 @@
   "Current: %1": {
     "Current: %1": "目前：%1"
   },
-  "Cursor Config Not Configured": {
-    "Cursor Config Not Configured": "游標設定檔未設定"
-  },
-  "Cursor Include Missing": {
-    "Cursor Include Missing": "游標包含檔遺失"
-  },
   "Cursor Size": {
     "Cursor Size": "游標大小"
   },
@@ -2449,6 +2452,9 @@
   },
   "Device unpaired": {
     "Device unpaired": "裝置已解除配對"
+  },
+  "Diff": {
+    "Diff": ""
   },
   "Digital": {
     "Digital": "數位"
@@ -2894,9 +2900,6 @@
   "Enter URI or text to share": {
     "Enter URI or text to share": ""
   },
-  "Enter URL or text to share": {
-    "Enter URL or text to share": "輸入網址或文字以分享"
-  },
   "Enter a new name for session \"%1": {
     "Enter a new name for session \"%1\"": "為會話「%1」輸入新名稱"
   },
@@ -3272,6 +3275,9 @@
   "Failed to unpin entry": {
     "Failed to unpin entry": "無法解除釘選項目"
   },
+  "Failed to update %1: %2": {
+    "Failed to update %1: %2": ""
+  },
   "Failed to update VPN": {
     "Failed to update VPN": "更新 VPN 失敗"
   },
@@ -3355,6 +3361,9 @@
   },
   "Fill": {
     "Fill": "填滿"
+  },
+  "Fill Mode": {
+    "Fill Mode": ""
   },
   "Filter": {
     "Filter": "篩選器"
@@ -3875,9 +3884,6 @@
   "Hidden Apps": {
     "Hidden Apps": "隱藏的應用程式"
   },
-  "Hidden Network": {
-    "Hidden Network": "隱藏網路"
-  },
   "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": {
     "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": "隱藏的應用程式不會出現在啟動器中。右鍵點擊應用程式並選擇「隱藏應用程式」即可隱藏。"
   },
@@ -4016,6 +4022,9 @@
   "How the background image is scaled": {
     "How the background image is scaled": "背景圖片的縮放方式"
   },
+  "How the wallpaper is scaled to fit the screen": {
+    "How the wallpaper is scaled to fit the screen": ""
+  },
   "Humidity": {
     "Humidity": "濕度"
   },
@@ -4078,6 +4087,9 @@
   },
   "Identical alerts stack as separate notification cards": {
     "Identical alerts stack as separate notification cards": "相同的警告會堆疊為獨立的通知卡片"
+  },
+  "Identify": {
+    "Identify": ""
   },
   "Idle": {
     "Idle": "閒置"
@@ -4715,6 +4727,9 @@
   "Material": {
     "Material": "材質"
   },
+  "Material Battery Style": {
+    "Material Battery Style": ""
+  },
   "Material Colors": {
     "Material Colors": "手動調整顏色"
   },
@@ -5270,14 +5285,14 @@
   "No checks passed": {
     "No checks passed": "無檢查通過"
   },
+  "No codecs found": {
+    "No codecs found": ""
+  },
   "No custom theme file": {
     "No custom theme file": "無自訂主題檔案"
   },
   "No devices": {
     "No devices": "無裝置"
-  },
-  "No devices connected": {
-    "No devices connected": "無裝置已連接"
   },
   "No devices found": {
     "No devices found": "找不到裝置"
@@ -5434,6 +5449,9 @@
   },
   "No trigger": {
     "No trigger": "無觸發條件"
+  },
+  "No updates available.": {
+    "No updates available.": ""
   },
   "No user specified": {
     "No user specified": "未指定使用者"
@@ -5675,9 +5693,6 @@
   "Open From": {
     "Open From": ""
   },
-  "Open KDE Connect on your phone": {
-    "Open KDE Connect on your phone": "在您的手機上開啟 KDE Connect"
-  },
   "Open Notepad File": {
     "Open Notepad File": "打開筆記文件"
   },
@@ -5717,17 +5732,11 @@
   "Open with...": {
     "Open with...": "開啟方式..."
   },
-  "Opening SMS": {
-    "Opening SMS": "正在開啟簡訊"
-  },
   "Opening SMS app": {
     "Opening SMS app": "正在開啟簡訊應用程式"
   },
   "Opening file browser": {
     "Opening file browser": "正在開啟檔案瀏覽器"
-  },
-  "Opening files": {
-    "Opening files": "正在開啟檔案"
   },
   "Opening terminal to update greetd": {
     "Opening terminal to update greetd": "正在開啟終端機以更新 greetd"
@@ -5806,9 +5815,6 @@
   },
   "Override Corner Radius": {
     "Override Corner Radius": "覆寫圓角半徑"
-  },
-  "Override Gaps": {
-    "Override Gaps": "覆寫間距"
   },
   "Override global layout settings for this output": {
     "Override global layout settings for this output": "覆寫此輸出的全域版面配置設定"
@@ -5930,6 +5936,9 @@
   "Paste": {
     "Paste": "貼上"
   },
+  "Paste failed: %1": {
+    "Paste failed: %1": ""
+  },
   "Path copied to clipboard": {
     "Path copied to clipboard": ""
   },
@@ -6010,9 +6019,6 @@
   },
   "Ping": {
     "Ping": "Ping"
-  },
-  "Ping sent": {
-    "Ping sent": "Ping 已送出"
   },
   "Ping sent to": {
     "Ping sent to": "Ping 已送至"
@@ -6193,6 +6199,9 @@
   },
   "Power Profile Degradation": {
     "Power Profile Degradation": "電源配置降級"
+  },
+  "Power Profiles & Saving": {
+    "Power Profiles & Saving": ""
   },
   "Power Profiles Auto-Switching": {
     "Power Profiles Auto-Switching": ""
@@ -7217,9 +7226,6 @@
   "Share Text": {
     "Share Text": "分享文字"
   },
-  "Share URL": {
-    "Share URL": "分享網址"
-  },
   "Shared": {
     "Shared": "已分享"
   },
@@ -8123,8 +8129,14 @@
   "Tile H": {
     "Tile H": "水平拼貼"
   },
+  "Tile Horizontally": {
+    "Tile Horizontally": ""
+  },
   "Tile V": {
     "Tile V": "垂直拼貼"
+  },
+  "Tile Vertically": {
+    "Tile Vertically": ""
   },
   "Tiled": {
     "Tiled": "並排"
@@ -8429,6 +8441,9 @@
   "Unknown GPU": {
     "Unknown GPU": "未知 GPU"
   },
+  "Unknown Model": {
+    "Unknown Model": ""
+  },
   "Unknown Monitor": {
     "Unknown Monitor": "未知監視器"
   },
@@ -8507,6 +8522,12 @@
   "Update failed: %1": {
     "Update failed: %1": "更新失敗：%1"
   },
+  "Updating %1...": {
+    "Updating %1...": ""
+  },
+  "Updating plugins...": {
+    "Updating plugins...": ""
+  },
   "Upgrading...": {
     "Upgrading...": "正在升級..."
   },
@@ -8584,9 +8605,6 @@
   },
   "Use custom border/focus-ring width": {
     "Use custom border/focus-ring width": "使用自訂邊框/焦點環寬度"
-  },
-  "Use custom gaps instead of bar spacing": {
-    "Use custom gaps instead of bar spacing": "使用自訂間距而非預設間距"
   },
   "Use custom window radius instead of theme radius": {
     "Use custom window radius instead of theme radius": "使用自訂視窗圓角而非主題圓角"
@@ -9137,9 +9155,6 @@
   "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": {
     "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": "dms 是一個高度可自訂的現代桌面外殼，其設計<a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">靈感來自 material 3</a>。<br /><br/>它使用 <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>（一個用於構建桌面外殼的 QT6 框架）和 <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>（一種靜態類型、編譯式程式語言）構建。"
   },
-  "dms/cursor config exists but is not included. Cursor settings won't apply.": {
-    "dms/cursor config exists but is not included. Cursor settings won't apply.": "dms/cursor 設定存在但未被包含。游標設定將不會套用。"
-  },
   "e.g. /usr/bin/my-script --flag": {
     "e.g. /usr/bin/my-script --flag": "例如：/usr/bin/my-script --flag"
   },
@@ -9290,6 +9305,9 @@
   "source": {
     "source": "來源"
   },
+  "the Qt 6 Multimedia QML module": {
+    "the Qt 6 Multimedia QML module": ""
+  },
   "this app": {
     "this app": "此應用程式"
   },
@@ -9319,9 +9337,6 @@
   },
   "verified": {
     "verified": ""
-  },
-  "wtype not available - install wtype for paste support": {
-    "wtype not available - install wtype for paste support": "wtype 未可用 - 請安裝 wtype 以支援貼上功能"
   },
   "• Install only from trusted sources": {
     "• Install only from trusted sources": "• 僅從受信任的來源安裝"

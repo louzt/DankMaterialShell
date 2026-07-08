@@ -9,7 +9,7 @@
     "%1 Sessions": "%1 Sessioni"
   },
   "%1 Startup Failed": {
-    "%1 Startup Failed": ""
+    "%1 Startup Failed": "Avvio di %1 non Riuscito"
   },
   "%1 active session": {
     "%1 active session": "%1 sessione attiva"
@@ -49,9 +49,6 @@
   },
   "%1 displays": {
     "%1 displays": "%1 schermi"
-  },
-  "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": {
-    "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": "%1 esiste ma non è incluso nella configurazione. Le scorciatoie personalizzate non funzioneranno finché non sarà risolto."
   },
   "%1 exists but is not included. Window rules won't apply.": {
     "%1 exists but is not included. Window rules won't apply.": "%1 esiste ma non è incluso. Le regole della finestra non verranno applicate."
@@ -142,9 +139,6 @@
   },
   "1 day before": {
     "1 day before": "1 giorno prima"
-  },
-  "1 device connected": {
-    "1 device connected": "1 dispositivo connesso"
   },
   "1 hour": {
     "1 hour": "1 ora"
@@ -401,9 +395,6 @@
   "Active Color": {
     "Active Color": "Colore Attivo"
   },
-  "Active Lock Screen Monitor": {
-    "Active Lock Screen Monitor": "Schermo Attivo per la Schermata di Blocco"
-  },
   "Active VPN": {
     "Active VPN": "VPN Attiva"
   },
@@ -507,7 +498,7 @@
     "Adjusts contrast of generated colors (-100 = minimum, 0 = standard, 100 = maximum)": "Regola il contrasto dei colori generati (-100 = minimo, 0 = standard, 100 = massimo)"
   },
   "Administrator access is required. Use the Sync button in Settings → Greeter to apply.": {
-    "Administrator access is required. Use the Sync button in Settings → Greeter to apply.": ""
+    "Administrator access is required. Use the Sync button in Settings → Greeter to apply.": "È richiesto l'accesso come amministratore. Usa il pulsante Sincronizza in Impostazioni → Greeter per applicare."
   },
   "Administrator group:": {
     "Administrator group:": "Gruppo amministratori:"
@@ -520,9 +511,6 @@
   },
   "All": {
     "All": "Tutto"
-  },
-  "All Monitors": {
-    "All Monitors": "Tutti gli Schermi"
   },
   "All checks passed": {
     "All checks passed": "Tutti i controlli superati"
@@ -570,7 +558,7 @@
     "Always Show Percentage": "Mostra Sempre Percentuale"
   },
   "Always blur against the wallpaper, even with Xray off": {
-    "Always blur against the wallpaper, even with Xray off": ""
+    "Always blur against the wallpaper, even with Xray off": "Sfoca sempre sullo sfondo, anche con Xray disattivato"
   },
   "Always hide the dock and reveal it when hovering near the dock area": {
     "Always hide the dock and reveal it when hovering near the dock area": "Nascondi sempre il dock e mostralo passando il cursore vicino all’area del dock"
@@ -594,7 +582,7 @@
     "Amount": "Quantità"
   },
   "An xray rule at %1 may conflict with the Xray settings below": {
-    "An xray rule at %1 may conflict with the Xray settings below": ""
+    "An xray rule at %1 may conflict with the Xray settings below": "Una regola xray su %1 potrebbe entrare in conflitto con le impostazioni Xray sottostanti"
   },
   "Analog": {
     "Analog": "Analogico"
@@ -654,7 +642,7 @@
     "App Theming": "Theming Applicazioni"
   },
   "App name or identity (e.g., firefox)": {
-    "App name or identity (e.g., firefox)": ""
+    "App name or identity (e.g., firefox)": "Nome o identità dell'app (es., firefox)"
   },
   "Appearance": {
     "Appearance": "Aspetto"
@@ -849,13 +837,13 @@
     "Auto Power Saver": "Risparmio Energetico Automatico"
   },
   "Auto matches bar spacing; Off leaves gaps to your Hyprland config": {
-    "Auto matches bar spacing; Off leaves gaps to your Hyprland config": ""
+    "Auto matches bar spacing; Off leaves gaps to your Hyprland config": "Auto corrisponde alla spaziatura della barra; Off lascia gap alla tua configurazione di Hyprland"
   },
   "Auto matches bar spacing; Off leaves gaps to your MangoWC config": {
-    "Auto matches bar spacing; Off leaves gaps to your MangoWC config": ""
+    "Auto matches bar spacing; Off leaves gaps to your MangoWC config": "Auto corrisponde alla spaziatura della barra; Off lascia gap alla tua configurazione di MangoWC"
   },
   "Auto matches bar spacing; Off leaves gaps to your niri config": {
-    "Auto matches bar spacing; Off leaves gaps to your niri config": ""
+    "Auto matches bar spacing; Off leaves gaps to your niri config": "Auto corrisponde alla spaziatura della barra; Off lascia gap alla tua configurazione di niri"
   },
   "Auto mode is on. Manual profile selection is disabled.": {
     "Auto mode is on. Manual profile selection is disabled.": "Modalità automatica attiva. Selezione dei profili manuale disabilitata."
@@ -885,7 +873,7 @@
     "Auto-login": "Accesso Automatico"
   },
   "Auto-login change needs a sync": {
-    "Auto-login change needs a sync": ""
+    "Auto-login change needs a sync": "La modifica dell'accesso automatico richiede una sincronizzazione"
   },
   "Auto-login disabled": {
     "Auto-login disabled": "Accesso Automatico Disabilitato"
@@ -976,6 +964,9 @@
   },
   "Available Screens (%1)": {
     "Available Screens (%1)": "Schermi Disponibili (%1)"
+  },
+  "Available Updates (%1)": {
+    "Available Updates (%1)": "Aggiornamenti Disponibili (%1)"
   },
   "Available in Detailed and Forecast view modes": {
     "Available in Detailed and Forecast view modes": "Disponibile nelle modalità Dettagliata e Previsioni"
@@ -1073,6 +1064,9 @@
   "Battery %1": {
     "Battery %1": "Batteria %1"
   },
+  "Battery Alerts": {
+    "Battery Alerts": "Avvisi Batteria"
+  },
   "Battery Charge Limit": {
     "Battery Charge Limit": "Limite Carica Batteria"
   },
@@ -1081,6 +1075,9 @@
   },
   "Battery Power": {
     "Battery Power": "Alimentazione Batteria"
+  },
+  "Battery Protection": {
+    "Battery Protection": "Protezione Batteria"
   },
   "Battery Protection & Charging": {
     "Battery Protection & Charging": "Protezione e Ricarica della Batteria"
@@ -1179,7 +1176,7 @@
     "Blur wallpaper when niri overview is open": "Sfoca lo sfondo quando la panoramica di niri è aperta"
   },
   "Blurred surfaces show the wallpaper instead of the content beneath": {
-    "Blurred surfaces show the wallpaper instead of the content beneath": ""
+    "Blurred surfaces show the wallpaper instead of the content beneath": "Le superfici sfocate mostrano lo sfondo invece del contenuto sottostante"
   },
   "Body": {
     "Body": "Corpo"
@@ -1218,7 +1215,7 @@
     "Border color around blurred surfaces": "Colore del bordo attorno alle superfici sfocate"
   },
   "Border color around popouts, modals, and other shell surfaces": {
-    "Border color around popouts, modals, and other shell surfaces": ""
+    "Border color around popouts, modals, and other shell surfaces": "Colore del bordo attorno a popup, modali e altre superfici della shell"
   },
   "Border w/ Bg": {
     "Border w/ Bg": "Bordo con Sfondo"
@@ -1269,13 +1266,16 @@
     "Browse Themes": "Sfoglia Temi"
   },
   "Browse and set wallpapers": {
-    "Browse and set wallpapers": ""
+    "Browse and set wallpapers": "Sfoglia e imposta sfondi"
   },
   "Browse or search plugins": {
     "Browse or search plugins": "Sfoglia o cerca plugin"
   },
   "Button Color": {
     "Button Color": "Colore Pulsante"
+  },
+  "By %1": {
+    "By %1": "Di %1"
   },
   "CPU": {
     "CPU": "CPU"
@@ -1466,6 +1466,15 @@
   "Choose how to be notified about battery alerts.": {
     "Choose how to be notified about battery alerts.": "Scegli come ricevere le notifiche per gli avvisi della batteria."
   },
+  "Choose how to be notified about critical battery alerts.": {
+    "Choose how to be notified about critical battery alerts.": "Scegli come ricevere le notifiche per gli avvisi critici della batteria."
+  },
+  "Choose how to be notified about low battery alerts.": {
+    "Choose how to be notified about low battery alerts.": "Scegli come ricevere le notifiche per gli avvisi di batteria scarica."
+  },
+  "Choose how to be notified when charge limit is reached.": {
+    "Choose how to be notified when charge limit is reached.": "Scegli come ricevere le notifiche quando viene raggiunto il limite di carica."
+  },
   "Choose icon": {
     "Choose icon": "Scegli icona"
   },
@@ -1485,7 +1494,7 @@
     "Choose the logo displayed on the launcher button in DankBar": "Scegli il logo visualizzato sul pulsante del launcher nella DankBar"
   },
   "Choose wallpaper folder": {
-    "Choose wallpaper folder": ""
+    "Choose wallpaper folder": "Scegli cartella sfondi"
   },
   "Choose where notification popups appear on screen": {
     "Choose where notification popups appear on screen": "Scegli dove i popup delle notifiche appaiono sullo schermo"
@@ -1502,8 +1511,8 @@
   "Choose which displays show this widget": {
     "Choose which displays show this widget": "Scegli su quali schermi mostrare questo widget"
   },
-  "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
-    "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": "Scegli quale schermo mostra l'interfaccia della schermata di blocco. Gli altri schermi visualizzeranno un colore solido per proteggere gli schermi OLED dal burn-in."
+  "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
+    "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": "Scegli quali monitor mostrano l'interfaccia della schermata di blocco. Gli altri monitor mostreranno un colore solido per la protezione dal burn-in degli OLED."
   },
   "Chroma Style": {
     "Chroma Style": "Stile Chroma"
@@ -1540,9 +1549,6 @@
   },
   "Clear at Startup": {
     "Clear at Startup": "Cancella all'Avvio"
-  },
-  "Click 'Setup' to create %1 and add include to config.": {
-    "Click 'Setup' to create %1 and add include to config.": "Fai clic su \"Configura\" per creare %1 e aggiungere l'inclusione alla configurazione."
   },
   "Click 'Setup' to create %1 and add include to your compositor config.": {
     "Click 'Setup' to create %1 and add include to your compositor config.": "Fai clic su \"Configura\" per creare %1 e aggiungere l'inclusione al file di configurazione del compositor."
@@ -1605,7 +1611,7 @@
     "Clock Style": "Stile dell'Orologio"
   },
   "Clock, calendar, system info and profile": {
-    "Clock, calendar, system info and profile": ""
+    "Clock, calendar, system info and profile": "Orologio, calendario, informazioni di sistema e profilo"
   },
   "Close": {
     "Close": "Chiudi"
@@ -1618,6 +1624,9 @@
   },
   "Close Window": {
     "Close Window": "Chiudi Finestra"
+  },
+  "Codec switching is unavailable because pactl was not found": {
+    "Codec switching is unavailable because pactl was not found": ""
   },
   "Color": {
     "Color": "Colore"
@@ -1650,7 +1659,7 @@
     "Color for primary action buttons": "Colore per i pulsanti di azione principali"
   },
   "Color shown for areas not covered by wallpaper": {
-    "Color shown for areas not covered by wallpaper": ""
+    "Color shown for areas not covered by wallpaper": "Colore mostrato per le aree non coperte dallo sfondo"
   },
   "Color shown for areas not covered by wallpaper (e.g. Fit or Pad modes)": {
     "Color shown for areas not covered by wallpaper (e.g. Fit or Pad modes)": "Colore mostrato per le aree non coperte dallo sfondo (es. nella modalità Adatta o Riempi)"
@@ -1893,7 +1902,7 @@
     "Controls outlines around blurred foreground cards, pills, and notification cards": "Determina i contorni attorno alle schede in primo piano sfocate, alle pillole e alle schede di notifica"
   },
   "Controls outlines around foreground cards, pills, and notification cards": {
-    "Controls outlines around foreground cards, pills, and notification cards": ""
+    "Controls outlines around foreground cards, pills, and notification cards": "Controlla i contorni attorno alle schede in primo piano, alle pillole e alle schede di notifica"
   },
   "Controls shadow cast direction for elevation layers": {
     "Controls shadow cast direction for elevation layers": "Controlla la direzione della proiezione dell'ombra per i livelli in rilievo"
@@ -1908,7 +1917,7 @@
     "Controls the outer edge of protocol-blurred windows": "Determina il bordo esterno delle finestre con sfocatura da protocollo"
   },
   "Controls the outline of popouts, modals, and other shell surfaces": {
-    "Controls the outline of popouts, modals, and other shell surfaces": ""
+    "Controls the outline of popouts, modals, and other shell surfaces": "Controlla il contorno di popup, modali e altre superfici della shell"
   },
   "Controls the transparency of the shadow": {
     "Controls the transparency of the shadow": "Controlla la trasparenza dell'ombra"
@@ -1995,7 +2004,7 @@
     "Create Window Rule": "Crea Regola Finestra"
   },
   "Create a new %1 session (^N)": {
-    "Create a new %1 session (^N)": ""
+    "Create a new %1 session (^N)": "Crea una nuova sessione %1 (^N)"
   },
   "Create a new %1 session (n)": {
     "Create a new %1 session (n)": "Crea una nuova sessione %1 (n)"
@@ -2084,12 +2093,6 @@
   "Current: %1": {
     "Current: %1": "Attuale: %1"
   },
-  "Cursor Config Not Configured": {
-    "Cursor Config Not Configured": "Configurazione Cursore non Impostata"
-  },
-  "Cursor Include Missing": {
-    "Cursor Include Missing": "Inclusione Cursore Mancante"
-  },
   "Cursor Size": {
     "Cursor Size": "Dimensione Cursore"
   },
@@ -2172,7 +2175,7 @@
     "Customizable empty space": "Spazio vuoto personalizzabile"
   },
   "Customize the font and background of the lock screen, or leave empty to use your theme font and desktop wallpaper. Changes apply instantly.": {
-    "Customize the font and background of the lock screen, or leave empty to use your theme font and desktop wallpaper. Changes apply instantly.": ""
+    "Customize the font and background of the lock screen, or leave empty to use your theme font and desktop wallpaper. Changes apply instantly.": "Personalizza il font e lo sfondo della schermata di blocco, o lascia vuoto per usare il font del tuo tema e lo sfondo del desktop. Le modifiche vengono applicate immediatamente."
   },
   "Customize which actions appear in the power menu": {
     "Customize which actions appear in the power menu": "Personalizza quali azioni visualizzare nel menu alimentazione"
@@ -2232,10 +2235,10 @@
     "Dank Bar": "Dank Bar"
   },
   "Dank Bar Xray": {
-    "Dank Bar Xray": ""
+    "Dank Bar Xray": "Dank Bar Xray"
   },
   "Dank Dash": {
-    "Dank Dash": ""
+    "Dank Dash": "Dank Dash"
   },
   "DankBar": {
     "DankBar": "DankBar"
@@ -2450,6 +2453,9 @@
   "Device unpaired": {
     "Device unpaired": "Dispositivo dissociato"
   },
+  "Diff": {
+    "Diff": "Diff"
+  },
   "Digital": {
     "Digital": "Digitale"
   },
@@ -2652,13 +2658,13 @@
     "Downloads": "Scaricati"
   },
   "Drag a widget by its handle here to reorder it or drop it into another group": {
-    "Drag a widget by its handle here to reorder it or drop it into another group": ""
+    "Drag a widget by its handle here to reorder it or drop it into another group": "Trascina un widget dalla sua maniglia qui per riordinarlo o rilascialo in un altro gruppo"
   },
   "Drag to Reorder": {
     "Drag to Reorder": "Trascina per Riordinare"
   },
   "Drag to reorder or click to hide tabs. Use ↑/↓ to highlight a tab and Ctrl+↑/↓ to move it.": {
-    "Drag to reorder or click to hide tabs. Use ↑/↓ to highlight a tab and Ctrl+↑/↓ to move it.": ""
+    "Drag to reorder or click to hide tabs. Use ↑/↓ to highlight a tab and Ctrl+↑/↓ to move it.": "Trascina per riordinare o fai clic per nascondere le schede. Usa ↑/↓ per evidenziare una scheda e Ctrl+↑/↓ per spostarla."
   },
   "Drag widgets to reorder within sections. Use the eye icon to hide/show widgets (maintains spacing), or X to remove them completely.": {
     "Drag widgets to reorder within sections. Use the eye icon to hide/show widgets (maintains spacing), or X to remove them completely.": "Trascina i widget per riordinarli nelle sezioni. Usa l'icona dell'occhio per nascondere/mostrare i widget (mantenendo la spaziatura), o X per rimuoverli completamente."
@@ -2676,7 +2682,7 @@
     "Drizzle": "Pioviggine"
   },
   "Drop here": {
-    "Drop here": ""
+    "Drop here": "Rilascia qui"
   },
   "Drop your override for %1 so the DMS default action re-applies?": {
     "Drop your override for %1 so the DMS default action re-applies?": "Elimina la tua modifica per %1 in modo che venga riapplicata l'azione predefinita di DMS?"
@@ -2709,7 +2715,7 @@
     "Dynamic Theming": "Theming Dinamico"
   },
   "Dynamic Width": {
-    "Dynamic Width": ""
+    "Dynamic Width": "Larghezza Dinamica"
   },
   "Dynamic colors from wallpaper": {
     "Dynamic colors from wallpaper": "Colori dinamici dallo sfondo"
@@ -2724,7 +2730,7 @@
     "Dynamic: Spring bezier with overshoot — entry briefly exceeds its target then settles. Expressive and alive.": "Dinamico: bezier a molla con overshooting — l'entrata supera brevemente il bersaglio poi si stabilizza. Espressivo e vitale."
   },
   "Edge Hover Reveal": {
-    "Edge Hover Reveal": ""
+    "Edge Hover Reveal": "Rivelazione al Passaggio sul Bordo"
   },
   "Edge Spacing": {
     "Edge Spacing": "Spaziatura del Bordo"
@@ -2894,9 +2900,6 @@
   "Enter URI or text to share": {
     "Enter URI or text to share": "Inserisci URI o testo da condividere"
   },
-  "Enter URL or text to share": {
-    "Enter URL or text to share": "Inserisci un URL o un testo da condividere"
-  },
   "Enter a new name for session \"%1": {
     "Enter a new name for session \"%1\"": "Inserisci un nuovo nome per la sessione \"%1\""
   },
@@ -2985,7 +2988,7 @@
     "Exact": "Esatto"
   },
   "Excluded Media Players": {
-    "Excluded Media Players": ""
+    "Excluded Media Players": "Lettori Multimediali Esclusi"
   },
   "Exclusive Zone Offset": {
     "Exclusive Zone Offset": "Offset Zona Esclusiva"
@@ -3272,6 +3275,9 @@
   "Failed to unpin entry": {
     "Failed to unpin entry": "Impossibile rimuovere la voce"
   },
+  "Failed to update %1: %2": {
+    "Failed to update %1: %2": "Impossibile aggiornare %1: %2"
+  },
   "Failed to update VPN": {
     "Failed to update VPN": "Impossibile aggiornare la VPN"
   },
@@ -3355,6 +3361,9 @@
   },
   "Fill": {
     "Fill": "Riempi"
+  },
+  "Fill Mode": {
+    "Fill Mode": "Modalità Riempimento"
   },
   "Filter": {
     "Filter": "Filtro"
@@ -3459,7 +3468,7 @@
     "Focused Color": "Colore Attivo"
   },
   "Focused Display": {
-    "Focused Display": ""
+    "Focused Display": "Schermo Attivo"
   },
   "Focused Monitor Only": {
     "Focused Monitor Only": "Solo Schermo Attivo"
@@ -3504,7 +3513,7 @@
     "Font Weight": "Spessore Font"
   },
   "Font used for the clock and date on the lock screen": {
-    "Font used for the clock and date on the lock screen": ""
+    "Font used for the clock and date on the lock screen": "Font utilizzato per orologio e data sulla schermata di blocco"
   },
   "Font used on the login screen": {
     "Font used on the login screen": "Font utilizzato nella schermata di accesso"
@@ -3537,7 +3546,7 @@
     "Force Kill (SIGKILL)": "Terminazione Forzata (SIGKILL)"
   },
   "Force Padding": {
-    "Force Padding": ""
+    "Force Padding": "Forza Spaziatura"
   },
   "Force RGBX": {
     "Force RGBX": "Forza RGBX"
@@ -3558,7 +3567,7 @@
     "Forecast Not Available": "Previsioni non Disponibili"
   },
   "Forecast and conditions": {
-    "Forecast and conditions": ""
+    "Forecast and conditions": "Previsioni e condizioni"
   },
   "Foreground Layers": {
     "Foreground Layers": "Livelli in Primo Piano"
@@ -3600,7 +3609,7 @@
     "Frame Border Color": "Colore Bordo Cornice"
   },
   "Frame Xray": {
-    "Frame Xray": ""
+    "Frame Xray": "Cornice Xray"
   },
   "Free VRAM/memory when the launcher is closed. May cause a slight delay when reopening.": {
     "Free VRAM/memory when the launcher is closed. May cause a slight delay when reopening.": "Libera VRAM/memoria alla chiusura del launcher. Potrebbe causare un leggero ritardo alla riapertura."
@@ -3627,7 +3636,7 @@
     "Full Day & Month": "Data e Mese Estesi"
   },
   "Full Size": {
-    "Full Size": ""
+    "Full Size": "Grandezza Massima"
   },
   "Full command to execute": {
     "Full command to execute": "Comando completo da eseguire"
@@ -3681,7 +3690,7 @@
     "Gap between the end widgets and the bar ends (0 = edge-to-edge)": "Spazio tra i widget finali e le estremità della barra (0 = da bordo a bordo)"
   },
   "Gaps": {
-    "Gaps": ""
+    "Gaps": "Spaziature"
   },
   "Generate Override": {
     "Generate Override": "Genera Override"
@@ -3774,7 +3783,7 @@
     "Greeter only — format for the date on the login screen": "Solo per il greeter - formato della data sulla schermata di accesso"
   },
   "Greeter sync complete": {
-    "Greeter sync complete": ""
+    "Greeter sync complete": "Sincronizzazione greeter completata"
   },
   "Grid": {
     "Grid": "Griglia"
@@ -3875,14 +3884,11 @@
   "Hidden Apps": {
     "Hidden Apps": "App Nascoste"
   },
-  "Hidden Network": {
-    "Hidden Network": "Rete Nascosta"
-  },
   "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": {
     "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": "Le app nascoste non appariranno nel launcher. Fai clic col tasto destro su un'app e seleziona \"Nascondi App\" per nasconderla."
   },
   "Hidden until weather is enabled": {
-    "Hidden until weather is enabled": ""
+    "Hidden until weather is enabled": "Nascosto finché il meteo non è abilitato"
   },
   "Hide": {
     "Hide": "Nascondi"
@@ -3933,10 +3939,10 @@
     "Hide the bar when the pointer leaves even if a popout is still open": "Nascondi la barra quando il puntatore esce, anche se una finestra a comparsa è ancora aperta."
   },
   "Hide when no updates: OFF": {
-    "Hide when no updates: OFF": ""
+    "Hide when no updates: OFF": "Nascondi quando non ci sono aggiornamenti: OFF"
   },
   "Hide when no updates: ON": {
-    "Hide when no updates: ON": ""
+    "Hide when no updates: ON": "Nascondi quando non ci sono aggiornamenti: ON"
   },
   "High": {
     "High": "Alta"
@@ -4005,7 +4011,7 @@
     "Hourly Forecast Count": "Numero di Previsioni Orarie"
   },
   "Hover Popouts": {
-    "Hover Popouts": ""
+    "Hover Popouts": "Popup al Passaggio del Mouse"
   },
   "How often the server polls for new updates.": {
     "How often the server polls for new updates.": "Con quale frequenza il server verifica la presenza di nuovi aggiornamenti."
@@ -4015,6 +4021,9 @@
   },
   "How the background image is scaled": {
     "How the background image is scaled": "Come viene ridimensionata l'immagine di sfondo"
+  },
+  "How the wallpaper is scaled to fit the screen": {
+    "How the wallpaper is scaled to fit the screen": "Come viene scalato lo sfondo per adattarlo allo schermo"
   },
   "Humidity": {
     "Humidity": "Umidità"
@@ -4078,6 +4087,9 @@
   },
   "Identical alerts stack as separate notification cards": {
     "Identical alerts stack as separate notification cards": "Gli avvisi identici vengono visualizzati come schede di notifica separate."
+  },
+  "Identify": {
+    "Identify": "Identifica"
   },
   "Idle": {
     "Idle": "Inattivo"
@@ -4179,7 +4191,7 @@
     "Initialised": "Inizializzato"
   },
   "Inner Gaps": {
-    "Inner Gaps": ""
+    "Inner Gaps": "Spaziature Interne"
   },
   "Inner padding applied to each widget": {
     "Inner padding applied to each widget": "Spaziatura interna applicata a ciascun widget"
@@ -4302,10 +4314,10 @@
     "Jobs: ": "Stampe: "
   },
   "Jump to page": {
-    "Jump to page": ""
+    "Jump to page": "Vai alla pagina"
   },
   "Jump to page (1 - %1)": {
-    "Jump to page (1 - %1)": ""
+    "Jump to page (1 - %1)": "Vai alla pagina (1 - %1)"
   },
   "Keep Awake": {
     "Keep Awake": "Mantieni Attivo"
@@ -4545,7 +4557,7 @@
     "Lock Screen": "Schermata di Blocco"
   },
   "Lock Screen Appearance": {
-    "Lock Screen Appearance": ""
+    "Lock Screen Appearance": "Aspetto Schermata di Blocco"
   },
   "Lock Screen Display": {
     "Lock Screen Display": "Schermo della Schermata di Blocco"
@@ -4572,7 +4584,7 @@
     "Lock screen authentication changes apply automatically and may open a terminal when sudo authentication is required.": "Le modifiche all'autenticazione della schermata di blocco vengono applicate automaticamente e potrebbero aprire un terminale quando è richiesta l'autenticazione sudo."
   },
   "Lock screen font": {
-    "Lock screen font": ""
+    "Lock screen font": "Font schermata di blocco"
   },
   "Locked": {
     "Locked": "Bloccato"
@@ -4714,6 +4726,9 @@
   },
   "Material": {
     "Material": "Material"
+  },
+  "Material Battery Style": {
+    "Material Battery Style": "Stile Batteria Material"
   },
   "Material Colors": {
     "Material Colors": "Colori Material"
@@ -5133,7 +5148,7 @@
     "Next Transition": "Prossima Transizione"
   },
   "Next page": {
-    "Next page": ""
+    "Next page": "Pagina successiva"
   },
   "Night": {
     "Night": "Notte"
@@ -5270,14 +5285,14 @@
   "No checks passed": {
     "No checks passed": "Nessun controllo superato"
   },
+  "No codecs found": {
+    "No codecs found": ""
+  },
   "No custom theme file": {
     "No custom theme file": "Nessun file tema personalizzato"
   },
   "No devices": {
     "No devices": "Nessun dispositivo"
-  },
-  "No devices connected": {
-    "No devices connected": "Nessun dispositivo connesso"
   },
   "No devices found": {
     "No devices found": "Nessun dispositivo trovato"
@@ -5298,7 +5313,7 @@
     "No errors": "Nessun errore"
   },
   "No excluded players configured": {
-    "No excluded players configured": ""
+    "No excluded players configured": "Nessun lettore escluso configurato"
   },
   "No features enabled": {
     "No features enabled": "Nessuna funzionalità abilitata"
@@ -5409,7 +5424,7 @@
     "No saved clipboard entries": "Nessuna voce degli appunti salvata"
   },
   "No screenshot provided": {
-    "No screenshot provided": ""
+    "No screenshot provided": "Nessuno screenshot fornito"
   },
   "No session selected": {
     "No session selected": "Nessuna sessione selezionata"
@@ -5434,6 +5449,9 @@
   },
   "No trigger": {
     "No trigger": "Nessun attivatore"
+  },
+  "No updates available.": {
+    "No updates available.": "Nessun aggiornamento disponibile."
   },
   "No user specified": {
     "No user specified": "Nessun utente specificato"
@@ -5574,7 +5592,7 @@
     "Notify when limit is reached": "Notifica quando il limite viene raggiunto"
   },
   "Now playing and media controls": {
-    "Now playing and media controls": ""
+    "Now playing and media controls": "In riproduzione e controlli multimediali"
   },
   "Numbers": {
     "Numbers": "Numeri"
@@ -5664,7 +5682,7 @@
     "Open App": "Apri l'App"
   },
   "Open Delay": {
-    "Open Delay": ""
+    "Open Delay": "Ritardo Apertura"
   },
   "Open Dir": {
     "Open Dir": "Apri Cartella"
@@ -5674,9 +5692,6 @@
   },
   "Open From": {
     "Open From": "Apri Da"
-  },
-  "Open KDE Connect on your phone": {
-    "Open KDE Connect on your phone": "Apri KDE Connect sul tuo telefono"
   },
   "Open Notepad File": {
     "Open Notepad File": "Apri File Blocco Note"
@@ -5709,25 +5724,19 @@
     "Open search bar to find text": "Apri barra di ricerca per cercare testo"
   },
   "Open the launcher by hovering the emerge edge (when free of bar and dock)": {
-    "Open the launcher by hovering the emerge edge (when free of bar and dock)": ""
+    "Open the launcher by hovering the emerge edge (when free of bar and dock)": "Apri il launcher passando il cursore sul bordo di comparsa (quando libero da barra e dock)"
   },
   "Open widget popouts by hovering over the bar. Moving to another widget switches the popout.": {
-    "Open widget popouts by hovering over the bar. Moving to another widget switches the popout.": ""
+    "Open widget popouts by hovering over the bar. Moving to another widget switches the popout.": "Apri i popup dei widget passando il mouse sulla barra. Spostarsi su un altro widget cambia il popup."
   },
   "Open with...": {
     "Open with...": "Apri con..."
-  },
-  "Opening SMS": {
-    "Opening SMS": "Apertura SMS"
   },
   "Opening SMS app": {
     "Opening SMS app": "Apertura dell'app SMS"
   },
   "Opening file browser": {
     "Opening file browser": "Apertura del gestore file"
-  },
-  "Opening files": {
-    "Opening files": "Apertura dei file"
   },
   "Opening terminal to update greetd": {
     "Opening terminal to update greetd": "Apertura terminale per aggiornare greetd"
@@ -5766,7 +5775,7 @@
     "Other": "Altro"
   },
   "Outer Gaps": {
-    "Outer Gaps": ""
+    "Outer Gaps": "Spaziature Esterne"
   },
   "Outline": {
     "Outline": "Bordo"
@@ -5793,7 +5802,7 @@
     "Overflow": "Overflow"
   },
   "Overlay": {
-    "Overlay": ""
+    "Overlay": "Sovrapposizione"
   },
   "Overridden by config": {
     "Overridden by config": "Sovrascritto dalla configurazione"
@@ -5806,9 +5815,6 @@
   },
   "Override Corner Radius": {
     "Override Corner Radius": "Sovrascrivi Raggio Angoli"
-  },
-  "Override Gaps": {
-    "Override Gaps": "Sovrascrivi Spaziature"
   },
   "Override global layout settings for this output": {
     "Override global layout settings for this output": "Sovrascrivi le impostazioni di layout globali per questa uscita"
@@ -5930,6 +5936,9 @@
   "Paste": {
     "Paste": "Incolla"
   },
+  "Paste failed: %1": {
+    "Paste failed: %1": "Impossibile incollare: %1"
+  },
   "Path copied to clipboard": {
     "Path copied to clipboard": "Percorso copiato negli appunti"
   },
@@ -6010,9 +6019,6 @@
   },
   "Ping": {
     "Ping": "Ping"
-  },
-  "Ping sent": {
-    "Ping sent": "Ping inviato"
   },
   "Ping sent to": {
     "Ping sent to": "Ping inviato a"
@@ -6096,7 +6102,7 @@
     "Plugin Visibility": "Visibilità Plugin"
   },
   "Plugin dependency missing": {
-    "Plugin dependency missing": ""
+    "Plugin dependency missing": "Dipendenza del plugin mancante"
   },
   "Plugin disabled: %1": {
     "Plugin disabled: %1": "Plugin disabilitato: %1"
@@ -6194,6 +6200,9 @@
   "Power Profile Degradation": {
     "Power Profile Degradation": "Degrado Profilo Energetico"
   },
+  "Power Profiles & Saving": {
+    "Power Profiles & Saving": "Profili Energetici e Risparmio"
+  },
   "Power Profiles Auto-Switching": {
     "Power Profiles Auto-Switching": "Commutazione Automatica Profili Energetici"
   },
@@ -6240,7 +6249,7 @@
     "Press 'n' or click 'New Session' to create one": "Premi \"n\" o fai clic su \"Nuova Sessione\" per crearne una"
   },
   "Press Ctrl+N or click 'New Session' to create one": {
-    "Press Ctrl+N or click 'New Session' to create one": ""
+    "Press Ctrl+N or click 'New Session' to create one": "Premi Ctrl+N o fai clic su \"Nuova Sessione\" per crearne una"
   },
   "Press Enter and the audio system will restart to apply the change": {
     "Press Enter and the audio system will restart to apply the change": "Premi Invio e il sistema audio si riavvierà per applicare la modifica"
@@ -6258,7 +6267,7 @@
     "Prevent screen timeout": "Disattiva sospensione schermo"
   },
   "Prevent specific applications from displaying in the media controllers (e.g., browser audio streams, background tools). Matches player identity or desktop file name case-insensitively.": {
-    "Prevent specific applications from displaying in the media controllers (e.g., browser audio streams, background tools). Matches player identity or desktop file name case-insensitively.": ""
+    "Prevent specific applications from displaying in the media controllers (e.g., browser audio streams, background tools). Matches player identity or desktop file name case-insensitively.": "Impedisci a specifiche applicazioni di essere visualizzate nei controller multimediali (es. flussi audio del browser, strumenti in background). Corrisponde all'identità del lettore o al nome del file desktop senza distinzione tra maiuscole e minuscole."
   },
   "Preview": {
     "Preview": "Anteprima"
@@ -6270,7 +6279,7 @@
     "Previous": "Precedente"
   },
   "Previous page": {
-    "Previous page": ""
+    "Previous page": "Pagina precedente"
   },
   "Primary": {
     "Primary": "Primario"
@@ -6489,7 +6498,7 @@
     "Reject Jobs": "Rifiuta Stampe"
   },
   "Related: %1": {
-    "Related: %1": ""
+    "Related: %1": "Correlati: %1"
   },
   "Release": {
     "Release": "Rilascio"
@@ -6582,7 +6591,7 @@
     "Rename Workspace": "Rinomina Spazio di Lavoro"
   },
   "Reorder & Group": {
-    "Reorder & Group": ""
+    "Reorder & Group": "Riordina e Raggruppa"
   },
   "Repeat": {
     "Repeat": "Ripeti"
@@ -6621,7 +6630,7 @@
     "Requires a newer version of Quickshell": "Richiede una versione più recente di Quickshell"
   },
   "Requires greetd, dms-greeter, and your user in the greeter group (plus fprintd/pam_fprintd for fingerprint, pam_u2f for security keys). Auth changes apply automatically and may open a terminal for sudo.": {
-    "Requires greetd, dms-greeter, and your user in the greeter group (plus fprintd/pam_fprintd for fingerprint, pam_u2f for security keys). Auth changes apply automatically and may open a terminal for sudo.": ""
+    "Requires greetd, dms-greeter, and your user in the greeter group (plus fprintd/pam_fprintd for fingerprint, pam_u2f for security keys). Auth changes apply automatically and may open a terminal for sudo.": "Richiede greetd, dms-greeter e il tuo utente nel gruppo greeter (oltre a fprintd/pam_fprintd per l'impronta digitale e pam_u2f per le chiavi di sicurezza). Le modifiche all'autenticazione vengono applicate automaticamente e potrebbero aprire un terminale per sudo."
   },
   "Requires night mode support": {
     "Requires night mode support": "Richiede il supporto alla modalità notturna"
@@ -6876,7 +6885,7 @@
     "Screen sharing": "Condivisione schermo"
   },
   "Screenshot unavailable": {
-    "Screenshot unavailable": ""
+    "Screenshot unavailable": "Screenshot non disponibile"
   },
   "Scroll": {
     "Scroll": "Scorrimento"
@@ -7038,7 +7047,7 @@
     "Select at least one provider": "Seleziona almeno un fornitore"
   },
   "Select background image": {
-    "Select background image": ""
+    "Select background image": "Seleziona immagine di sfondo"
   },
   "Select device": {
     "Select device": "Seleziona dispositivo"
@@ -7056,7 +7065,7 @@
     "Select greeter background image": "Seleziona l'immagine di sfondo del greeter"
   },
   "Select lock screen background image": {
-    "Select lock screen background image": ""
+    "Select lock screen background image": "Seleziona immagine di sfondo per la schermata di blocco"
   },
   "Select monitor to configure wallpaper": {
     "Select monitor to configure wallpaper": "Seleziona lo schermo per configurare lo sfondo"
@@ -7110,13 +7119,13 @@
     "Separate": "Separato"
   },
   "Separate Appearance for Unfocused Display(s)": {
-    "Separate Appearance for Unfocused Display(s)": ""
+    "Separate Appearance for Unfocused Display(s)": "Aspetto Separato per Schermo(i) Inattivo(i)"
   },
   "Separate Light & Dark Themes": {
     "Separate Light & Dark Themes": "Separa Temi Chiari e Scuri"
   },
   "Separate appearance for unfocused displays is not supported on this compositor.": {
-    "Separate appearance for unfocused displays is not supported on this compositor.": ""
+    "Separate appearance for unfocused displays is not supported on this compositor.": "L'aspetto separato per gli schermi inattivi non è supportato su questo compositor."
   },
   "Separator": {
     "Separator": "Separatore"
@@ -7167,7 +7176,7 @@
     "Setting": "Impostazione"
   },
   "Setting up...": {
-    "Setting up...": ""
+    "Setting up...": "Configurazione..."
   },
   "Settings": {
     "Settings": "Impostazioni"
@@ -7217,9 +7226,6 @@
   "Share Text": {
     "Share Text": "Condividi Testo"
   },
-  "Share URL": {
-    "Share URL": "Condividi URL"
-  },
   "Shared": {
     "Shared": "Condiviso"
   },
@@ -7239,7 +7245,7 @@
     "Shortcut (%1)": "Scorciatoia (%1)"
   },
   "Shortcut that opens this settings window": {
-    "Shortcut that opens this settings window": ""
+    "Shortcut that opens this settings window": "Scorciatoia che apre questa finestra di impostazioni"
   },
   "Shortcuts": {
     "Shortcuts": "Scorciatoie"
@@ -7479,7 +7485,7 @@
     "Show foreground surfaces on blurred panels for stronger contrast": "Mostra le superfici in primo piano sui pannelli sfocati per ottenere un contrasto più marcato"
   },
   "Show foreground surfaces on panels for stronger contrast": {
-    "Show foreground surfaces on panels for stronger contrast": ""
+    "Show foreground surfaces on panels for stronger contrast": "Mostra superfici in primo piano sui pannelli per un contrasto più forte"
   },
   "Show in GB": {
     "Show in GB": "Mostra in GB"
@@ -7653,7 +7659,7 @@
     "Sort By": "Ordina Per"
   },
   "Sort wallpapers": {
-    "Sort wallpapers": ""
+    "Sort wallpapers": "Ordina sfondi"
   },
   "Sorting & Layout": {
     "Sorting & Layout": "Ordinamento e Layout"
@@ -7674,7 +7680,7 @@
     "Space between windows": "Spazio tra le finestre"
   },
   "Space between windows and screen edges": {
-    "Space between windows and screen edges": ""
+    "Space between windows and screen edges": "Spazio tra le finestre e i bordi dello schermo"
   },
   "Spacer": {
     "Spacer": "Distanziatore"
@@ -7785,10 +7791,10 @@
     "Surface Behavior": "Comportamento delle Superfici"
   },
   "Surface Border Color": {
-    "Surface Border Color": ""
+    "Surface Border Color": "Colore Bordo Superficie"
   },
   "Surface Border Opacity": {
-    "Surface Border Opacity": ""
+    "Surface Border Opacity": "Opacità Bordo Superficie"
   },
   "Surface Container": {
     "Surface Container": "Contenitore Superficie"
@@ -7854,7 +7860,7 @@
     "Sync Position Across Screens": "Sincronizza la Posizione tra gli Schermi"
   },
   "Sync applies your theme and settings to the login screen. Other users should run dms greeter sync --profile instead of a full sync. Authentication changes apply automatically.": {
-    "Sync applies your theme and settings to the login screen. Other users should run dms greeter sync --profile instead of a full sync. Authentication changes apply automatically.": ""
+    "Sync applies your theme and settings to the login screen. Other users should run dms greeter sync --profile instead of a full sync. Authentication changes apply automatically.": "La sincronizzazione applica il tuo tema e le tue impostazioni alla schermata di accesso. Gli altri utenti dovrebbero eseguire dms greeter sync --profile invece di una sincronizzazione completa. Le modifiche di autenticazione vengono applicate automaticamente."
   },
   "Sync completed successfully.": {
     "Sync completed successfully.": "Sincronizzazione completata con successo."
@@ -7869,10 +7875,10 @@
     "Sync needs sudo authentication. Opening terminal so you can use password or fingerprint.": "La sincronizzazione richiede l'autenticazione sudo. Apertura del terminale per poter usare password o impronta digitale."
   },
   "Sync to apply": {
-    "Sync to apply": ""
+    "Sync to apply": "Sincronizza per applicare"
   },
   "Syncing...": {
-    "Syncing...": ""
+    "Syncing...": "Sincronizzazione..."
   },
   "System": {
     "System": "Sistema"
@@ -8013,7 +8019,7 @@
     "Text Rendering": "Rendering del Testo"
   },
   "The 'boregard' tool is not installed or not on your PATH.\n\nInstall it from https://danklinux.com, then re-enable this plugin.": {
-    "The 'boregard' tool is not installed or not on your PATH.\n\nInstall it from https://danklinux.com, then re-enable this plugin.": ""
+    "The 'boregard' tool is not installed or not on your PATH.\n\nInstall it from https://danklinux.com, then re-enable this plugin.": "Lo strumento 'boregard' non è installato o non è nel tuo PATH.\n\nInstallalo da https://danklinux.com, poi riattiva questo plugin."
   },
   "The 'dgop' tool is required for system monitoring.\nPlease install dgop to use this feature.": {
     "The 'dgop' tool is required for system monitoring.\nPlease install dgop to use this feature.": "Lo strumento \"dgop\" è necessario per il monitoraggio del sistema.\nInstalla dgop per utilizzare questa funzionalità."
@@ -8082,7 +8088,7 @@
     "This install is still using hyprland.conf. Run dms setup to migrate before editing display settings.": "Questa installazione usa ancora hyprland.conf. Esegui dms setup per migrare prima di modificare le impostazioni del display."
   },
   "This install is still using hyprland.conf. Run dms setup to migrate before editing layout settings.": {
-    "This install is still using hyprland.conf. Run dms setup to migrate before editing layout settings.": ""
+    "This install is still using hyprland.conf. Run dms setup to migrate before editing layout settings.": "Questa installazione usa ancora hyprland.conf. Esegui dms setup per migrare prima di modificare le impostazioni di layout."
   },
   "This install is still using hyprland.conf. Run dms setup to migrate before editing shortcuts in Settings.": {
     "This install is still using hyprland.conf. Run dms setup to migrate before editing shortcuts in Settings.": "Questa installazione usa ancora hyprland.conf. Esegui dms setup per migrare prima di modificare le scorciatoie nelle Impostazioni."
@@ -8123,8 +8129,14 @@
   "Tile H": {
     "Tile H": "Affianca Orizz."
   },
+  "Tile Horizontally": {
+    "Tile Horizontally": "Affianca Orizzontalmente"
+  },
   "Tile V": {
     "Tile V": "Affianca Vert."
+  },
+  "Tile Vertically": {
+    "Tile Vertically": "Affianca Verticalmente"
   },
   "Tiled": {
     "Tiled": "Affiancato"
@@ -8151,7 +8163,7 @@
     "Time remaining: %1": "Tempo rimanente: %1"
   },
   "Time to rest on a widget before its popout opens": {
-    "Time to rest on a widget before its popout opens": ""
+    "Time to rest on a widget before its popout opens": "Tempo di attesa su un widget prima che il suo popup si apra"
   },
   "Time to wait before hiding after the pointer leaves": {
     "Time to wait before hiding after the pointer leaves": "Tempo prima di nascondere dopo che il puntatore se ne va."
@@ -8382,7 +8394,7 @@
     "Unfocused Color": "Colore Inattivo"
   },
   "Unfocused Display(s)": {
-    "Unfocused Display(s)": ""
+    "Unfocused Display(s)": "Schermo(i) Inattivo(i)"
   },
   "Ungrouped": {
     "Ungrouped": "Non Raggruppato"
@@ -8428,6 +8440,9 @@
   },
   "Unknown GPU": {
     "Unknown GPU": "GPU Sconosciuta"
+  },
+  "Unknown Model": {
+    "Unknown Model": "Modello Sconosciuto"
   },
   "Unknown Monitor": {
     "Unknown Monitor": "Schermo Sconosciuto"
@@ -8507,6 +8522,12 @@
   "Update failed: %1": {
     "Update failed: %1": "Aggiornamento non riuscito: %1"
   },
+  "Updating %1...": {
+    "Updating %1...": "Aggiornamento di %1..."
+  },
+  "Updating plugins...": {
+    "Updating plugins...": "Aggiornamento plugin..."
+  },
   "Upgrading...": {
     "Upgrading...": "Aggiornamento..."
   },
@@ -8559,7 +8580,7 @@
     "Use System Theme": "Usa Tema di Sistema"
   },
   "Use a custom image for the lock screen, or leave empty to use your desktop wallpaper.": {
-    "Use a custom image for the lock screen, or leave empty to use your desktop wallpaper.": ""
+    "Use a custom image for the lock screen, or leave empty to use your desktop wallpaper.": "Utilizza un'immagine personalizzata per la schermata di blocco, oppure lascia vuoto per usare lo sfondo del desktop."
   },
   "Use a custom image for the login screen, or leave empty to use your desktop wallpaper.": {
     "Use a custom image for the login screen, or leave empty to use your desktop wallpaper.": "Usa un'immagine personalizzata per la schermata di blocco, o lascia vuoto per utilizzare lo sfondo del tuo desktop."
@@ -8585,9 +8606,6 @@
   "Use custom border/focus-ring width": {
     "Use custom border/focus-ring width": "Usa larghezza bordo/cornice di focus personalizzata"
   },
-  "Use custom gaps instead of bar spacing": {
-    "Use custom gaps instead of bar spacing": "Usa spaziature personalizzate invece di quelle della barra"
-  },
   "Use custom window radius instead of theme radius": {
     "Use custom window radius instead of theme radius": "Usa raggio personalizzato per le finestre invece di quello del tema"
   },
@@ -8598,7 +8616,7 @@
     "Use different icon themes for light and dark mode": "Usa temi icone diversi per modalità chiara e scura"
   },
   "Use different workspace colors on displays that are not focused": {
-    "Use different workspace colors on displays that are not focused": ""
+    "Use different workspace colors on displays that are not focused": "Usa colori diversi per gli spazi di lavoro sugli schermi non attivi"
   },
   "Use fingerprint authentication for the lock screen.": {
     "Use fingerprint authentication for the lock screen.": "Usa l'autenticazione tramite impronta digitale per la schermata di blocco."
@@ -9039,13 +9057,13 @@
     "XWayland": "XWayland"
   },
   "Xray Blur Effect": {
-    "Xray Blur Effect": ""
+    "Xray Blur Effect": "Effetto Sfocatura Xray"
   },
   "Xray blurs only the wallpaper (efficient) and is the default when Blur is on. Set Xray to Off for regular full blur of everything beneath the window (more expensive).": {
     "Xray blurs only the wallpaper (efficient) and is the default when Blur is on. Set Xray to Off for regular full blur of everything beneath the window (more expensive).": "I Raggi X sfocano solo lo sfondo (efficiente) ed è l'impostazione predefinita quando la Sfocatura è attiva. Imposta Raggi X su Spento per una normale sfocatura completa di tutto ciò che si trova sotto la finestra (più costoso)."
   },
   "Xray options are in Compositor → Layout": {
-    "Xray options are in Compositor → Layout": ""
+    "Xray options are in Compositor → Layout": "Le opzioni Xray sono in Compositor → Layout"
   },
   "Y": {
     "Y": "Y"
@@ -9099,7 +9117,7 @@
     "attached": "agganciato"
   },
   "boregard is required": {
-    "boregard is required": ""
+    "boregard is required": "boregard è richiesto"
   },
   "brandon": {
     "brandon": "brandon"
@@ -9136,9 +9154,6 @@
   },
   "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": {
     "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": "dms è una shell desktop moderna e altamente personalizzabile con un design ispirato a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">Material 3</a>.<br /><br/>È costruita con <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, un framework QT6 per la creazione di shell desktop, e <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, un linguaggio di programmazione compilato e staticamente tipizzato."
-  },
-  "dms/cursor config exists but is not included. Cursor settings won't apply.": {
-    "dms/cursor config exists but is not included. Cursor settings won't apply.": "Il file di configurazione dms/cursor esiste ma non è incluso. Le impostazioni del cursore non verranno applicate."
   },
   "e.g. /usr/bin/my-script --flag": {
     "e.g. /usr/bin/my-script --flag": "es. /usr/bin/my-script --flag"
@@ -9279,7 +9294,7 @@
     "remote": "remoto"
   },
   "reviewed": {
-    "reviewed": ""
+    "reviewed": "revisionato"
   },
   "seconds": {
     "seconds": "secondi"
@@ -9289,6 +9304,9 @@
   },
   "source": {
     "source": "sorgente"
+  },
+  "the Qt 6 Multimedia QML module": {
+    "the Qt 6 Multimedia QML module": "il modulo QML Qt 6 Multimedia"
   },
   "this app": {
     "this app": "questa app"
@@ -9319,9 +9337,6 @@
   },
   "verified": {
     "verified": "verificato"
-  },
-  "wtype not available - install wtype for paste support": {
-    "wtype not available - install wtype for paste support": "wtype non disponibile – installa wtype per il supporto alla funzione incolla"
   },
   "• Install only from trusted sources": {
     "• Install only from trusted sources": "• Installa solo da sorgenti fidate"

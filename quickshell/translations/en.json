@@ -158,7 +158,7 @@
   {
     "term": "%1 tasks",
     "context": "%1 tasks",
-    "reference": "Modules/DankDash/Overview/CalendarOverviewCard.qml:343",
+    "reference": "Modules/DankDash/Overview/CalendarOverviewCard.qml:313",
     "comment": "task count next to a date, %1 is the number of tasks"
   },
   {
@@ -182,13 +182,13 @@
   {
     "term": "%1 wallpaper  •  %2 / %3",
     "context": "%1 wallpaper  •  %2 / %3",
-    "reference": "Modules/DankDash/WallpaperTab.qml:646",
+    "reference": "Modules/DankDash/WallpaperTab.qml:657",
     "comment": ""
   },
   {
     "term": "%1 wallpapers  •  %2 / %3",
     "context": "%1 wallpapers  •  %2 / %3",
-    "reference": "Modules/DankDash/WallpaperTab.qml:646",
+    "reference": "Modules/DankDash/WallpaperTab.qml:657",
     "comment": ""
   },
   {
@@ -236,7 +236,7 @@
   {
     "term": "(Default)",
     "context": "(Default)",
-    "reference": "Modules/Settings/WallpaperTab.qml:879, Modules/Settings/WallpaperTab.qml:894, Modules/Settings/WallpaperTab.qml:901",
+    "reference": "Modules/Settings/WallpaperTab.qml:846, Modules/Settings/WallpaperTab.qml:861, Modules/Settings/WallpaperTab.qml:868",
     "comment": "default monitor label suffix"
   },
   {
@@ -260,7 +260,7 @@
   {
     "term": "0 = square corners",
     "context": "0 = square corners",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1850",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1839",
     "comment": ""
   },
   {
@@ -278,13 +278,13 @@
   {
     "term": "1 hour",
     "context": "1 hour",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016, Modules/Settings/PowerSleepTab.qml:10, Modules/ControlCenter/Details/DoNotDisturbDetail.qml:71",
+    "reference": "Modules/Settings/WallpaperTab.qml:983, Modules/Settings/PowerSleepTab.qml:10, Modules/ControlCenter/Details/DoNotDisturbDetail.qml:71",
     "comment": "wallpaper interval"
   },
   {
     "term": "1 hour 30 minutes",
     "context": "1 hour 30 minutes",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016, Modules/Settings/PowerSleepTab.qml:10",
+    "reference": "Modules/Settings/WallpaperTab.qml:983, Modules/Settings/PowerSleepTab.qml:10",
     "comment": "wallpaper interval"
   },
   {
@@ -296,7 +296,7 @@
   {
     "term": "1 minute",
     "context": "1 minute",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016, Modules/Settings/PowerSleepTab.qml:10, Modules/Settings/NotificationsTab.qml:65, Modules/Notifications/Center/NotificationSettings.qml:71",
+    "reference": "Modules/Settings/WallpaperTab.qml:983, Modules/Settings/PowerSleepTab.qml:10, Modules/Settings/NotificationsTab.qml:65, Modules/Notifications/Center/NotificationSettings.qml:71",
     "comment": "wallpaper interval"
   },
   {
@@ -314,7 +314,7 @@
   {
     "term": "1 task",
     "context": "1 task",
-    "reference": "Modules/DankDash/Overview/CalendarOverviewCard.qml:343",
+    "reference": "Modules/DankDash/Overview/CalendarOverviewCard.qml:313",
     "comment": "task count next to a date"
   },
   {
@@ -332,7 +332,7 @@
   {
     "term": "10 seconds",
     "context": "10 seconds",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016, Modules/Settings/PowerSleepTab.qml:103, Modules/Settings/PowerSleepTab.qml:129, Modules/Settings/PowerSleepTab.qml:512, Modules/Settings/NotificationsTab.qml:53, Modules/Notifications/Center/NotificationSettings.qml:59",
+    "reference": "Modules/Settings/WallpaperTab.qml:983, Modules/Settings/PowerSleepTab.qml:103, Modules/Settings/PowerSleepTab.qml:129, Modules/Settings/PowerSleepTab.qml:512, Modules/Settings/NotificationsTab.qml:53, Modules/Notifications/Center/NotificationSettings.qml:59",
     "comment": "wallpaper interval"
   },
   {
@@ -344,7 +344,7 @@
   {
     "term": "12 hours",
     "context": "12 hours",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016",
+    "reference": "Modules/Settings/WallpaperTab.qml:983",
     "comment": "wallpaper interval"
   },
   {
@@ -368,13 +368,13 @@
   {
     "term": "15 minutes",
     "context": "15 minutes",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016, Modules/Settings/PowerSleepTab.qml:10",
+    "reference": "Modules/Settings/WallpaperTab.qml:983, Modules/Settings/PowerSleepTab.qml:10",
     "comment": "wallpaper interval"
   },
   {
     "term": "15 seconds",
     "context": "15 seconds",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016, Modules/Settings/PowerSleepTab.qml:10, Modules/Settings/PowerSleepTab.qml:103, Modules/Settings/PowerSleepTab.qml:129, Modules/Settings/NotificationsTab.qml:57, Modules/Notifications/Center/NotificationSettings.qml:63",
+    "reference": "Modules/Settings/WallpaperTab.qml:983, Modules/Settings/PowerSleepTab.qml:10, Modules/Settings/PowerSleepTab.qml:103, Modules/Settings/PowerSleepTab.qml:129, Modules/Settings/NotificationsTab.qml:57, Modules/Notifications/Center/NotificationSettings.qml:63",
     "comment": "wallpaper interval"
   },
   {
@@ -386,7 +386,7 @@
   {
     "term": "2 hours",
     "context": "2 hours",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016, Modules/Settings/PowerSleepTab.qml:10",
+    "reference": "Modules/Settings/WallpaperTab.qml:983, Modules/Settings/PowerSleepTab.qml:10",
     "comment": "wallpaper interval"
   },
   {
@@ -410,13 +410,13 @@
   {
     "term": "20 seconds",
     "context": "20 seconds",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016, Modules/Settings/PowerSleepTab.qml:103, Modules/Settings/PowerSleepTab.qml:129",
+    "reference": "Modules/Settings/WallpaperTab.qml:983, Modules/Settings/PowerSleepTab.qml:103, Modules/Settings/PowerSleepTab.qml:129",
     "comment": "wallpaper interval"
   },
   {
     "term": "24-Hour Format",
     "context": "24-Hour Format",
-    "reference": "Modules/Settings/WallpaperTab.qml:1154, Modules/Settings/TimeWeatherTab.qml:53",
+    "reference": "Modules/Settings/WallpaperTab.qml:1121, Modules/Settings/TimeWeatherTab.qml:53",
     "comment": ""
   },
   {
@@ -428,7 +428,7 @@
   {
     "term": "25 seconds",
     "context": "25 seconds",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016",
+    "reference": "Modules/Settings/WallpaperTab.qml:983",
     "comment": "wallpaper interval"
   },
   {
@@ -452,7 +452,7 @@
   {
     "term": "3 hours",
     "context": "3 hours",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016, Modules/Settings/PowerSleepTab.qml:10, Modules/ControlCenter/Details/DoNotDisturbDetail.qml:75",
+    "reference": "Modules/Settings/WallpaperTab.qml:983, Modules/Settings/PowerSleepTab.qml:10, Modules/ControlCenter/Details/DoNotDisturbDetail.qml:75",
     "comment": "wallpaper interval"
   },
   {
@@ -488,19 +488,19 @@
   {
     "term": "30 minutes",
     "context": "30 minutes",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016, Modules/Settings/PowerSleepTab.qml:10",
+    "reference": "Modules/Settings/WallpaperTab.qml:983, Modules/Settings/PowerSleepTab.qml:10",
     "comment": "wallpaper interval"
   },
   {
     "term": "30 seconds",
     "context": "30 seconds",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016, Modules/Settings/PowerSleepTab.qml:10, Modules/Settings/PowerSleepTab.qml:103, Modules/Settings/PowerSleepTab.qml:129, Modules/Settings/NotificationsTab.qml:61, Modules/Notifications/Center/NotificationSettings.qml:67",
+    "reference": "Modules/Settings/WallpaperTab.qml:983, Modules/Settings/PowerSleepTab.qml:10, Modules/Settings/PowerSleepTab.qml:103, Modules/Settings/PowerSleepTab.qml:129, Modules/Settings/NotificationsTab.qml:61, Modules/Notifications/Center/NotificationSettings.qml:67",
     "comment": "wallpaper interval"
   },
   {
     "term": "35 seconds",
     "context": "35 seconds",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016",
+    "reference": "Modules/Settings/WallpaperTab.qml:983",
     "comment": "wallpaper interval"
   },
   {
@@ -512,7 +512,7 @@
   {
     "term": "4 hours",
     "context": "4 hours",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016",
+    "reference": "Modules/Settings/WallpaperTab.qml:983",
     "comment": "wallpaper interval"
   },
   {
@@ -524,13 +524,13 @@
   {
     "term": "40 seconds",
     "context": "40 seconds",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016",
+    "reference": "Modules/Settings/WallpaperTab.qml:983",
     "comment": "wallpaper interval"
   },
   {
     "term": "45 seconds",
     "context": "45 seconds",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016",
+    "reference": "Modules/Settings/WallpaperTab.qml:983",
     "comment": "wallpaper interval"
   },
   {
@@ -542,19 +542,19 @@
   {
     "term": "5 minutes",
     "context": "5 minutes",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016, Modules/Settings/WallpaperTab.qml:1040, Modules/Settings/WallpaperTab.qml:1064, Modules/Settings/PowerSleepTab.qml:10, Modules/Settings/NotificationsTab.qml:73, Modules/Notifications/Center/NotificationSettings.qml:79",
+    "reference": "Modules/Settings/WallpaperTab.qml:983, Modules/Settings/WallpaperTab.qml:1007, Modules/Settings/WallpaperTab.qml:1031, Modules/Settings/PowerSleepTab.qml:10, Modules/Settings/NotificationsTab.qml:73, Modules/Notifications/Center/NotificationSettings.qml:79",
     "comment": "wallpaper interval"
   },
   {
     "term": "5 seconds",
     "context": "5 seconds",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016, Modules/Settings/PowerSleepTab.qml:103, Modules/Settings/PowerSleepTab.qml:114, Modules/Settings/PowerSleepTab.qml:129, Modules/Settings/PowerSleepTab.qml:140, Modules/Settings/PowerSleepTab.qml:512, Modules/Settings/NotificationsTab.qml:45, Modules/Settings/NotificationsTab.qml:160, Modules/Notifications/Center/NotificationSettings.qml:51, Modules/Notifications/Center/NotificationSettings.qml:90",
+    "reference": "Modules/Settings/WallpaperTab.qml:983, Modules/Settings/PowerSleepTab.qml:103, Modules/Settings/PowerSleepTab.qml:114, Modules/Settings/PowerSleepTab.qml:129, Modules/Settings/PowerSleepTab.qml:140, Modules/Settings/PowerSleepTab.qml:512, Modules/Settings/NotificationsTab.qml:45, Modules/Settings/NotificationsTab.qml:160, Modules/Notifications/Center/NotificationSettings.qml:51, Modules/Notifications/Center/NotificationSettings.qml:90",
     "comment": "wallpaper interval"
   },
   {
     "term": "50 seconds",
     "context": "50 seconds",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016",
+    "reference": "Modules/Settings/WallpaperTab.qml:983",
     "comment": "wallpaper interval"
   },
   {
@@ -566,13 +566,13 @@
   {
     "term": "55 seconds",
     "context": "55 seconds",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016",
+    "reference": "Modules/Settings/WallpaperTab.qml:983",
     "comment": "wallpaper interval"
   },
   {
     "term": "6 hours",
     "context": "6 hours",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016",
+    "reference": "Modules/Settings/WallpaperTab.qml:983",
     "comment": "wallpaper interval"
   },
   {
@@ -590,7 +590,7 @@
   {
     "term": "8 hours",
     "context": "8 hours",
-    "reference": "Modules/Settings/WallpaperTab.qml:1016, Modules/ControlCenter/Details/DoNotDisturbDetail.qml:79",
+    "reference": "Modules/Settings/WallpaperTab.qml:983, Modules/ControlCenter/Details/DoNotDisturbDetail.qml:79",
     "comment": "wallpaper interval"
   },
   {
@@ -776,7 +776,7 @@
   {
     "term": "Active",
     "context": "Active",
-    "reference": "Modals/WindowRuleModal.qml:879, Modules/DankDash/MediaDropdownOverlay.qml:368, Modules/Settings/ThemeColorsTab.qml:1542, Modules/Settings/NetworkEthernetTab.qml:435, Modules/Settings/WindowRulesTab.qml:48, Modules/ControlCenter/Details/AudioInputDetail.qml:256, Modules/ControlCenter/Details/AudioOutputDetail.qml:265, Modules/ControlCenter/BuiltinPlugins/DisplayProfilesWidget.qml:196",
+    "reference": "Modals/WindowRuleModal.qml:879, Modules/DankDash/MediaDropdownOverlay.qml:372, Modules/Settings/ThemeColorsTab.qml:1531, Modules/Settings/NetworkEthernetTab.qml:435, Modules/Settings/WindowRulesTab.qml:48, Modules/ControlCenter/Details/AudioInputDetail.qml:256, Modules/ControlCenter/Details/AudioOutputDetail.qml:265, Modules/ControlCenter/BuiltinPlugins/DisplayProfilesWidget.qml:196",
     "comment": ""
   },
   {
@@ -800,7 +800,7 @@
   {
     "term": "Active tile background and icon color",
     "context": "Active tile background and icon color",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1678",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1667",
     "comment": "control center tile color setting description"
   },
   {
@@ -914,7 +914,7 @@
   {
     "term": "Add a task...",
     "context": "Add a task...",
-    "reference": "Modules/DankDash/Overview/CalendarOverviewCard.qml:1163",
+    "reference": "Modules/DankDash/Overview/CalendarOverviewCard.qml:1048",
     "comment": "placeholder in the new-task input field"
   },
   {
@@ -986,7 +986,7 @@
   {
     "term": "Adjusts contrast of generated colors (-100 = minimum, 0 = standard, 100 = maximum)",
     "context": "Adjusts contrast of generated colors (-100 = minimum, 0 = standard, 100 = maximum)",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:656",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:645",
     "comment": ""
   },
   {
@@ -1016,7 +1016,7 @@
   {
     "term": "All",
     "context": "All",
-    "reference": "Modals/ProcessListModal.qml:383, Services/AppSearchService.qml:724, Services/AppSearchService.qml:745, dms-plugins/DankStickerSearch/DankStickerSearch.qml:101, Modals/DankLauncherV2/Controller.qml:745, Modals/DankLauncherV2/SpotlightLauncherContent.qml:440, Modals/DankLauncherV2/LauncherContent.qml:362, Modals/DankLauncherV2/LauncherContent.qml:651, Modals/Clipboard/ClipboardContent.qml:16, Modules/ProcessList/ProcessListPopout.qml:169, Modules/Settings/WidgetsTabSection.qml:3962, Modules/Settings/WidgetsTabSection.qml:4018, Modules/Settings/PluginBrowser.qml:194, Modules/Settings/KeybindsTab.qml:458, Modules/Settings/DisplayConfig/NiriOutputSettings.qml:103, Modules/Settings/DisplayConfig/NiriOutputSettings.qml:106, Modules/Settings/DisplayConfig/NiriOutputSettings.qml:118, Modules/ControlCenter/BuiltinPlugins/TailscaleWidget.qml:254, Modules/Notifications/Center/HistoryNotificationList.qml:87",
+    "reference": "Modals/ProcessListModal.qml:383, Services/AppSearchService.qml:728, Services/AppSearchService.qml:749, dms-plugins/DankStickerSearch/DankStickerSearch.qml:101, Modals/DankLauncherV2/Controller.qml:783, Modals/DankLauncherV2/SpotlightLauncherContent.qml:440, Modals/DankLauncherV2/LauncherContent.qml:334, Modals/DankLauncherV2/LauncherContent.qml:623, Modals/Clipboard/ClipboardContent.qml:16, Modules/ProcessList/ProcessListPopout.qml:169, Modules/Settings/WidgetsTabSection.qml:3962, Modules/Settings/WidgetsTabSection.qml:4018, Modules/Settings/PluginBrowser.qml:194, Modules/Settings/KeybindsTab.qml:458, Modules/Settings/DisplayConfig/NiriOutputSettings.qml:103, Modules/Settings/DisplayConfig/NiriOutputSettings.qml:106, Modules/Settings/DisplayConfig/NiriOutputSettings.qml:118, Modules/ControlCenter/BuiltinPlugins/TailscaleWidget.qml:254, Modules/Notifications/Center/HistoryNotificationList.qml:87",
     "comment": "Tailscale filter: all devices | notification history filter | plugin browser category filter"
   },
   {
@@ -1028,7 +1028,7 @@
   {
     "term": "All day",
     "context": "All day",
-    "reference": "Modules/DankDash/Overview/CalendarEventEditor.qml:205, Modules/DankDash/Overview/CalendarEventDetail.qml:88, Modules/DankDash/Overview/CalendarOverviewCard.qml:989",
+    "reference": "Modules/DankDash/Overview/CalendarEventEditor.qml:205, Modules/DankDash/Overview/CalendarEventDetail.qml:88, Modules/DankDash/Overview/CalendarOverviewCard.qml:891",
     "comment": "calendar task with no specific time"
   },
   {
@@ -1304,7 +1304,7 @@
   {
     "term": "Applications",
     "context": "Applications",
-    "reference": "Modals/DankLauncherV2/Controller.qml:198, Modals/Settings/SettingsSidebar.qml:277, Modules/Settings/ThemeColorsTab.qml:2147, Modules/Dock/DockLauncherButton.qml:25",
+    "reference": "Modals/DankLauncherV2/Controller.qml:198, Modals/Settings/SettingsSidebar.qml:277, Modules/Settings/ThemeColorsTab.qml:2136, Modules/Dock/DockLauncherButton.qml:25",
     "comment": ""
   },
   {
@@ -1328,13 +1328,13 @@
   {
     "term": "Apply GTK Colors",
     "context": "Apply GTK Colors",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2911",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2900",
     "comment": ""
   },
   {
     "term": "Apply Qt Colors",
     "context": "Apply Qt Colors",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2945",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2934",
     "comment": ""
   },
   {
@@ -1376,7 +1376,7 @@
   {
     "term": "Apps",
     "context": "Apps",
-    "reference": "Modals/DankLauncherV2/SpotlightLauncherContent.qml:444, Modals/DankLauncherV2/LauncherContent.qml:367",
+    "reference": "Modals/DankLauncherV2/SpotlightLauncherContent.qml:444, Modals/DankLauncherV2/LauncherContent.qml:339",
     "comment": ""
   },
   {
@@ -1472,13 +1472,13 @@
   {
     "term": "Audio Codec",
     "context": "Audio Codec",
-    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:645",
+    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:682",
     "comment": ""
   },
   {
     "term": "Audio Codec Selection",
     "context": "Audio Codec Selection",
-    "reference": "Modules/ControlCenter/Details/BluetoothCodecSelector.qml:210",
+    "reference": "Modules/ControlCenter/Details/BluetoothCodecSelector.qml:224",
     "comment": ""
   },
   {
@@ -1502,7 +1502,7 @@
   {
     "term": "Audio Output Devices (",
     "context": "Audio Output Devices (",
-    "reference": "Modules/DankDash/MediaDropdownOverlay.qml:291",
+    "reference": "Modules/DankDash/MediaDropdownOverlay.qml:295",
     "comment": ""
   },
   {
@@ -1520,7 +1520,7 @@
   {
     "term": "Audio system restarted",
     "context": "Audio system restarted",
-    "reference": "Services/AudioService.qml:358",
+    "reference": "Services/AudioService.qml:367",
     "comment": ""
   },
   {
@@ -1628,7 +1628,7 @@
   {
     "term": "Auto (Bar-aware)",
     "context": "Auto (Bar-aware)",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2018, Modules/Settings/ThemeColorsTab.qml:2022, Modules/Settings/ThemeColorsTab.qml:2035, Modules/Settings/DankBarTab.qml:1683, Modules/Settings/DankBarTab.qml:1687, Modules/Settings/DankBarTab.qml:1695",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2007, Modules/Settings/ThemeColorsTab.qml:2011, Modules/Settings/ThemeColorsTab.qml:2024, Modules/Settings/DankBarTab.qml:1683, Modules/Settings/DankBarTab.qml:1687, Modules/Settings/DankBarTab.qml:1695",
     "comment": "bar shadow direction source option | shadow direction option"
   },
   {
@@ -1706,7 +1706,7 @@
   {
     "term": "Auto-Hide Timeout",
     "context": "Auto-Hide Timeout",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2351",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2340",
     "comment": ""
   },
   {
@@ -1796,19 +1796,19 @@
   {
     "term": "Automatic Color Mode",
     "context": "Automatic Color Mode",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1162",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1151",
     "comment": ""
   },
   {
     "term": "Automatic Control",
     "context": "Automatic Control",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1173, Modules/Settings/GammaControlTab.qml:139",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1162, Modules/Settings/GammaControlTab.qml:139",
     "comment": ""
   },
   {
     "term": "Automatic Cycling",
     "context": "Automatic Cycling",
-    "reference": "Modules/Settings/WallpaperTab.qml:927, Modules/Settings/LockScreenTab.qml:387",
+    "reference": "Modules/Settings/WallpaperTab.qml:894, Modules/Settings/LockScreenTab.qml:387",
     "comment": ""
   },
   {
@@ -1820,7 +1820,7 @@
   {
     "term": "Automatically cycle through wallpapers in the same folder",
     "context": "Automatically cycle through wallpapers in the same folder",
-    "reference": "Modules/Settings/WallpaperTab.qml:928",
+    "reference": "Modules/Settings/WallpaperTab.qml:895",
     "comment": ""
   },
   {
@@ -1880,7 +1880,7 @@
   {
     "term": "Automation",
     "context": "Automation",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1499",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1488",
     "comment": ""
   },
   {
@@ -1898,7 +1898,7 @@
   {
     "term": "Available",
     "context": "Available",
-    "reference": "Modules/DankDash/MediaDropdownOverlay.qml:368, Modules/Settings/PrinterTab.qml:202, Modules/ControlCenter/Details/AudioInputDetail.qml:256, Modules/ControlCenter/Details/AudioOutputDetail.qml:265",
+    "reference": "Modules/DankDash/MediaDropdownOverlay.qml:372, Modules/Settings/PrinterTab.qml:202, Modules/ControlCenter/Details/AudioInputDetail.qml:256, Modules/ControlCenter/Details/AudioOutputDetail.qml:265",
     "comment": ""
   },
   {
@@ -1952,7 +1952,7 @@
   {
     "term": "Back",
     "context": "Back",
-    "reference": "Modals/Greeter/GreeterModal.qml:288, Modules/DankBar/Widgets/SystemTrayBar.qml:1944",
+    "reference": "Modals/Greeter/GreeterModal.qml:288, Modules/DankBar/Widgets/SystemTrayBar.qml:1949",
     "comment": "greeter back button"
   },
   {
@@ -1982,13 +1982,13 @@
   {
     "term": "Background Blur",
     "context": "Background Blur",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1870, Modules/Settings/ThemeColorsTab.qml:1878",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1859, Modules/Settings/ThemeColorsTab.qml:1867",
     "comment": ""
   },
   {
     "term": "Background Color",
     "context": "Background Color",
-    "reference": "Modules/Settings/WallpaperTab.qml:344, Modules/Settings/WallpaperTab.qml:372",
+    "reference": "Modules/Settings/WallpaperTab.qml:333, Modules/Settings/WallpaperTab.qml:361",
     "comment": ""
   },
   {
@@ -2024,19 +2024,19 @@
   {
     "term": "Balance power and performance",
     "context": "Balance power and performance",
-    "reference": "Common/Theme.qml:1655",
+    "reference": "Common/Theme.qml:1657",
     "comment": "power profile description"
   },
   {
     "term": "Balanced",
     "context": "Balanced",
-    "reference": "Common/Theme.qml:1642",
+    "reference": "Common/Theme.qml:1644",
     "comment": "power profile option"
   },
   {
     "term": "Balanced palette with focused accents (default).",
     "context": "Balanced palette with focused accents (default).",
-    "reference": "Common/Theme.qml:484",
+    "reference": "Common/Theme.qml:486",
     "comment": ""
   },
   {
@@ -2072,7 +2072,7 @@
   {
     "term": "Bar Shadows",
     "context": "Bar Shadows",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2110",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2099",
     "comment": ""
   },
   {
@@ -2096,7 +2096,7 @@
   {
     "term": "Base color for shadows (opacity is applied automatically)",
     "context": "Base color for shadows (opacity is applied automatically)",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1972",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1961",
     "comment": ""
   },
   {
@@ -2228,13 +2228,13 @@
   {
     "term": "Black",
     "context": "Black",
-    "reference": "Modules/Settings/TypographyMotionTab.qml:254, Modules/Settings/TypographyMotionTab.qml:274, Modules/Settings/TypographyMotionTab.qml:306, Modules/Settings/WallpaperTab.qml:351",
+    "reference": "Modules/Settings/TypographyMotionTab.qml:254, Modules/Settings/TypographyMotionTab.qml:274, Modules/Settings/TypographyMotionTab.qml:306, Modules/Settings/WallpaperTab.qml:340",
     "comment": "font weight"
   },
   {
     "term": "Blend between Surface High and the selected custom color",
     "context": "Blend between Surface High and the selected custom color",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1657",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1646",
     "comment": ""
   },
   {
@@ -2258,7 +2258,7 @@
   {
     "term": "Blocked",
     "context": "Blocked",
-    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:533",
+    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:568",
     "comment": ""
   },
   {
@@ -2270,13 +2270,13 @@
   {
     "term": "Bluetooth",
     "context": "Bluetooth",
-    "reference": "Modules/Settings/WidgetsTabSection.qml:2221, Modules/Settings/WidgetsTabSection.qml:2462, Modules/ControlCenter/Models/WidgetModel.qml:170, Modules/ControlCenter/Components/DragDropGrid.qml:503",
+    "reference": "Modules/Settings/WidgetsTabSection.qml:2221, Modules/Settings/WidgetsTabSection.qml:2462, Modules/ControlCenter/Models/WidgetModel.qml:170, Modules/ControlCenter/Components/DragDropGrid.qml:505",
     "comment": "bluetooth status"
   },
   {
     "term": "Bluetooth Settings",
     "context": "Bluetooth Settings",
-    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:96",
+    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:131",
     "comment": ""
   },
   {
@@ -2294,25 +2294,25 @@
   {
     "term": "Blur Wallpaper Layer",
     "context": "Blur Wallpaper Layer",
-    "reference": "Modules/Settings/WallpaperTab.qml:1292",
+    "reference": "Modules/Settings/WallpaperTab.qml:1259",
     "comment": ""
   },
   {
     "term": "Blur on Overview",
     "context": "Blur on Overview",
-    "reference": "Modules/Settings/WallpaperTab.qml:802",
+    "reference": "Modules/Settings/WallpaperTab.qml:769",
     "comment": ""
   },
   {
     "term": "Blur the background behind bars, popouts, modals, and notifications. Requires compositor support. Adjust Opacity accordingly.",
     "context": "Blur the background behind bars, popouts, modals, and notifications. Requires compositor support. Adjust Opacity accordingly.",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1879",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1868",
     "comment": ""
   },
   {
     "term": "Blur wallpaper when niri overview is open",
     "context": "Blur wallpaper when niri overview is open",
-    "reference": "Modules/Settings/WallpaperTab.qml:803",
+    "reference": "Modules/Settings/WallpaperTab.qml:770",
     "comment": ""
   },
   {
@@ -2390,7 +2390,7 @@
   {
     "term": "Border color around popouts, modals, and other shell surfaces",
     "context": "Border color around popouts, modals, and other shell surfaces",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1778",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1767",
     "comment": ""
   },
   {
@@ -2408,7 +2408,7 @@
   {
     "term": "Bottom",
     "context": "Bottom",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2018, Modules/Settings/ThemeColorsTab.qml:2028, Modules/Settings/ThemeColorsTab.qml:2041, Modules/Settings/DockTab.qml:116, Modules/Settings/DankBarTab.qml:344, Modules/Settings/DankBarTab.qml:493, Modules/Settings/DankBarTab.qml:1717, Modules/Settings/DankBarTab.qml:1725, Modules/Settings/DankBarTab.qml:1739, Modules/Settings/FrameTab.qml:343",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2007, Modules/Settings/ThemeColorsTab.qml:2017, Modules/Settings/ThemeColorsTab.qml:2030, Modules/Settings/DockTab.qml:116, Modules/Settings/DankBarTab.qml:344, Modules/Settings/DankBarTab.qml:493, Modules/Settings/DankBarTab.qml:1717, Modules/Settings/DankBarTab.qml:1725, Modules/Settings/DankBarTab.qml:1739, Modules/Settings/FrameTab.qml:343",
     "comment": "shadow direction option"
   },
   {
@@ -2468,7 +2468,7 @@
   {
     "term": "Browse",
     "context": "Browse",
-    "reference": "Modals/DankLauncherV2/SpotlightResultRow.qml:62, Modals/DankLauncherV2/Controller.qml:219, Modals/DankLauncherV2/Controller.qml:1367, Modules/Settings/ThemeColorsTab.qml:406, Modules/Settings/AutoStartTab.qml:487, Modules/Settings/PluginsTab.qml:236, Modules/Settings/LockScreenTab.qml:378, Modules/Settings/Widgets/SettingsWallpaperPicker.qml:57",
+    "reference": "Modals/DankLauncherV2/SpotlightResultRow.qml:61, Modals/DankLauncherV2/Controller.qml:219, Modals/DankLauncherV2/Controller.qml:1422, Modules/Settings/ThemeColorsTab.qml:406, Modules/Settings/AutoStartTab.qml:487, Modules/Settings/PluginsTab.qml:236, Modules/Settings/LockScreenTab.qml:378, Modules/Settings/Widgets/SettingsWallpaperPicker.qml:57",
     "comment": "theme category option"
   },
   {
@@ -2486,7 +2486,7 @@
   {
     "term": "Browse Themes",
     "context": "Browse Themes",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:908, Modules/Settings/ThemeBrowser.qml:147, Modules/Settings/ThemeBrowser.qml:244",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:897, Modules/Settings/ThemeBrowser.qml:147, Modules/Settings/ThemeBrowser.qml:244",
     "comment": "browse themes button | theme browser header | theme browser window title"
   },
   {
@@ -2498,13 +2498,13 @@
   {
     "term": "Browse or search plugins",
     "context": "Browse or search plugins",
-    "reference": "Modals/DankLauncherV2/ResultsList.qml:549",
+    "reference": "Modals/DankLauncherV2/ResultsList.qml:566",
     "comment": ""
   },
   {
     "term": "Button Color",
     "context": "Button Color",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1715",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1704",
     "comment": ""
   },
   {
@@ -2600,7 +2600,7 @@
   {
     "term": "Cancel",
     "context": "Cancel",
-    "reference": "DMSShell.qml:587, Modals/WindowRuleModal.qml:1853, Modals/PolkitAuthContent.qml:326, Modals/WorkspaceRenameModal.qml:163, Modals/BluetoothPairingModal.qml:267, Modals/WifiPasswordModal.qml:677, Widgets/KeybindItem.qml:1863, Modals/DankLauncherV2/LauncherContent.qml:1065, Modals/Common/ConfirmModal.qml:15, Modals/Common/ConfirmModal.qml:26, Modals/Common/ConfirmModal.qml:39, Modals/FileBrowser/FileBrowserOverwriteDialog.qml:83, Modals/Clipboard/ClipboardEditor.qml:322, Modules/Settings/PluginBrowser.qml:453, Modules/Settings/PluginBrowser.qml:1491, Modules/Settings/GreeterTab.qml:165, Modules/Settings/PluginUpdatesDialog.qml:278, Modules/Settings/ThemeBrowser.qml:122, Modules/Settings/DisplayConfigTab.qml:287, Modules/Settings/DisplayConfigTab.qml:332, Modules/Settings/DisplayConfigTab.qml:416, Modules/Settings/AudioTab.qml:727, Modules/DankDash/Overview/CalendarEventEditor.qml:342, Modules/DankBar/Popouts/SystemUpdatePopout.qml:203",
+    "reference": "DMSShell.qml:587, Modals/WindowRuleModal.qml:1853, Modals/PolkitAuthContent.qml:326, Modals/WorkspaceRenameModal.qml:163, Modals/BluetoothPairingModal.qml:267, Modals/WifiPasswordModal.qml:677, Widgets/KeybindItem.qml:1863, Modals/DankLauncherV2/AppEditView.qml:283, Modals/Common/ConfirmModal.qml:15, Modals/Common/ConfirmModal.qml:26, Modals/Common/ConfirmModal.qml:39, Modals/FileBrowser/FileBrowserOverwriteDialog.qml:83, Modals/Clipboard/ClipboardEditor.qml:322, Modules/Settings/PluginBrowser.qml:453, Modules/Settings/PluginBrowser.qml:1491, Modules/Settings/GreeterTab.qml:165, Modules/Settings/PluginUpdatesDialog.qml:278, Modules/Settings/ThemeBrowser.qml:122, Modules/Settings/DisplayConfigTab.qml:287, Modules/Settings/DisplayConfigTab.qml:332, Modules/Settings/DisplayConfigTab.qml:416, Modules/Settings/AudioTab.qml:727, Modules/DankDash/Overview/CalendarEventEditor.qml:342, Modules/DankBar/Popouts/SystemUpdatePopout.qml:203",
     "comment": ""
   },
   {
@@ -2642,7 +2642,7 @@
   {
     "term": "Cannot pair",
     "context": "Cannot pair",
-    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:558",
+    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:593",
     "comment": ""
   },
   {
@@ -2678,7 +2678,7 @@
   {
     "term": "Caps Lock is on",
     "context": "Caps Lock is on",
-    "reference": "Modules/Lock/LockScreenContent.qml:1296",
+    "reference": "Modules/Lock/LockScreenContent.qml:1367",
     "comment": ""
   },
   {
@@ -2822,7 +2822,7 @@
   {
     "term": "Choose Dark Mode Color",
     "context": "Choose Dark Mode Color",
-    "reference": "Modules/Settings/WallpaperTab.qml:726",
+    "reference": "Modules/Settings/WallpaperTab.qml:693",
     "comment": "dark mode wallpaper color picker title"
   },
   {
@@ -2840,13 +2840,13 @@
   {
     "term": "Choose Light Mode Color",
     "context": "Choose Light Mode Color",
-    "reference": "Modules/Settings/WallpaperTab.qml:536",
+    "reference": "Modules/Settings/WallpaperTab.qml:514",
     "comment": "light mode wallpaper color picker title"
   },
   {
     "term": "Choose Wallpaper Color",
     "context": "Choose Wallpaper Color",
-    "reference": "Modules/Settings/WallpaperTab.qml:180",
+    "reference": "Modules/Settings/WallpaperTab.qml:169",
     "comment": "wallpaper color picker title"
   },
   {
@@ -2912,13 +2912,13 @@
   {
     "term": "Choose neutral or accent-colored widget text",
     "context": "Choose neutral or accent-colored widget text",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1625",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1614",
     "comment": ""
   },
   {
     "term": "Choose the background color for widgets",
     "context": "Choose the background color for widgets",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1640",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1629",
     "comment": ""
   },
   {
@@ -2936,7 +2936,7 @@
   {
     "term": "Choose wallpaper folder",
     "context": "Choose wallpaper folder",
-    "reference": "Modules/DankDash/WallpaperTab.qml:711",
+    "reference": "Modules/DankDash/WallpaperTab.qml:722",
     "comment": ""
   },
   {
@@ -3050,7 +3050,7 @@
   {
     "term": "Click 'Setup' to create %1 and add include to your compositor config.",
     "context": "Click 'Setup' to create %1 and add include to your compositor config.",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2236, Modules/Settings/WindowRulesTab.qml:510, Modules/Settings/KeybindsTab.qml:402, Modules/Settings/CompositorLayoutTab.qml:213",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2225, Modules/Settings/WindowRulesTab.qml:510, Modules/Settings/KeybindsTab.qml:402, Modules/Settings/CompositorLayoutTab.qml:213",
     "comment": ""
   },
   {
@@ -3104,7 +3104,7 @@
   {
     "term": "Click to select a custom theme JSON file",
     "context": "Click to select a custom theme JSON file",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:701",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:690",
     "comment": "custom theme file hint"
   },
   {
@@ -3122,7 +3122,7 @@
   {
     "term": "Clipboard",
     "context": "Clipboard",
-    "reference": "Services/AppSearchService.qml:223, Modals/DankLauncherV2/ResultItem.qml:228, Modals/DankLauncherV2/SpotlightResultRow.qml:68, Modals/DankLauncherV2/Controller.qml:212, Modals/DankLauncherV2/Controller.qml:1215, Modals/Settings/SettingsSidebar.qml:330",
+    "reference": "Services/AppSearchService.qml:223, Modals/DankLauncherV2/ResultItem.qml:228, Modals/DankLauncherV2/SpotlightResultRow.qml:67, Modals/DankLauncherV2/Controller.qml:212, Modals/DankLauncherV2/Controller.qml:1270, Modals/Settings/SettingsSidebar.qml:330",
     "comment": ""
   },
   {
@@ -3198,6 +3198,12 @@
     "comment": ""
   },
   {
+    "term": "Codec switching is unavailable because pactl was not found",
+    "context": "Codec switching is unavailable because pactl was not found",
+    "reference": "Services/BluetoothService.qml:409, Modules/ControlCenter/Details/BluetoothCodecSelector.qml:68",
+    "comment": ""
+  },
+  {
     "term": "Color",
     "context": "Color",
     "reference": "Modules/Settings/LauncherTab.qml:718, Modules/Settings/DankBarTab.qml:1423, Modules/Settings/DankBarTab.qml:1518, Modules/Settings/DankBarTab.qml:1757, Modules/Settings/DankBarTab.qml:1831, Modules/Settings/Widgets/SettingsColorPicker.qml:29",
@@ -3224,7 +3230,7 @@
   {
     "term": "Color Mode",
     "context": "Color Mode",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1595",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1584",
     "comment": ""
   },
   {
@@ -3254,13 +3260,13 @@
   {
     "term": "Color for primary action buttons",
     "context": "Color for primary action buttons",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1716",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1705",
     "comment": ""
   },
   {
     "term": "Color shown for areas not covered by wallpaper",
     "context": "Color shown for areas not covered by wallpaper",
-    "reference": "Modules/Settings/WallpaperTab.qml:345",
+    "reference": "Modules/Settings/WallpaperTab.qml:334",
     "comment": ""
   },
   {
@@ -3296,13 +3302,13 @@
   {
     "term": "Colorful",
     "context": "Colorful",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1626",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1615",
     "comment": "widget style option"
   },
   {
     "term": "Colorful mix of bright contrasting accents.",
     "context": "Colorful mix of bright contrasting accents.",
-    "reference": "Common/Theme.qml:504",
+    "reference": "Common/Theme.qml:506",
     "comment": ""
   },
   {
@@ -3524,7 +3530,7 @@
   {
     "term": "Connect",
     "context": "Connect",
-    "reference": "Modals/WifiPasswordModal.qml:719, Modules/Settings/NetworkWifiTab.qml:1191, Modules/ControlCenter/Details/BluetoothDetail.qml:617, Modules/ControlCenter/Details/NetworkDetail.qml:803, Modules/ControlCenter/BuiltinPlugins/TailscaleWidget.qml:150",
+    "reference": "Modals/WifiPasswordModal.qml:719, Modules/Settings/NetworkWifiTab.qml:1191, Modules/ControlCenter/Details/BluetoothDetail.qml:654, Modules/ControlCenter/Details/NetworkDetail.qml:803, Modules/ControlCenter/BuiltinPlugins/TailscaleWidget.qml:150",
     "comment": "Tailscale connect button"
   },
   {
@@ -3548,13 +3554,13 @@
   {
     "term": "Connected",
     "context": "Connected",
-    "reference": "Modules/Settings/AboutTab.qml:716, Modules/Settings/NetworkVpnTab.qml:101, Modules/Settings/NetworkEthernetTab.qml:163, Modules/Settings/DisplayConfigTab.qml:393, Modules/Settings/FrameTab.qml:59, Modules/Settings/NetworkWifiTab.qml:566, Modules/Settings/NetworkWifiTab.qml:969, Modules/ControlCenter/Details/BluetoothDetail.qml:301, Modules/ControlCenter/Details/BluetoothDetail.qml:302, Modules/ControlCenter/Details/NetworkDetail.qml:627, Modules/ControlCenter/BuiltinPlugins/VpnWidget.qml:26, Modules/ControlCenter/BuiltinPlugins/TailscaleWidget.qml:111, Modules/ControlCenter/Components/DragDropGrid.qml:529, Modules/ControlCenter/Components/DragDropGrid.qml:532, Modules/ControlCenter/Components/DragDropGrid.qml:534, Modules/ControlCenter/Components/DragDropGrid.qml:537",
+    "reference": "Modules/Settings/AboutTab.qml:716, Modules/Settings/NetworkVpnTab.qml:101, Modules/Settings/NetworkEthernetTab.qml:163, Modules/Settings/DisplayConfigTab.qml:393, Modules/Settings/FrameTab.qml:59, Modules/Settings/NetworkWifiTab.qml:566, Modules/Settings/NetworkWifiTab.qml:969, Modules/ControlCenter/Details/BluetoothDetail.qml:336, Modules/ControlCenter/Details/BluetoothDetail.qml:337, Modules/ControlCenter/Details/NetworkDetail.qml:627, Modules/ControlCenter/BuiltinPlugins/VpnWidget.qml:26, Modules/ControlCenter/BuiltinPlugins/TailscaleWidget.qml:111, Modules/ControlCenter/Components/DragDropGrid.qml:531, Modules/ControlCenter/Components/DragDropGrid.qml:534, Modules/ControlCenter/Components/DragDropGrid.qml:536, Modules/ControlCenter/Components/DragDropGrid.qml:539",
     "comment": "Tailscale connection status: connected | network status"
   },
   {
     "term": "Connected Device",
     "context": "Connected Device",
-    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:561",
+    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:563",
     "comment": "bluetooth status"
   },
   {
@@ -3596,7 +3602,7 @@
   {
     "term": "Connecting...",
     "context": "Connecting...",
-    "reference": "Widgets/VpnProfileDelegate.qml:145, Modules/Settings/NetworkWifiTab.qml:566, Modules/Settings/NetworkWifiTab.qml:968, Modules/Settings/NetworkWifiTab.qml:1191, Modules/ControlCenter/Details/BluetoothDetail.qml:297, Modules/ControlCenter/Details/NetworkDetail.qml:627, Modules/ControlCenter/Details/NetworkDetail.qml:803, Modules/ControlCenter/Components/DragDropGrid.qml:483, Modules/ControlCenter/Components/DragDropGrid.qml:525, Modules/ControlCenter/Components/DragDropGrid.qml:549",
+    "reference": "Widgets/VpnProfileDelegate.qml:145, Modules/Settings/NetworkWifiTab.qml:566, Modules/Settings/NetworkWifiTab.qml:968, Modules/Settings/NetworkWifiTab.qml:1191, Modules/ControlCenter/Details/BluetoothDetail.qml:332, Modules/ControlCenter/Details/NetworkDetail.qml:627, Modules/ControlCenter/Details/NetworkDetail.qml:803, Modules/ControlCenter/Components/DragDropGrid.qml:485, Modules/ControlCenter/Components/DragDropGrid.qml:527, Modules/ControlCenter/Components/DragDropGrid.qml:551",
     "comment": "bluetooth status | network status"
   },
   {
@@ -3620,7 +3626,7 @@
   {
     "term": "Content",
     "context": "Content",
-    "reference": "Common/Theme.qml:491",
+    "reference": "Common/Theme.qml:493",
     "comment": "matugen color scheme option"
   },
   {
@@ -3650,7 +3656,7 @@
   {
     "term": "Control Center Tile Color",
     "context": "Control Center Tile Color",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1677",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1666",
     "comment": ""
   },
   {
@@ -3698,7 +3704,7 @@
   {
     "term": "Controls opacity of shell surfaces, popouts, and modals",
     "context": "Controls opacity of shell surfaces, popouts, and modals",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1763",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1752",
     "comment": ""
   },
   {
@@ -3734,31 +3740,31 @@
   {
     "term": "Controls outlines around foreground cards, pills, and notification cards",
     "context": "Controls outlines around foreground cards, pills, and notification cards",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1836",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1825",
     "comment": ""
   },
   {
     "term": "Controls shadow cast direction for elevation layers",
     "context": "Controls shadow cast direction for elevation layers",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2017",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2006",
     "comment": ""
   },
   {
     "term": "Controls the base blur radius and offset of shadows",
     "context": "Controls the base blur radius and offset of shadows",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1942",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1931",
     "comment": ""
   },
   {
     "term": "Controls the opacity of the shadow",
     "context": "Controls the opacity of the shadow",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1957",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1946",
     "comment": ""
   },
   {
     "term": "Controls the outline of popouts, modals, and other shell surfaces",
     "context": "Controls the outline of popouts, modals, and other shell surfaces",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1822",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1811",
     "comment": ""
   },
   {
@@ -3800,7 +3806,7 @@
   {
     "term": "Copied to clipboard",
     "context": "Copied to clipboard",
-    "reference": "Services/ClipboardService.qml:277, dms-plugins/DankStickerSearch/DankStickerSearch.qml:230, dms-plugins/DankLauncherKeys/DankLauncherKeys.qml:154, dms-plugins/DankGifSearch/DankGifSearch.qml:175, Modals/Settings/SettingsModal.qml:325, Modals/Settings/SettingsModal.qml:342, Modules/Notepad/NotepadTextEditor.qml:328, Modules/Settings/DesktopWidgetInstanceCard.qml:426",
+    "reference": "Services/ClipboardService.qml:212, dms-plugins/DankStickerSearch/DankStickerSearch.qml:230, dms-plugins/DankLauncherKeys/DankLauncherKeys.qml:154, dms-plugins/DankGifSearch/DankGifSearch.qml:175, Modals/Settings/SettingsModal.qml:325, Modals/Settings/SettingsModal.qml:342, Modules/Notepad/NotepadTextEditor.qml:328, Modules/Settings/DesktopWidgetInstanceCard.qml:426",
     "comment": ""
   },
   {
@@ -3812,7 +3818,7 @@
   {
     "term": "Copy",
     "context": "Copy",
-    "reference": "dms-plugins/DankLauncherKeys/DankLauncherKeys.qml:170, Modals/DankLauncherV2/Controller.qml:1211, Modals/Clipboard/ClipboardContextMenu.qml:40, Modules/Settings/ClipboardTab.qml:156, Modules/ControlCenter/BuiltinPlugins/TailscaleWidget.qml:395",
+    "reference": "dms-plugins/DankLauncherKeys/DankLauncherKeys.qml:170, Modals/DankLauncherV2/Controller.qml:1266, Modals/Clipboard/ClipboardContextMenu.qml:40, Modules/Settings/ClipboardTab.qml:156, Modules/ControlCenter/BuiltinPlugins/TailscaleWidget.qml:395",
     "comment": "Copy to clipboard"
   },
   {
@@ -3854,13 +3860,13 @@
   {
     "term": "Copy path",
     "context": "Copy path",
-    "reference": "Modals/DankLauncherV2/Controller.qml:1207, Modals/FileBrowser/FileBrowserItemContextMenu.qml:28",
+    "reference": "Modals/DankLauncherV2/Controller.qml:1262, Modals/FileBrowser/FileBrowserItemContextMenu.qml:28",
     "comment": ""
   },
   {
     "term": "Corner Radius",
     "context": "Corner Radius",
-    "reference": "Modals/WindowRuleModal.qml:1213, Modules/Settings/ThemeColorsTab.qml:1849",
+    "reference": "Modals/WindowRuleModal.qml:1213, Modules/Settings/ThemeColorsTab.qml:1838",
     "comment": ""
   },
   {
@@ -4088,19 +4094,19 @@
   {
     "term": "Current: %1",
     "context": "Current: %1",
-    "reference": "Modules/ControlCenter/Details/BluetoothCodecSelector.qml:224",
+    "reference": "Modules/ControlCenter/Details/BluetoothCodecSelector.qml:243",
     "comment": ""
   },
   {
     "term": "Cursor Size",
     "context": "Cursor Size",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2280",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2269",
     "comment": ""
   },
   {
     "term": "Cursor Theme",
     "context": "Cursor Theme",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2175, Modules/Settings/ThemeColorsTab.qml:2264",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2164, Modules/Settings/ThemeColorsTab.qml:2253",
     "comment": ""
   },
   {
@@ -4118,13 +4124,13 @@
   {
     "term": "Custom",
     "context": "Custom",
-    "reference": "Widgets/KeybindItem.qml:1441, dms-plugins/DankDesktopWeather/DankDesktopWeatherSettings.qml:47, Modules/Settings/ThemeColorsTab.qml:62, Modules/Settings/ThemeColorsTab.qml:406, Modules/Settings/ThemeColorsTab.qml:406, Modules/Settings/ThemeColorsTab.qml:1779, Modules/Settings/ThemeColorsTab.qml:1785, Modules/Settings/ThemeColorsTab.qml:1796, Modules/Settings/ThemeColorsTab.qml:1808, Modules/Settings/ThemeColorsTab.qml:1973, Modules/Settings/ThemeColorsTab.qml:1979, Modules/Settings/ThemeColorsTab.qml:1990, Modules/Settings/ThemeColorsTab.qml:2001, Modules/Settings/TypographyMotionTab.qml:495, Modules/Settings/TypographyMotionTab.qml:592, Modules/Settings/TypographyMotionTab.qml:676, Modules/Settings/DockTab.qml:296, Modules/Settings/DockTab.qml:403, Modules/Settings/WallpaperTab.qml:367, Modules/Settings/LauncherTab.qml:319, Modules/Settings/LauncherTab.qml:428, Modules/Settings/DankBarTab.qml:1775, Modules/Settings/WorkspaceAppearanceCard.qml:52, Modules/Settings/WorkspaceAppearanceCard.qml:90, Modules/Settings/WorkspaceAppearanceCard.qml:122, Modules/Settings/WorkspaceAppearanceCard.qml:157, Modules/Settings/WorkspaceAppearanceCard.qml:183, Modules/Settings/FrameTab.qml:231, Modules/Settings/NotificationsTab.qml:382, Modules/Settings/CompositorLayoutTab.qml:283, Modules/Settings/CompositorLayoutTab.qml:412, Modules/Settings/CompositorLayoutTab.qml:564, Modules/Settings/Widgets/SettingsColorPicker.qml:52, Modules/Settings/Widgets/DeviceAliasRow.qml:92",
+    "reference": "Widgets/KeybindItem.qml:1441, dms-plugins/DankDesktopWeather/DankDesktopWeatherSettings.qml:47, Modules/Settings/ThemeColorsTab.qml:62, Modules/Settings/ThemeColorsTab.qml:406, Modules/Settings/ThemeColorsTab.qml:406, Modules/Settings/ThemeColorsTab.qml:1768, Modules/Settings/ThemeColorsTab.qml:1774, Modules/Settings/ThemeColorsTab.qml:1785, Modules/Settings/ThemeColorsTab.qml:1797, Modules/Settings/ThemeColorsTab.qml:1962, Modules/Settings/ThemeColorsTab.qml:1968, Modules/Settings/ThemeColorsTab.qml:1979, Modules/Settings/ThemeColorsTab.qml:1990, Modules/Settings/TypographyMotionTab.qml:495, Modules/Settings/TypographyMotionTab.qml:592, Modules/Settings/TypographyMotionTab.qml:676, Modules/Settings/DockTab.qml:296, Modules/Settings/DockTab.qml:403, Modules/Settings/WallpaperTab.qml:356, Modules/Settings/LauncherTab.qml:319, Modules/Settings/LauncherTab.qml:428, Modules/Settings/DankBarTab.qml:1775, Modules/Settings/WorkspaceAppearanceCard.qml:52, Modules/Settings/WorkspaceAppearanceCard.qml:90, Modules/Settings/WorkspaceAppearanceCard.qml:122, Modules/Settings/WorkspaceAppearanceCard.qml:157, Modules/Settings/WorkspaceAppearanceCard.qml:183, Modules/Settings/FrameTab.qml:231, Modules/Settings/NotificationsTab.qml:382, Modules/Settings/CompositorLayoutTab.qml:283, Modules/Settings/CompositorLayoutTab.qml:412, Modules/Settings/CompositorLayoutTab.qml:564, Modules/Settings/Widgets/SettingsColorPicker.qml:52, Modules/Settings/Widgets/DeviceAliasRow.qml:92",
     "comment": "shadow color option | surface border color | theme category option | widget background color option | workspace color option"
   },
   {
     "term": "Custom Blend",
     "context": "Custom Blend",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1656",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1645",
     "comment": ""
   },
   {
@@ -4190,7 +4196,7 @@
   {
     "term": "Custom Shadow Color",
     "context": "Custom Shadow Color",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2061",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2050",
     "comment": ""
   },
   {
@@ -4220,7 +4226,7 @@
   {
     "term": "Custom power profile",
     "context": "Custom power profile",
-    "reference": "Common/Theme.qml:1659",
+    "reference": "Common/Theme.qml:1661",
     "comment": "power profile description"
   },
   {
@@ -4274,7 +4280,7 @@
   {
     "term": "DEMO MODE - Click anywhere to exit",
     "context": "DEMO MODE - Click anywhere to exit",
-    "reference": "Modules/Lock/LockScreenContent.qml:1314",
+    "reference": "Modules/Lock/LockScreenContent.qml:1385",
     "comment": ""
   },
   {
@@ -4334,19 +4340,19 @@
   {
     "term": "DMS_SOCKET not available",
     "context": "DMS_SOCKET not available",
-    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:458",
+    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:460",
     "comment": ""
   },
   {
     "term": "Daily",
     "context": "Daily",
-    "reference": "Modules/DankDash/WeatherTab.qml:868",
+    "reference": "Modules/DankDash/WeatherTab.qml:848",
     "comment": ""
   },
   {
     "term": "Daily at:",
     "context": "Daily at:",
-    "reference": "Modules/Settings/WallpaperTab.qml:1081",
+    "reference": "Modules/Settings/WallpaperTab.qml:1048",
     "comment": ""
   },
   {
@@ -4388,13 +4394,13 @@
   {
     "term": "DankCalendar isn't installed",
     "context": "DankCalendar isn't installed",
-    "reference": "Modules/DankDash/Overview/CalendarOverviewCard.qml:254",
+    "reference": "Modules/DankDash/Overview/CalendarOverviewCard.qml:252",
     "comment": ""
   },
   {
     "term": "DankCalendar isn't running",
     "context": "DankCalendar isn't running",
-    "reference": "Modules/DankDash/Overview/CalendarOverviewCard.qml:254",
+    "reference": "Modules/DankDash/Overview/CalendarOverviewCard.qml:252",
     "comment": ""
   },
   {
@@ -4406,37 +4412,37 @@
   {
     "term": "DankShell & System Icons (requires restart)",
     "context": "DankShell & System Icons (requires restart)",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2409, Modules/Settings/ThemeColorsTab.qml:2427, Modules/Settings/ThemeColorsTab.qml:2445",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2398, Modules/Settings/ThemeColorsTab.qml:2416, Modules/Settings/ThemeColorsTab.qml:2434",
     "comment": ""
   },
   {
     "term": "Dark Mode",
     "context": "Dark Mode",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1533, Modules/Settings/WallpaperTab.qml:602, Modules/ControlCenter/Models/WidgetModel.qml:137, Modules/ControlCenter/Components/DragDropGrid.qml:749",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1522, Modules/Settings/WallpaperTab.qml:580, Modules/ControlCenter/Models/WidgetModel.qml:137, Modules/ControlCenter/Components/DragDropGrid.qml:751",
     "comment": ""
   },
   {
     "term": "Dark Mode Icon Theme",
     "context": "Dark Mode Icon Theme",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2426",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2415",
     "comment": ""
   },
   {
     "term": "Dark mode base",
     "context": "Dark mode base",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2687",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2676",
     "comment": ""
   },
   {
     "term": "Dark mode harmony",
     "context": "Dark mode harmony",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2721",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2710",
     "comment": ""
   },
   {
     "term": "Darken Modal Background",
     "context": "Darken Modal Background",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2128, Modules/Settings/ThemeColorsTab.qml:2136",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2117, Modules/Settings/ThemeColorsTab.qml:2125",
     "comment": ""
   },
   {
@@ -4502,13 +4508,13 @@
   {
     "term": "Default",
     "context": "Default",
-    "reference": "Modals/WindowRuleModal.qml:561, Modules/Settings/ThemeColorsTab.qml:1626, Modules/Settings/TypographyMotionTab.qml:458, Modules/Settings/DockTab.qml:403, Modules/Settings/LauncherTab.qml:428, Modules/Settings/WorkspaceAppearanceCard.qml:95, Modules/Settings/FrameTab.qml:231, Modules/Settings/NotificationsTab.qml:119, Modules/Settings/NotificationsTab.qml:142",
+    "reference": "Modals/WindowRuleModal.qml:561, Modules/Settings/ThemeColorsTab.qml:1615, Modules/Settings/TypographyMotionTab.qml:458, Modules/Settings/DockTab.qml:403, Modules/Settings/LauncherTab.qml:428, Modules/Settings/WorkspaceAppearanceCard.qml:95, Modules/Settings/FrameTab.qml:231, Modules/Settings/NotificationsTab.qml:119, Modules/Settings/NotificationsTab.qml:142",
     "comment": "notification rule action option | notification rule urgency option | widget style option | workspace color option"
   },
   {
     "term": "Default (Black)",
     "context": "Default (Black)",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1973, Modules/Settings/ThemeColorsTab.qml:1975, Modules/Settings/ThemeColorsTab.qml:1992, Modules/Settings/DankBarTab.qml:1775",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1962, Modules/Settings/ThemeColorsTab.qml:1964, Modules/Settings/ThemeColorsTab.qml:1981, Modules/Settings/DankBarTab.qml:1775",
     "comment": "shadow color option"
   },
   {
@@ -4628,7 +4634,7 @@
   {
     "term": "Delete Saved Item?",
     "context": "Delete Saved Item?",
-    "reference": "Services/ClipboardService.qml:345",
+    "reference": "Services/ClipboardService.qml:280",
     "comment": ""
   },
   {
@@ -4688,13 +4694,13 @@
   {
     "term": "Derives colors that closely match the underlying image.",
     "context": "Derives colors that closely match the underlying image.",
-    "reference": "Common/Theme.qml:492",
+    "reference": "Common/Theme.qml:494",
     "comment": ""
   },
   {
     "term": "Description",
     "context": "Description",
-    "reference": "Modals/DankLauncherV2/LauncherContent.qml:964, Modules/Settings/PrinterTab.qml:796",
+    "reference": "Modals/DankLauncherV2/AppEditView.qml:182, Modules/Settings/PrinterTab.qml:796",
     "comment": ""
   },
   {
@@ -4760,7 +4766,7 @@
   {
     "term": "Development",
     "context": "Development",
-    "reference": "Services/AppSearchService.qml:665, Services/AppSearchService.qml:666, Services/AppSearchService.qml:667, Widgets/DankIconPicker.qml:31",
+    "reference": "Services/AppSearchService.qml:669, Services/AppSearchService.qml:670, Services/AppSearchService.qml:671, Widgets/DankIconPicker.qml:31",
     "comment": ""
   },
   {
@@ -4784,13 +4790,13 @@
   {
     "term": "Device names updated",
     "context": "Device names updated",
-    "reference": "Services/AudioService.qml:358",
+    "reference": "Services/AudioService.qml:367",
     "comment": ""
   },
   {
     "term": "Device paired",
     "context": "Device paired",
-    "reference": "dms-plugins/DankKDEConnect/DankKDEConnect.qml:686, Modules/ControlCenter/Details/BluetoothDetail.qml:54",
+    "reference": "dms-plugins/DankKDEConnect/DankKDEConnect.qml:686, Modules/ControlCenter/Details/BluetoothDetail.qml:89",
     "comment": "Phone Connect pairing action"
   },
   {
@@ -4838,7 +4844,7 @@
   {
     "term": "Disable Built-in Wallpapers",
     "context": "Disable Built-in Wallpapers",
-    "reference": "Modules/Settings/WallpaperTab.qml:1270",
+    "reference": "Modules/Settings/WallpaperTab.qml:1237",
     "comment": "wallpaper settings disable toggle"
   },
   {
@@ -4856,19 +4862,19 @@
   {
     "term": "Disabled",
     "context": "Disabled",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1507, Modules/Settings/AutoStartTab.qml:721, Modules/Settings/LockScreenTab.qml:148, Modules/Settings/DankBarTab.qml:413, Modules/Settings/NotificationsTab.qml:774, Modules/Settings/NetworkWifiTab.qml:179, Modules/Settings/DisplayConfig/OutputCard.qml:128, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2078, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2084, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2086, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2098, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2112, Modules/ControlCenter/Components/DragDropGrid.qml:507",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1496, Modules/Settings/AutoStartTab.qml:721, Modules/Settings/LockScreenTab.qml:148, Modules/Settings/DankBarTab.qml:413, Modules/Settings/NotificationsTab.qml:774, Modules/Settings/NetworkWifiTab.qml:179, Modules/Settings/DisplayConfig/OutputCard.qml:128, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2078, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2084, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2086, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2098, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2112, Modules/ControlCenter/Components/DragDropGrid.qml:509",
     "comment": "bluetooth status | lock screen notification mode option"
   },
   {
     "term": "Disabled by Frame Mode",
     "context": "Disabled by Frame Mode",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2129",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2118",
     "comment": ""
   },
   {
     "term": "Disabling WiFi...",
     "context": "Disabling WiFi...",
-    "reference": "Modules/ControlCenter/Details/NetworkDetail.qml:194, Modules/ControlCenter/Components/DragDropGrid.qml:481",
+    "reference": "Modules/ControlCenter/Details/NetworkDetail.qml:194, Modules/ControlCenter/Components/DragDropGrid.qml:483",
     "comment": "network status"
   },
   {
@@ -4880,7 +4886,7 @@
   {
     "term": "Disc",
     "context": "Disc",
-    "reference": "Modules/Settings/WallpaperTab.qml:1187",
+    "reference": "Modules/Settings/WallpaperTab.qml:1154",
     "comment": "wallpaper transition option"
   },
   {
@@ -4898,7 +4904,7 @@
   {
     "term": "Disconnect",
     "context": "Disconnect",
-    "reference": "Widgets/VpnDetailContent.qml:126, Modules/Settings/NetworkVpnTab.qml:172, Modules/Settings/NetworkWifiTab.qml:1191, Modules/ControlCenter/Details/BluetoothDetail.qml:617, Modules/ControlCenter/Details/NetworkDetail.qml:429, Modules/ControlCenter/Details/NetworkDetail.qml:803, Modules/ControlCenter/BuiltinPlugins/TailscaleWidget.qml:150",
+    "reference": "Widgets/VpnDetailContent.qml:126, Modules/Settings/NetworkVpnTab.qml:172, Modules/Settings/NetworkWifiTab.qml:1191, Modules/ControlCenter/Details/BluetoothDetail.qml:654, Modules/ControlCenter/Details/NetworkDetail.qml:429, Modules/ControlCenter/Details/NetworkDetail.qml:803, Modules/ControlCenter/BuiltinPlugins/TailscaleWidget.qml:150",
     "comment": "Tailscale disconnect button"
   },
   {
@@ -5114,7 +5120,7 @@
   {
     "term": "Diverse palette spanning the full spectrum.",
     "context": "Diverse palette spanning the full spectrum.",
-    "reference": "Common/Theme.qml:516",
+    "reference": "Common/Theme.qml:518",
     "comment": ""
   },
   {
@@ -5270,7 +5276,7 @@
   {
     "term": "Duplicate Wallpaper with Blur",
     "context": "Duplicate Wallpaper with Blur",
-    "reference": "Modules/Settings/WallpaperTab.qml:1301",
+    "reference": "Modules/Settings/WallpaperTab.qml:1268",
     "comment": ""
   },
   {
@@ -5324,13 +5330,13 @@
   {
     "term": "Dynamic colors from wallpaper",
     "context": "Dynamic colors from wallpaper",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:605",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:594",
     "comment": "dynamic colors description"
   },
   {
     "term": "Dynamic colors parse error: %1",
     "context": "Dynamic colors parse error: %1",
-    "reference": "Common/Theme.qml:2240",
+    "reference": "Common/Theme.qml:2242",
     "comment": ""
   },
   {
@@ -5378,7 +5384,7 @@
   {
     "term": "Edit App",
     "context": "Edit App",
-    "reference": "Modals/DankLauncherV2/LauncherContextMenu.qml:193, Modals/DankLauncherV2/LauncherContent.qml:887",
+    "reference": "Modals/DankLauncherV2/LauncherContextMenu.qml:193, Modals/DankLauncherV2/AppEditView.qml:105",
     "comment": ""
   },
   {
@@ -5420,7 +5426,7 @@
   {
     "term": "Education",
     "context": "Education",
-    "reference": "Services/AppSearchService.qml:668",
+    "reference": "Services/AppSearchService.qml:672",
     "comment": ""
   },
   {
@@ -5528,7 +5534,7 @@
   {
     "term": "Enable compositor-targetable blur layer (namespace: dms:blurwallpaper). Requires manual niri configuration.",
     "context": "Enable compositor-targetable blur layer (namespace: dms:blurwallpaper). Requires manual niri configuration.",
-    "reference": "Modules/Settings/WallpaperTab.qml:1302",
+    "reference": "Modules/Settings/WallpaperTab.qml:1269",
     "comment": ""
   },
   {
@@ -5570,7 +5576,7 @@
   {
     "term": "Enabled",
     "context": "Enabled",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1507, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2078, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2086, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2112, Modules/ControlCenter/Components/DragDropGrid.qml:508",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1496, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2078, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2086, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2112, Modules/ControlCenter/Components/DragDropGrid.qml:510",
     "comment": "bluetooth status"
   },
   {
@@ -5636,13 +5642,13 @@
   {
     "term": "Enabling WiFi...",
     "context": "Enabling WiFi...",
-    "reference": "Modules/ControlCenter/Details/NetworkDetail.qml:194, Modules/ControlCenter/Components/DragDropGrid.qml:481",
+    "reference": "Modules/ControlCenter/Details/NetworkDetail.qml:194, Modules/ControlCenter/Components/DragDropGrid.qml:483",
     "comment": "network status"
   },
   {
     "term": "End",
     "context": "End",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1322, Modules/Settings/GammaControlTab.qml:295, Modules/DankDash/Overview/CalendarEventEditor.qml:264",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1311, Modules/Settings/GammaControlTab.qml:295, Modules/DankDash/Overview/CalendarEventEditor.qml:264",
     "comment": ""
   },
   {
@@ -5786,19 +5792,19 @@
   {
     "term": "Entry pinned",
     "context": "Entry pinned",
-    "reference": "Services/ClipboardService.qml:380",
+    "reference": "Services/ClipboardService.qml:315",
     "comment": ""
   },
   {
     "term": "Entry unpinned",
     "context": "Entry unpinned",
-    "reference": "Services/ClipboardService.qml:394",
+    "reference": "Services/ClipboardService.qml:329",
     "comment": ""
   },
   {
     "term": "Environment Variables",
     "context": "Environment Variables",
-    "reference": "Modals/DankLauncherV2/LauncherContent.qml:984",
+    "reference": "Modals/DankLauncherV2/AppEditView.qml:202",
     "comment": ""
   },
   {
@@ -5822,7 +5828,7 @@
   {
     "term": "Ethernet",
     "context": "Ethernet",
-    "reference": "Modals/Settings/SettingsSidebar.qml:257, Modules/Settings/NetworkStatusTab.qml:115, Modules/Settings/NetworkStatusTab.qml:164, Modules/Settings/NetworkEthernetTab.qml:42, Modules/ControlCenter/Details/NetworkDetail.qml:137, Modules/ControlCenter/Components/DragDropGrid.qml:487, Modules/ControlCenter/Components/DragDropGrid.qml:490",
+    "reference": "Modals/Settings/SettingsSidebar.qml:257, Modules/Settings/NetworkStatusTab.qml:115, Modules/Settings/NetworkStatusTab.qml:164, Modules/Settings/NetworkEthernetTab.qml:42, Modules/ControlCenter/Details/NetworkDetail.qml:137, Modules/ControlCenter/Components/DragDropGrid.qml:489, Modules/ControlCenter/Components/DragDropGrid.qml:492",
     "comment": "network status"
   },
   {
@@ -5912,13 +5918,13 @@
   {
     "term": "Expressive",
     "context": "Expressive",
-    "reference": "Common/Theme.qml:495",
+    "reference": "Common/Theme.qml:497",
     "comment": "matugen color scheme option"
   },
   {
     "term": "Extend battery life",
     "context": "Extend battery life",
-    "reference": "Common/Theme.qml:1653",
+    "reference": "Common/Theme.qml:1655",
     "comment": "power profile description"
   },
   {
@@ -5930,13 +5936,13 @@
   {
     "term": "External Wallpaper Management",
     "context": "External Wallpaper Management",
-    "reference": "Modules/Settings/WallpaperTab.qml:1262",
+    "reference": "Modules/Settings/WallpaperTab.qml:1229",
     "comment": "wallpaper settings external management"
   },
   {
     "term": "Extra Arguments",
     "context": "Extra Arguments",
-    "reference": "Modals/DankLauncherV2/LauncherContent.qml:1010",
+    "reference": "Modals/DankLauncherV2/AppEditView.qml:228",
     "comment": ""
   },
   {
@@ -5960,7 +5966,7 @@
   {
     "term": "Fade",
     "context": "Fade",
-    "reference": "Modules/Settings/WallpaperTab.qml:1183",
+    "reference": "Modules/Settings/WallpaperTab.qml:1150",
     "comment": "wallpaper transition option"
   },
   {
@@ -6002,13 +6008,13 @@
   {
     "term": "Failed to apply GTK colors",
     "context": "Failed to apply GTK colors",
-    "reference": "Common/Theme.qml:1972",
+    "reference": "Common/Theme.qml:1974",
     "comment": ""
   },
   {
     "term": "Failed to apply Qt colors",
     "context": "Failed to apply Qt colors",
-    "reference": "Common/Theme.qml:1993",
+    "reference": "Common/Theme.qml:1995",
     "comment": ""
   },
   {
@@ -6044,7 +6050,7 @@
   {
     "term": "Failed to check pin limit",
     "context": "Failed to check pin limit",
-    "reference": "Services/ClipboardService.qml:363",
+    "reference": "Services/ClipboardService.qml:298",
     "comment": ""
   },
   {
@@ -6062,7 +6068,7 @@
   {
     "term": "Failed to copy entry",
     "context": "Failed to copy entry",
-    "reference": "Services/ClipboardService.qml:274, Services/ClipboardService.qml:303",
+    "reference": "Services/ClipboardService.qml:209, Services/ClipboardService.qml:238",
     "comment": ""
   },
   {
@@ -6098,7 +6104,7 @@
   {
     "term": "Failed to disable night mode",
     "context": "Failed to disable night mode",
-    "reference": "Services/DisplayService.qml:487",
+    "reference": "Services/DisplayService.qml:496",
     "comment": ""
   },
   {
@@ -6134,7 +6140,7 @@
   {
     "term": "Failed to enable IP location",
     "context": "Failed to enable IP location",
-    "reference": "Services/DisplayService.qml:627",
+    "reference": "Services/DisplayService.qml:636",
     "comment": ""
   },
   {
@@ -6152,7 +6158,7 @@
   {
     "term": "Failed to enable night mode",
     "context": "Failed to enable night mode",
-    "reference": "Services/DisplayService.qml:459",
+    "reference": "Services/DisplayService.qml:468",
     "comment": ""
   },
   {
@@ -6212,19 +6218,19 @@
   {
     "term": "Failed to parse plugin_settings.json",
     "context": "Failed to parse plugin_settings.json",
-    "reference": "Common/SettingsData.qml:1892",
+    "reference": "Common/SettingsData.qml:1881",
     "comment": ""
   },
   {
     "term": "Failed to parse session.json",
     "context": "Failed to parse session.json",
-    "reference": "Common/SessionData.qml:286, Common/SessionData.qml:366",
+    "reference": "Common/SessionData.qml:294, Common/SessionData.qml:374",
     "comment": ""
   },
   {
     "term": "Failed to parse settings.json",
     "context": "Failed to parse settings.json",
-    "reference": "Common/SettingsData.qml:1794, Common/SettingsData.qml:3658",
+    "reference": "Common/SettingsData.qml:1783, Common/SettingsData.qml:3643",
     "comment": ""
   },
   {
@@ -6236,7 +6242,7 @@
   {
     "term": "Failed to pin entry",
     "context": "Failed to pin entry",
-    "reference": "Services/ClipboardService.qml:377",
+    "reference": "Services/ClipboardService.qml:312",
     "comment": ""
   },
   {
@@ -6248,7 +6254,7 @@
   {
     "term": "Failed to read theme file: %1",
     "context": "Failed to read theme file: %1",
-    "reference": "Common/Theme.qml:2195",
+    "reference": "Common/Theme.qml:2197",
     "comment": ""
   },
   {
@@ -6272,7 +6278,7 @@
   {
     "term": "Failed to remove device",
     "context": "Failed to remove device",
-    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:726",
+    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:763",
     "comment": ""
   },
   {
@@ -6290,7 +6296,7 @@
   {
     "term": "Failed to restart audio system",
     "context": "Failed to restart audio system",
-    "reference": "Services/AudioService.qml:362",
+    "reference": "Services/AudioService.qml:371",
     "comment": ""
   },
   {
@@ -6326,7 +6332,7 @@
   {
     "term": "Failed to save audio config",
     "context": "Failed to save audio config",
-    "reference": "Services/AudioService.qml:247",
+    "reference": "Services/AudioService.qml:256",
     "comment": ""
   },
   {
@@ -6380,19 +6386,19 @@
   {
     "term": "Failed to set night mode location",
     "context": "Failed to set night mode location",
-    "reference": "Services/DisplayService.qml:647",
+    "reference": "Services/DisplayService.qml:656",
     "comment": ""
   },
   {
     "term": "Failed to set night mode schedule",
     "context": "Failed to set night mode schedule",
-    "reference": "Services/DisplayService.qml:589",
+    "reference": "Services/DisplayService.qml:598",
     "comment": ""
   },
   {
     "term": "Failed to set night mode temperature",
     "context": "Failed to set night mode temperature",
-    "reference": "Services/DisplayService.qml:528, Services/DisplayService.qml:579, Services/DisplayService.qml:617",
+    "reference": "Services/DisplayService.qml:537, Services/DisplayService.qml:588, Services/DisplayService.qml:626",
     "comment": ""
   },
   {
@@ -6404,13 +6410,13 @@
   {
     "term": "Failed to set profile image",
     "context": "Failed to set profile image",
-    "reference": "Services/PortalService.qml:152",
+    "reference": "Services/PortalService.qml:173",
     "comment": ""
   },
   {
     "term": "Failed to set profile image: %1",
     "context": "Failed to set profile image: %1",
-    "reference": "Services/PortalService.qml:161",
+    "reference": "Services/PortalService.qml:182",
     "comment": ""
   },
   {
@@ -6428,7 +6434,7 @@
   {
     "term": "Failed to unpin entry",
     "context": "Failed to unpin entry",
-    "reference": "Services/ClipboardService.qml:391",
+    "reference": "Services/ClipboardService.qml:326",
     "comment": ""
   },
   {
@@ -6518,13 +6524,13 @@
   {
     "term": "Feels Like %1°",
     "context": "Feels Like %1°",
-    "reference": "Modules/DankDash/WeatherTab.qml:314, Modules/Settings/TimeWeatherTab.qml:807",
+    "reference": "Modules/DankDash/WeatherTab.qml:302, Modules/Settings/TimeWeatherTab.qml:807",
     "comment": "weather feels like temperature"
   },
   {
     "term": "Fidelity",
     "context": "Fidelity",
-    "reference": "Common/Theme.qml:499",
+    "reference": "Common/Theme.qml:501",
     "comment": "matugen color scheme option"
   },
   {
@@ -6536,7 +6542,7 @@
   {
     "term": "File",
     "context": "File",
-    "reference": "Services/CupsService.qml:139, dms-plugins/DankKDEConnect/components/ShareDialog.qml:361, Modals/DankLauncherV2/ResultItem.qml:230, Modals/DankLauncherV2/SpotlightResultRow.qml:70",
+    "reference": "Services/CupsService.qml:139, dms-plugins/DankKDEConnect/components/ShareDialog.qml:361, Modals/DankLauncherV2/ResultItem.qml:230, Modals/DankLauncherV2/SpotlightResultRow.qml:69",
     "comment": "KDE Connect send file button"
   },
   {
@@ -6578,7 +6584,7 @@
   {
     "term": "File search requires dsearch\nInstall from github.com/AvengeMedia/danksearch",
     "context": "File search requires dsearch\nInstall from github.com/AvengeMedia/danksearch",
-    "reference": "Modals/DankLauncherV2/ResultsList.qml:534",
+    "reference": "Modals/DankLauncherV2/ResultsList.qml:551",
     "comment": ""
   },
   {
@@ -6590,7 +6596,7 @@
   {
     "term": "Files",
     "context": "Files",
-    "reference": "Modals/DankLauncherV2/Controller.qml:226, Modals/DankLauncherV2/Controller.qml:1115, Modals/DankLauncherV2/Controller.qml:1136, Modals/DankLauncherV2/SpotlightLauncherContent.qml:448, Modals/DankLauncherV2/LauncherContent.qml:372, Modals/DankLauncherV2/LauncherContent.qml:656, Modules/Settings/LauncherTab.qml:902",
+    "reference": "Modals/DankLauncherV2/Controller.qml:226, Modals/DankLauncherV2/Controller.qml:1166, Modals/DankLauncherV2/Controller.qml:1187, Modals/DankLauncherV2/SpotlightLauncherContent.qml:448, Modals/DankLauncherV2/LauncherContent.qml:344, Modals/DankLauncherV2/LauncherContent.qml:628, Modules/Settings/LauncherTab.qml:902",
     "comment": ""
   },
   {
@@ -6602,13 +6608,13 @@
   {
     "term": "Fill",
     "context": "Fill",
-    "reference": "Modules/Settings/WallpaperTab.qml:307, Modules/Settings/Widgets/SettingsWallpaperPicker.qml:72",
+    "reference": "Modules/Settings/WallpaperTab.qml:296, Modules/Settings/Widgets/SettingsWallpaperPicker.qml:72",
     "comment": "wallpaper fill mode"
   },
   {
     "term": "Fill Mode",
     "context": "Fill Mode",
-    "reference": "Modules/Settings/WallpaperTab.qml:312",
+    "reference": "Modules/Settings/WallpaperTab.qml:301",
     "comment": "wallpaper fill mode setting"
   },
   {
@@ -6686,13 +6692,13 @@
   {
     "term": "First Time Setup",
     "context": "First Time Setup",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2221, Modules/Settings/WindowRulesTab.qml:501, Modules/Settings/KeybindsTab.qml:385, Modules/Settings/CompositorLayoutTab.qml:198, Modules/Settings/DisplayConfig/IncludeWarningBox.qml:50",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2210, Modules/Settings/WindowRulesTab.qml:501, Modules/Settings/KeybindsTab.qml:385, Modules/Settings/CompositorLayoutTab.qml:198, Modules/Settings/DisplayConfig/IncludeWarningBox.qml:50",
     "comment": ""
   },
   {
     "term": "Fit",
     "context": "Fit",
-    "reference": "Modules/Settings/WallpaperTab.qml:307",
+    "reference": "Modules/Settings/WallpaperTab.qml:296",
     "comment": "wallpaper fill mode"
   },
   {
@@ -6842,19 +6848,19 @@
   {
     "term": "Folder",
     "context": "Folder",
-    "reference": "Modals/DankLauncherV2/ResultItem.qml:230, Modals/DankLauncherV2/SpotlightResultRow.qml:70",
+    "reference": "Modals/DankLauncherV2/ResultItem.qml:230, Modals/DankLauncherV2/SpotlightResultRow.qml:69",
     "comment": ""
   },
   {
     "term": "Folders",
     "context": "Folders",
-    "reference": "Modals/DankLauncherV2/Controller.qml:1126, Modals/DankLauncherV2/Controller.qml:1136, Modals/DankLauncherV2/LauncherContent.qml:661, Modules/Settings/LauncherTab.qml:913",
+    "reference": "Modals/DankLauncherV2/Controller.qml:1177, Modals/DankLauncherV2/Controller.qml:1187, Modals/DankLauncherV2/LauncherContent.qml:633, Modules/Settings/LauncherTab.qml:913",
     "comment": ""
   },
   {
     "term": "Follow DMS background color",
     "context": "Follow DMS background color",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2755",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2744",
     "comment": ""
   },
   {
@@ -6992,7 +6998,7 @@
   {
     "term": "Force terminal applications to always use dark color schemes",
     "context": "Force terminal applications to always use dark color schemes",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2166",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2155",
     "comment": ""
   },
   {
@@ -7022,7 +7028,7 @@
   {
     "term": "Foreground Layers",
     "context": "Foreground Layers",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1752",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1741",
     "comment": ""
   },
   {
@@ -7046,7 +7052,7 @@
   {
     "term": "Forget Device",
     "context": "Forget Device",
-    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:698",
+    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:735",
     "comment": ""
   },
   {
@@ -7124,7 +7130,7 @@
   {
     "term": "Fruit Salad",
     "context": "Fruit Salad",
-    "reference": "Common/Theme.qml:503",
+    "reference": "Common/Theme.qml:505",
     "comment": "matugen color scheme option"
   },
   {
@@ -7226,7 +7232,7 @@
   {
     "term": "GTK colors applied successfully",
     "context": "GTK colors applied successfully",
-    "reference": "Common/Theme.qml:1968",
+    "reference": "Common/Theme.qml:1970",
     "comment": ""
   },
   {
@@ -7238,7 +7244,7 @@
   {
     "term": "Games",
     "context": "Games",
-    "reference": "Services/AppSearchService.qml:669",
+    "reference": "Services/AppSearchService.qml:673",
     "comment": ""
   },
   {
@@ -7274,7 +7280,7 @@
   {
     "term": "Generate baseline GTK3/4 or QT5/QT6 (requires qt6ct-kde) configurations to follow DMS colors. Only needed once.<br /><br />It is recommended to configure <a href=\"https://github.com/AvengeMedia/DankMaterialShell/blob/master/README.md#Theming\" style=\"text-decoration:none; color:%1;\">adw-gtk3</a> prior to applying GTK themes.",
     "context": "Generate baseline GTK3/4 or QT5/QT6 (requires qt6ct-kde) configurations to follow DMS colors. Only needed once.<br /><br />It is recommended to configure <a href=\"https://github.com/AvengeMedia/DankMaterialShell/blob/master/README.md#Theming\" style=\"text-decoration:none; color:%1;\">adw-gtk3</a> prior to applying GTK themes.",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2963",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2952",
     "comment": ""
   },
   {
@@ -7382,7 +7388,7 @@
   {
     "term": "Graphics",
     "context": "Graphics",
-    "reference": "Services/AppSearchService.qml:670, Services/AppSearchService.qml:671",
+    "reference": "Services/AppSearchService.qml:674, Services/AppSearchService.qml:675",
     "comment": ""
   },
   {
@@ -7628,7 +7634,7 @@
   {
     "term": "Hibernate failed",
     "context": "Hibernate failed",
-    "reference": "Services/SessionService.qml:116",
+    "reference": "Services/SessionService.qml:140",
     "comment": ""
   },
   {
@@ -7694,7 +7700,7 @@
   {
     "term": "Hide When Typing",
     "context": "Hide When Typing",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2305",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2294",
     "comment": ""
   },
   {
@@ -7706,19 +7712,19 @@
   {
     "term": "Hide cursor after inactivity (0 = disabled)",
     "context": "Hide cursor after inactivity (0 = disabled)",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2352",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2341",
     "comment": ""
   },
   {
     "term": "Hide cursor when pressing keyboard keys",
     "context": "Hide cursor when pressing keyboard keys",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2306",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2295",
     "comment": ""
   },
   {
     "term": "Hide cursor when using touch input",
     "context": "Hide cursor when using touch input",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2335",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2324",
     "comment": ""
   },
   {
@@ -7748,7 +7754,7 @@
   {
     "term": "Hide on Touch",
     "context": "Hide on Touch",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2334",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2323",
     "comment": ""
   },
   {
@@ -7778,7 +7784,7 @@
   {
     "term": "High-fidelity palette that preserves source hues.",
     "context": "High-fidelity palette that preserves source hues.",
-    "reference": "Common/Theme.qml:500",
+    "reference": "Common/Theme.qml:502",
     "comment": ""
   },
   {
@@ -7814,7 +7820,7 @@
   {
     "term": "History cleared. %1 pinned entries kept.",
     "context": "History cleared. %1 pinned entries kept.",
-    "reference": "Services/ClipboardService.qml:410",
+    "reference": "Services/ClipboardService.qml:345",
     "comment": ""
   },
   {
@@ -7826,7 +7832,7 @@
   {
     "term": "Hold longer to confirm",
     "context": "Hold longer to confirm",
-    "reference": "Modals/PowerMenuModal.qml:866, Modules/Lock/LockPowerMenu.qml:833",
+    "reference": "Modals/PowerMenuModal.qml:840, Modules/Lock/LockPowerMenu.qml:807",
     "comment": ""
   },
   {
@@ -7838,13 +7844,13 @@
   {
     "term": "Hold to confirm (%1 ms)",
     "context": "Hold to confirm (%1 ms)",
-    "reference": "Modals/PowerMenuModal.qml:869, Modals/PowerMenuModal.qml:873, Modules/Lock/LockPowerMenu.qml:836, Modules/Lock/LockPowerMenu.qml:840",
+    "reference": "Modals/PowerMenuModal.qml:843, Modals/PowerMenuModal.qml:847, Modules/Lock/LockPowerMenu.qml:810, Modules/Lock/LockPowerMenu.qml:814",
     "comment": ""
   },
   {
     "term": "Hold to confirm (%1s)",
     "context": "Hold to confirm (%1s)",
-    "reference": "Modals/PowerMenuModal.qml:870, Modals/PowerMenuModal.qml:874, Modules/Lock/LockPowerMenu.qml:837, Modules/Lock/LockPowerMenu.qml:841",
+    "reference": "Modals/PowerMenuModal.qml:844, Modals/PowerMenuModal.qml:848, Modules/Lock/LockPowerMenu.qml:811, Modules/Lock/LockPowerMenu.qml:815",
     "comment": ""
   },
   {
@@ -7886,13 +7892,13 @@
   {
     "term": "Hour",
     "context": "Hour",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1260, Modules/Settings/GammaControlTab.qml:232",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1249, Modules/Settings/GammaControlTab.qml:232",
     "comment": ""
   },
   {
     "term": "Hourly",
     "context": "Hourly",
-    "reference": "Modules/DankDash/WeatherTab.qml:868",
+    "reference": "Modules/DankDash/WeatherTab.qml:848",
     "comment": ""
   },
   {
@@ -7916,7 +7922,7 @@
   {
     "term": "How often to change wallpaper",
     "context": "How often to change wallpaper",
-    "reference": "Modules/Settings/WallpaperTab.qml:1030",
+    "reference": "Modules/Settings/WallpaperTab.qml:997",
     "comment": ""
   },
   {
@@ -7928,13 +7934,13 @@
   {
     "term": "How the wallpaper is scaled to fit the screen",
     "context": "How the wallpaper is scaled to fit the screen",
-    "reference": "Modules/Settings/WallpaperTab.qml:313",
+    "reference": "Modules/Settings/WallpaperTab.qml:302",
     "comment": ""
   },
   {
     "term": "Humidity",
     "context": "Humidity",
-    "reference": "dms-plugins/DankDesktopWeather/DankDesktopWeather.qml:413, Modules/DankDash/WeatherTab.qml:88, Modules/DankDash/WeatherForecastCard.qml:80, Modules/Settings/TimeWeatherTab.qml:964",
+    "reference": "dms-plugins/DankDesktopWeather/DankDesktopWeather.qml:413, Modules/DankDash/WeatherTab.qml:87, Modules/DankDash/WeatherForecastCard.qml:80, Modules/Settings/TimeWeatherTab.qml:964",
     "comment": ""
   },
   {
@@ -7964,7 +7970,7 @@
   {
     "term": "Hyprland conf mode",
     "context": "Hyprland conf mode",
-    "reference": "Services/KeybindsService.qml:550, Modules/Settings/ThemeColorsTab.qml:146, Modules/Settings/ThemeColorsTab.qml:2219, Modules/Settings/WindowRulesTab.qml:344, Modules/Settings/WindowRulesTab.qml:501, Modules/Settings/KeybindsTab.qml:383, Modules/Settings/CompositorLayoutTab.qml:97, Modules/Settings/CompositorLayoutTab.qml:196, Modules/Settings/DisplayConfig/IncludeWarningBox.qml:48, Modules/Settings/DisplayConfig/DisplayConfigState.qml:1521",
+    "reference": "Services/KeybindsService.qml:550, Modules/Settings/ThemeColorsTab.qml:146, Modules/Settings/ThemeColorsTab.qml:2208, Modules/Settings/WindowRulesTab.qml:344, Modules/Settings/WindowRulesTab.qml:501, Modules/Settings/KeybindsTab.qml:383, Modules/Settings/CompositorLayoutTab.qml:97, Modules/Settings/CompositorLayoutTab.qml:196, Modules/Settings/DisplayConfig/IncludeWarningBox.qml:48, Modules/Settings/DisplayConfig/DisplayConfigState.qml:1521",
     "comment": ""
   },
   {
@@ -8012,7 +8018,7 @@
   {
     "term": "Icon",
     "context": "Icon",
-    "reference": "Modals/DankLauncherV2/LauncherContent.qml:944, Modules/Settings/DockTab.qml:261",
+    "reference": "Modals/DankLauncherV2/AppEditView.qml:162, Modules/Settings/DockTab.qml:261",
     "comment": ""
   },
   {
@@ -8036,13 +8042,13 @@
   {
     "term": "Icon Theme",
     "context": "Icon Theme",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2390, Modules/Settings/ThemeColorsTab.qml:2408",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2379, Modules/Settings/ThemeColorsTab.qml:2397",
     "comment": ""
   },
   {
     "term": "Icon theme changed outside DMS; switched to System Default",
     "context": "Icon theme changed outside DMS; switched to System Default",
-    "reference": "Common/SettingsData.qml:1536",
+    "reference": "Common/SettingsData.qml:1525",
     "comment": "shown when an external tool overrides the icon theme DMS applied"
   },
   {
@@ -8108,7 +8114,7 @@
   {
     "term": "Image",
     "context": "Image",
-    "reference": "Modals/DankLauncherV2/Controller.qml:1215, Modals/Clipboard/ClipboardEntry.qml:195, Modals/Clipboard/ClipboardContent.qml:16",
+    "reference": "Modals/DankLauncherV2/Controller.qml:1270, Modals/Clipboard/ClipboardEntry.qml:195, Modals/Clipboard/ClipboardContent.qml:16",
     "comment": ""
   },
   {
@@ -8120,7 +8126,7 @@
   {
     "term": "Image copied to clipboard",
     "context": "Image copied to clipboard",
-    "reference": "Services/ClipboardService.qml:277",
+    "reference": "Services/ClipboardService.qml:212",
     "comment": ""
   },
   {
@@ -8168,7 +8174,7 @@
   {
     "term": "Include Transitions",
     "context": "Include Transitions",
-    "reference": "Modules/Settings/WallpaperTab.qml:1221",
+    "reference": "Modules/Settings/WallpaperTab.qml:1188",
     "comment": ""
   },
   {
@@ -8348,7 +8354,7 @@
   {
     "term": "Install matugen package for dynamic theming",
     "context": "Install matugen package for dynamic theming",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:602",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:591",
     "comment": "matugen installation hint"
   },
   {
@@ -8438,19 +8444,19 @@
   {
     "term": "Internet",
     "context": "Internet",
-    "reference": "Services/AppSearchService.qml:672, Services/AppSearchService.qml:673, Services/AppSearchService.qml:674, Modules/Settings/DefaultAppsTab.qml:267",
+    "reference": "Services/AppSearchService.qml:676, Services/AppSearchService.qml:677, Services/AppSearchService.qml:678, Modules/Settings/DefaultAppsTab.qml:267",
     "comment": "Internet"
   },
   {
     "term": "Interval",
     "context": "Interval",
-    "reference": "Modules/Settings/WallpaperTab.qml:976, Modules/Settings/WallpaperTab.qml:1029",
+    "reference": "Modules/Settings/WallpaperTab.qml:943, Modules/Settings/WallpaperTab.qml:996",
     "comment": "wallpaper cycling mode tab"
   },
   {
     "term": "Invalid JSON format: %1",
     "context": "Invalid JSON format: %1",
-    "reference": "Common/Theme.qml:2181",
+    "reference": "Common/Theme.qml:2183",
     "comment": ""
   },
   {
@@ -8480,13 +8486,13 @@
   {
     "term": "Invert touchpad scroll direction",
     "context": "Invert touchpad scroll direction",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2295",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2284",
     "comment": ""
   },
   {
     "term": "Iris Bloom",
     "context": "Iris Bloom",
-    "reference": "Modules/Settings/WallpaperTab.qml:1191",
+    "reference": "Modules/Settings/WallpaperTab.qml:1158",
     "comment": "wallpaper transition option"
   },
   {
@@ -8510,19 +8516,19 @@
   {
     "term": "Jump to page",
     "context": "Jump to page",
-    "reference": "Modules/DankDash/WallpaperTab.qml:662",
+    "reference": "Modules/DankDash/WallpaperTab.qml:673",
     "comment": ""
   },
   {
     "term": "Jump to page (1 - %1)",
     "context": "Jump to page (1 - %1)",
-    "reference": "Modules/DankDash/WallpaperTab.qml:824",
+    "reference": "Modules/DankDash/WallpaperTab.qml:835",
     "comment": ""
   },
   {
     "term": "Keep Awake",
     "context": "Keep Awake",
-    "reference": "Modules/ControlCenter/Models/WidgetModel.qml:153, Modules/ControlCenter/Components/DragDropGrid.qml:751",
+    "reference": "Modules/ControlCenter/Models/WidgetModel.qml:153, Modules/ControlCenter/Components/DragDropGrid.qml:753",
     "comment": ""
   },
   {
@@ -8540,7 +8546,7 @@
   {
     "term": "Keep in Bar",
     "context": "Keep in Bar",
-    "reference": "Modules/DankBar/Widgets/SystemTrayBar.qml:1873",
+    "reference": "Modules/DankBar/Widgets/SystemTrayBar.qml:1878",
     "comment": ""
   },
   {
@@ -8558,7 +8564,7 @@
   {
     "term": "Keeping Awake",
     "context": "Keeping Awake",
-    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:751",
+    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:753",
     "comment": ""
   },
   {
@@ -8726,13 +8732,13 @@
   {
     "term": "Latitude",
     "context": "Latitude",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1405, Modules/Settings/GammaControlTab.qml:379, Modules/Settings/TimeWeatherTab.qml:530",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1394, Modules/Settings/GammaControlTab.qml:379, Modules/Settings/TimeWeatherTab.qml:530",
     "comment": ""
   },
   {
     "term": "Launch",
     "context": "Launch",
-    "reference": "Modals/DankLauncherV2/LauncherContextMenu.qml:230, Modals/DankLauncherV2/Controller.qml:1189, Modals/DankLauncherV2/Controller.qml:1647, Modules/DankDash/Overview/CalendarOverviewCard.qml:265",
+    "reference": "Modals/DankLauncherV2/LauncherContextMenu.qml:230, Modals/DankLauncherV2/Controller.qml:1240, Modals/DankLauncherV2/Controller.qml:1702, Modules/DankDash/Overview/CalendarOverviewCard.qml:263",
     "comment": ""
   },
   {
@@ -8774,7 +8780,7 @@
   {
     "term": "Layer Outline Opacity",
     "context": "Layer Outline Opacity",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1835",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1824",
     "comment": ""
   },
   {
@@ -8816,19 +8822,19 @@
   {
     "term": "Light Direction",
     "context": "Light Direction",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2016",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2005",
     "comment": ""
   },
   {
     "term": "Light Mode",
     "context": "Light Mode",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1533, Modules/Settings/ThemeColorsTab.qml:1603, Modules/Settings/WallpaperTab.qml:412",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1522, Modules/Settings/ThemeColorsTab.qml:1592, Modules/Settings/WallpaperTab.qml:401",
     "comment": ""
   },
   {
     "term": "Light Mode Icon Theme",
     "context": "Light Mode Icon Theme",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2444",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2433",
     "comment": ""
   },
   {
@@ -8852,13 +8858,13 @@
   {
     "term": "Light mode base",
     "context": "Light mode base",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2704",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2693",
     "comment": ""
   },
   {
     "term": "Light mode harmony",
     "context": "Light mode harmony",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2738",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2727",
     "comment": ""
   },
   {
@@ -8906,7 +8912,7 @@
   {
     "term": "Lively palette with saturated accents.",
     "context": "Lively palette with saturated accents.",
-    "reference": "Common/Theme.qml:488",
+    "reference": "Common/Theme.qml:490",
     "comment": ""
   },
   {
@@ -8918,7 +8924,7 @@
   {
     "term": "Loading codecs...",
     "context": "Loading codecs...",
-    "reference": "Modules/ControlCenter/Details/BluetoothCodecSelector.qml:224",
+    "reference": "Modules/ControlCenter/Details/BluetoothCodecSelector.qml:240",
     "comment": ""
   },
   {
@@ -8966,7 +8972,7 @@
   {
     "term": "Location",
     "context": "Location",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1216, Modules/Settings/GammaControlTab.qml:188, Modules/Settings/PrinterTab.qml:775, Modules/Settings/PrinterTab.qml:1164, Modules/DankDash/Overview/CalendarEventEditor.qml:300",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1205, Modules/Settings/GammaControlTab.qml:188, Modules/Settings/PrinterTab.qml:775, Modules/Settings/PrinterTab.qml:1164, Modules/DankDash/Overview/CalendarEventEditor.qml:300",
     "comment": "theme auto mode tab"
   },
   {
@@ -9098,7 +9104,7 @@
   {
     "term": "Longitude",
     "context": "Longitude",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1428, Modules/Settings/GammaControlTab.qml:402, Modules/Settings/TimeWeatherTab.qml:580",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1417, Modules/Settings/GammaControlTab.qml:402, Modules/Settings/TimeWeatherTab.qml:580",
     "comment": ""
   },
   {
@@ -9188,7 +9194,7 @@
   {
     "term": "Managed by Frame in Connected Mode",
     "context": "Managed by Frame in Connected Mode",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1863, Modules/Settings/DockTab.qml:647, Modules/Settings/DankBarTab.qml:1605",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1852, Modules/Settings/DockTab.qml:647, Modules/Settings/DankBarTab.qml:1605",
     "comment": ""
   },
   {
@@ -9236,7 +9242,7 @@
   {
     "term": "Manual Coordinates",
     "context": "Manual Coordinates",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1390, Modules/Settings/GammaControlTab.qml:367",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1379, Modules/Settings/GammaControlTab.qml:367",
     "comment": ""
   },
   {
@@ -9356,7 +9362,7 @@
   {
     "term": "Material inspired shadows and elevation on modals, popouts, and dialogs",
     "context": "Material inspired shadows and elevation on modals, popouts, and dialogs",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1932",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1921",
     "comment": ""
   },
   {
@@ -9368,31 +9374,31 @@
   {
     "term": "Matugen Contrast",
     "context": "Matugen Contrast",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:655",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:644",
     "comment": ""
   },
   {
     "term": "Matugen Missing",
     "context": "Matugen Missing",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:585",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:574",
     "comment": "matugen not found status"
   },
   {
     "term": "Matugen Palette",
     "context": "Matugen Palette",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:621",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:610",
     "comment": ""
   },
   {
     "term": "Matugen Target Monitor",
     "context": "Matugen Target Monitor",
-    "reference": "Modules/Settings/WallpaperTab.qml:874",
+    "reference": "Modules/Settings/WallpaperTab.qml:841",
     "comment": ""
   },
   {
     "term": "Matugen Templates",
     "context": "Matugen Templates",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2462",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2451",
     "comment": ""
   },
   {
@@ -9530,7 +9536,7 @@
   {
     "term": "Maximum pinned entries reached",
     "context": "Maximum pinned entries reached",
-    "reference": "Services/ClipboardService.qml:369",
+    "reference": "Services/ClipboardService.qml:304",
     "comment": ""
   },
   {
@@ -9542,7 +9548,7 @@
   {
     "term": "Media",
     "context": "Media",
-    "reference": "Services/AppSearchService.qml:662, Services/AppSearchService.qml:663, Services/AppSearchService.qml:664, Widgets/DankIconPicker.qml:39, Widgets/KeybindItem.qml:1127, Widgets/KeybindItem.qml:1136, Widgets/KeybindItem.qml:1142, Modules/DankDash/DankDashPopout.qml:22, Modules/Settings/DankDashTab.qml:27",
+    "reference": "Services/AppSearchService.qml:666, Services/AppSearchService.qml:667, Services/AppSearchService.qml:668, Widgets/DankIconPicker.qml:39, Widgets/KeybindItem.qml:1127, Widgets/KeybindItem.qml:1136, Widgets/KeybindItem.qml:1142, Modules/DankDash/DankDashPopout.qml:22, Modules/Settings/DankDashTab.qml:27",
     "comment": ""
   },
   {
@@ -9596,7 +9602,7 @@
   {
     "term": "Media Players (",
     "context": "Media Players (",
-    "reference": "Modules/DankDash/MediaDropdownOverlay.qml:483",
+    "reference": "Modules/DankDash/MediaDropdownOverlay.qml:487",
     "comment": ""
   },
   {
@@ -9656,7 +9662,7 @@
   {
     "term": "Message Content",
     "context": "Message Content",
-    "reference": "Modules/Notifications/Popup/NotificationPopup.qml:988",
+    "reference": "Modules/Notifications/Popup/NotificationPopup.qml:1001",
     "comment": "notification privacy mode placeholder"
   },
   {
@@ -9710,13 +9716,13 @@
   {
     "term": "Minimal palette built around a single hue.",
     "context": "Minimal palette built around a single hue.",
-    "reference": "Common/Theme.qml:508",
+    "reference": "Common/Theme.qml:510",
     "comment": ""
   },
   {
     "term": "Minute",
     "context": "Minute",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1268, Modules/Settings/GammaControlTab.qml:240",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1257, Modules/Settings/GammaControlTab.qml:240",
     "comment": ""
   },
   {
@@ -9734,13 +9740,13 @@
   {
     "term": "Modal Background",
     "context": "Modal Background",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2121",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2110",
     "comment": ""
   },
   {
     "term": "Modal Shadows",
     "context": "Modal Shadows",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2088",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2077",
     "comment": ""
   },
   {
@@ -9758,7 +9764,7 @@
   {
     "term": "Mode:",
     "context": "Mode:",
-    "reference": "Modules/Settings/WallpaperTab.qml:960",
+    "reference": "Modules/Settings/WallpaperTab.qml:927",
     "comment": ""
   },
   {
@@ -9770,7 +9776,7 @@
   {
     "term": "Modified",
     "context": "Modified",
-    "reference": "Modals/DankLauncherV2/LauncherContent.qml:729, Modals/DankLauncherV2/LauncherContent.qml:736, Modals/DankLauncherV2/LauncherContent.qml:742, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2090, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2092",
+    "reference": "Modals/DankLauncherV2/LauncherContent.qml:701, Modals/DankLauncherV2/LauncherContent.qml:708, Modals/DankLauncherV2/LauncherContent.qml:714, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2090, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2092",
     "comment": ""
   },
   {
@@ -9800,7 +9806,7 @@
   {
     "term": "Monitor whose wallpaper drives dynamic theming colors",
     "context": "Monitor whose wallpaper drives dynamic theming colors",
-    "reference": "Modules/Settings/WallpaperTab.qml:875",
+    "reference": "Modules/Settings/WallpaperTab.qml:842",
     "comment": ""
   },
   {
@@ -9812,7 +9818,7 @@
   {
     "term": "Monochrome",
     "context": "Monochrome",
-    "reference": "Common/Theme.qml:507, Modules/Settings/DankBarTab.qml:1329",
+    "reference": "Common/Theme.qml:509, Modules/Settings/DankBarTab.qml:1329",
     "comment": "matugen color scheme option"
   },
   {
@@ -9860,13 +9866,13 @@
   {
     "term": "Mouse pointer appearance",
     "context": "Mouse pointer appearance",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2265",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2254",
     "comment": ""
   },
   {
     "term": "Mouse pointer size in pixels",
     "context": "Mouse pointer size in pixels",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2281",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2270",
     "comment": ""
   },
   {
@@ -9956,7 +9962,7 @@
   {
     "term": "Muted",
     "context": "Muted",
-    "reference": "Modules/DankDash/MediaDropdownOverlay.qml:370, Modules/ControlCenter/Components/DragDropGrid.qml:569, Modules/ControlCenter/Components/DragDropGrid.qml:580",
+    "reference": "Modules/DankDash/MediaDropdownOverlay.qml:374, Modules/ControlCenter/Components/DragDropGrid.qml:571, Modules/ControlCenter/Components/DragDropGrid.qml:582",
     "comment": "audio status"
   },
   {
@@ -9968,7 +9974,7 @@
   {
     "term": "Muted palette with subdued, calming tones.",
     "context": "Muted palette with subdued, calming tones.",
-    "reference": "Common/Theme.qml:512",
+    "reference": "Common/Theme.qml:514",
     "comment": ""
   },
   {
@@ -9980,13 +9986,13 @@
   {
     "term": "NM not supported",
     "context": "NM not supported",
-    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:460",
+    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:462",
     "comment": ""
   },
   {
     "term": "Name",
     "context": "Name",
-    "reference": "Modals/DankLauncherV2/LauncherContent.qml:727, Modals/DankLauncherV2/LauncherContent.qml:736, Modals/DankLauncherV2/LauncherContent.qml:741, Modals/DankLauncherV2/LauncherContent.qml:924, Modules/ProcessList/ProcessesView.qml:249, Modules/Settings/PluginBrowser.qml:55, Modules/Settings/DisplayWidgetsTab.qml:225, Modules/Settings/AutoStartTab.qml:540, Modules/Settings/DesktopWidgetInstanceCard.qml:203, Modules/Settings/PrinterTab.qml:754, Modules/Settings/DisplayConfigTab.qml:517, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2063, Modules/Settings/Widgets/SystemMonitorVariantCard.qml:144",
+    "reference": "Modals/DankLauncherV2/AppEditView.qml:142, Modals/DankLauncherV2/LauncherContent.qml:699, Modals/DankLauncherV2/LauncherContent.qml:708, Modals/DankLauncherV2/LauncherContent.qml:713, Modules/ProcessList/ProcessesView.qml:249, Modules/Settings/PluginBrowser.qml:55, Modules/Settings/DisplayWidgetsTab.qml:225, Modules/Settings/AutoStartTab.qml:540, Modules/Settings/DesktopWidgetInstanceCard.qml:203, Modules/Settings/PrinterTab.qml:754, Modules/Settings/DisplayConfigTab.qml:517, Modules/Settings/DisplayConfig/DisplayConfigState.qml:2063, Modules/Settings/Widgets/SystemMonitorVariantCard.qml:144",
     "comment": "plugin browser sort option"
   },
   {
@@ -10010,7 +10016,7 @@
   {
     "term": "Natural Touchpad Scrolling",
     "context": "Natural Touchpad Scrolling",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2294",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2283",
     "comment": ""
   },
   {
@@ -10088,7 +10094,7 @@
   {
     "term": "Neutral",
     "context": "Neutral",
-    "reference": "Common/Theme.qml:511",
+    "reference": "Common/Theme.qml:513",
     "comment": "matugen color scheme option"
   },
   {
@@ -10166,13 +10172,13 @@
   {
     "term": "Next Transition",
     "context": "Next Transition",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1569, Modules/Settings/GammaControlTab.qml:643",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1558, Modules/Settings/GammaControlTab.qml:643",
     "comment": ""
   },
   {
     "term": "Next page",
     "context": "Next page",
-    "reference": "Modules/DankDash/WallpaperTab.qml:678",
+    "reference": "Modules/DankDash/WallpaperTab.qml:689",
     "comment": ""
   },
   {
@@ -10184,7 +10190,7 @@
   {
     "term": "Night Mode",
     "context": "Night Mode",
-    "reference": "Modules/Settings/GammaControlTab.qml:76, Modules/ControlCenter/Models/WidgetModel.qml:128, Modules/ControlCenter/Components/DragDropGrid.qml:747",
+    "reference": "Modules/Settings/GammaControlTab.qml:76, Modules/ControlCenter/Models/WidgetModel.qml:128, Modules/ControlCenter/Components/DragDropGrid.qml:749",
     "comment": ""
   },
   {
@@ -10202,7 +10208,7 @@
   {
     "term": "Night mode failed: DMS gamma control not available",
     "context": "Night mode failed: DMS gamma control not available",
-    "reference": "Services/DisplayService.qml:447",
+    "reference": "Services/DisplayService.qml:456",
     "comment": ""
   },
   {
@@ -10232,7 +10238,7 @@
   {
     "term": "No Active Players",
     "context": "No Active Players",
-    "reference": "Modules/DankDash/MediaPlayerTab.qml:368",
+    "reference": "Modules/DankDash/MediaPlayerTab.qml:426",
     "comment": ""
   },
   {
@@ -10250,7 +10256,7 @@
   {
     "term": "No Bluetooth adapter found",
     "context": "No Bluetooth adapter found",
-    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:590",
+    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:625",
     "comment": ""
   },
   {
@@ -10346,7 +10352,7 @@
   {
     "term": "No Weather Data Available",
     "context": "No Weather Data Available",
-    "reference": "Modules/DankDash/WeatherTab.qml:139, Modules/Settings/TimeWeatherTab.qml:681",
+    "reference": "Modules/DankDash/WeatherTab.qml:138, Modules/Settings/TimeWeatherTab.qml:681",
     "comment": ""
   },
   {
@@ -10370,13 +10376,13 @@
   {
     "term": "No adapter",
     "context": "No adapter",
-    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:505",
+    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:507",
     "comment": "bluetooth status"
   },
   {
     "term": "No adapters",
     "context": "No adapters",
-    "reference": "Modules/Settings/NetworkEthernetTab.qml:60, Modules/ControlCenter/Components/DragDropGrid.qml:545",
+    "reference": "Modules/Settings/NetworkEthernetTab.qml:60, Modules/ControlCenter/Components/DragDropGrid.qml:547",
     "comment": "bluetooth status"
   },
   {
@@ -10394,7 +10400,7 @@
   {
     "term": "No apps found",
     "context": "No apps found",
-    "reference": "Modals/DankLauncherV2/ResultsList.qml:551",
+    "reference": "Modals/DankLauncherV2/ResultsList.qml:568",
     "comment": ""
   },
   {
@@ -10446,15 +10452,21 @@
     "comment": "greeter doctor page empty state"
   },
   {
+    "term": "No codecs found",
+    "context": "No codecs found",
+    "reference": "Modules/ControlCenter/Details/BluetoothCodecSelector.qml:71",
+    "comment": ""
+  },
+  {
     "term": "No custom theme file",
     "context": "No custom theme file",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:692",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:681",
     "comment": "no custom theme file status"
   },
   {
     "term": "No devices",
     "context": "No devices",
-    "reference": "dms-plugins/DankKDEConnect/DankKDEConnect.qml:461, Modules/ControlCenter/Components/DragDropGrid.qml:562",
+    "reference": "dms-plugins/DankKDEConnect/DankKDEConnect.qml:461, Modules/ControlCenter/Components/DragDropGrid.qml:564",
     "comment": "Phone Connect no devices status | bluetooth status"
   },
   {
@@ -10508,7 +10520,7 @@
   {
     "term": "No files found",
     "context": "No files found",
-    "reference": "Modals/DankLauncherV2/ResultsList.qml:544",
+    "reference": "Modals/DankLauncherV2/ResultsList.qml:561",
     "comment": ""
   },
   {
@@ -10520,7 +10532,7 @@
   {
     "term": "No folders found",
     "context": "No folders found",
-    "reference": "Modals/DankLauncherV2/ResultsList.qml:542",
+    "reference": "Modals/DankLauncherV2/ResultsList.qml:559",
     "comment": ""
   },
   {
@@ -10556,7 +10568,7 @@
   {
     "term": "No input device",
     "context": "No input device",
-    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:513",
+    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:515",
     "comment": "audio status"
   },
   {
@@ -10610,7 +10622,7 @@
   {
     "term": "No monitors",
     "context": "No monitors",
-    "reference": "Modules/Settings/WallpaperTab.qml:848, Modules/Settings/WallpaperTab.qml:879",
+    "reference": "Modules/Settings/WallpaperTab.qml:815, Modules/Settings/WallpaperTab.qml:846",
     "comment": "no monitors available label"
   },
   {
@@ -10628,7 +10640,7 @@
   {
     "term": "No output device",
     "context": "No output device",
-    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:511",
+    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:513",
     "comment": "audio status"
   },
   {
@@ -10646,7 +10658,7 @@
   {
     "term": "No plugin results",
     "context": "No plugin results",
-    "reference": "Modals/DankLauncherV2/ResultsList.qml:549",
+    "reference": "Modals/DankLauncherV2/ResultsList.qml:566",
     "comment": ""
   },
   {
@@ -10706,7 +10718,7 @@
   {
     "term": "No results found",
     "context": "No results found",
-    "reference": "dms-plugins/DankStickerSearch/DankStickerSearch.qml:153, dms-plugins/DankGifSearch/DankGifSearch.qml:96, Modals/DankLauncherV2/ResultsList.qml:546, Modals/DankLauncherV2/ResultsList.qml:553",
+    "reference": "dms-plugins/DankStickerSearch/DankStickerSearch.qml:153, dms-plugins/DankGifSearch/DankGifSearch.qml:96, Modals/DankLauncherV2/ResultsList.qml:563, Modals/DankLauncherV2/ResultsList.qml:570",
     "comment": ""
   },
   {
@@ -10760,13 +10772,13 @@
   {
     "term": "No themes installed. Browse themes to install from the registry.",
     "context": "No themes installed. Browse themes to install from the registry.",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:898",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:887",
     "comment": "no registry themes installed hint"
   },
   {
     "term": "No trigger",
     "context": "No trigger",
-    "reference": "Modals/DankLauncherV2/Controller.qml:1369, Modules/Settings/LauncherTab.qml:1028",
+    "reference": "Modals/DankLauncherV2/Controller.qml:1424, Modules/Settings/LauncherTab.qml:1028",
     "comment": ""
   },
   {
@@ -10790,19 +10802,19 @@
   {
     "term": "No wallpaper selected",
     "context": "No wallpaper selected",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:588, Modules/Settings/WallpaperTab.qml:240",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:577, Modules/Settings/WallpaperTab.qml:229",
     "comment": "no wallpaper status"
   },
   {
     "term": "No wallpapers",
     "context": "No wallpapers",
-    "reference": "Modules/DankDash/WallpaperTab.qml:646",
+    "reference": "Modules/DankDash/WallpaperTab.qml:657",
     "comment": ""
   },
   {
     "term": "No wallpapers found\n\nClick the folder icon below to browse",
     "context": "No wallpapers found\n\nClick the folder icon below to browse",
-    "reference": "Modules/DankDash/WallpaperTab.qml:601",
+    "reference": "Modules/DankDash/WallpaperTab.qml:612",
     "comment": ""
   },
   {
@@ -10850,7 +10862,7 @@
   {
     "term": "None",
     "context": "None",
-    "reference": "Modals/WindowRuleModal.qml:1156, Services/CupsService.qml:786, Modules/Settings/TypographyMotionTab.qml:495, Modules/Settings/TypographyMotionTab.qml:592, Modules/Settings/TypographyMotionTab.qml:676, Modules/Settings/WallpaperTab.qml:1181, Modules/Settings/DesktopWidgetInstanceCard.qml:258, Modules/Settings/DesktopWidgetInstanceCard.qml:274, Modules/Settings/DankBarTab.qml:1329, Modules/Settings/DankBarTab.qml:1857, Modules/Settings/DankBarTab.qml:1857, Modules/Settings/DankBarTab.qml:1898, Modules/Settings/WorkspaceAppearanceCard.qml:49, Modules/Settings/WorkspaceAppearanceCard.qml:57, Modules/Settings/NotificationsTab.qml:382, Modules/Settings/WindowRulesTab.qml:1061, Modules/Settings/DisplayConfig/HyprlandOutputSettings.qml:94, Modules/Settings/DisplayConfig/HyprlandOutputSettings.qml:107, Modules/Settings/DisplayConfig/HyprlandOutputSettings.qml:111, Modules/ControlCenter/BuiltinPlugins/TailscaleWidget.qml:181",
+    "reference": "Modals/WindowRuleModal.qml:1156, Services/CupsService.qml:786, Modules/Settings/TypographyMotionTab.qml:495, Modules/Settings/TypographyMotionTab.qml:592, Modules/Settings/TypographyMotionTab.qml:676, Modules/Settings/WallpaperTab.qml:1148, Modules/Settings/DesktopWidgetInstanceCard.qml:258, Modules/Settings/DesktopWidgetInstanceCard.qml:274, Modules/Settings/DankBarTab.qml:1329, Modules/Settings/DankBarTab.qml:1857, Modules/Settings/DankBarTab.qml:1857, Modules/Settings/DankBarTab.qml:1898, Modules/Settings/WorkspaceAppearanceCard.qml:49, Modules/Settings/WorkspaceAppearanceCard.qml:57, Modules/Settings/NotificationsTab.qml:382, Modules/Settings/WindowRulesTab.qml:1061, Modules/Settings/DisplayConfig/HyprlandOutputSettings.qml:94, Modules/Settings/DisplayConfig/HyprlandOutputSettings.qml:107, Modules/Settings/DisplayConfig/HyprlandOutputSettings.qml:111, Modules/ControlCenter/BuiltinPlugins/TailscaleWidget.qml:181",
     "comment": "Tailscale exit node: none selected | wallpaper transition option | workspace color option"
   },
   {
@@ -10916,7 +10928,7 @@
   {
     "term": "Not connected",
     "context": "Not connected",
-    "reference": "Modules/Settings/NetworkWifiTab.qml:182, Modules/ControlCenter/Components/DragDropGrid.qml:497",
+    "reference": "Modules/Settings/NetworkWifiTab.qml:182, Modules/ControlCenter/Components/DragDropGrid.qml:499",
     "comment": "network status"
   },
   {
@@ -10940,7 +10952,7 @@
   {
     "term": "Not set",
     "context": "Not set",
-    "reference": "Modules/Settings/WallpaperTab.qml:587, Modules/Settings/WallpaperTab.qml:777",
+    "reference": "Modules/Settings/WallpaperTab.qml:565, Modules/Settings/WallpaperTab.qml:744",
     "comment": "wallpaper not set label"
   },
   {
@@ -11102,13 +11114,13 @@
   {
     "term": "Off",
     "context": "Off",
-    "reference": "Modules/ProcessList/SystemView.qml:274, Modules/Settings/WindowRulesTab.qml:692, Modules/Settings/WindowRulesTab.qml:969, Modules/Settings/CompositorLayoutTab.qml:283, Modules/Settings/CompositorLayoutTab.qml:412, Modules/Settings/CompositorLayoutTab.qml:564, Modules/Settings/DisplayConfig/OutputCard.qml:334, Modules/Settings/DisplayConfig/OutputCard.qml:343, Modules/Settings/DisplayConfig/OutputCard.qml:346, Modules/Settings/DisplayConfig/OutputCard.qml:357, Modules/Settings/DisplayConfig/OutputCard.qml:365, Modules/Settings/DisplayConfig/OutputCard.qml:369, Modules/Settings/DisplayConfig/NiriOutputSettings.qml:98, Modules/Settings/DisplayConfig/NiriOutputSettings.qml:106, Modules/Settings/DisplayConfig/NiriOutputSettings.qml:113, Modules/ControlCenter/Components/DragDropGrid.qml:547, Modules/ControlCenter/Widgets/DndPill.qml:15, Modules/Notifications/Center/DndDurationMenu.qml:31",
+    "reference": "Modules/ProcessList/SystemView.qml:274, Modules/Settings/WindowRulesTab.qml:692, Modules/Settings/WindowRulesTab.qml:969, Modules/Settings/CompositorLayoutTab.qml:283, Modules/Settings/CompositorLayoutTab.qml:412, Modules/Settings/CompositorLayoutTab.qml:564, Modules/Settings/DisplayConfig/OutputCard.qml:334, Modules/Settings/DisplayConfig/OutputCard.qml:343, Modules/Settings/DisplayConfig/OutputCard.qml:346, Modules/Settings/DisplayConfig/OutputCard.qml:357, Modules/Settings/DisplayConfig/OutputCard.qml:365, Modules/Settings/DisplayConfig/OutputCard.qml:369, Modules/Settings/DisplayConfig/NiriOutputSettings.qml:98, Modules/Settings/DisplayConfig/NiriOutputSettings.qml:106, Modules/Settings/DisplayConfig/NiriOutputSettings.qml:113, Modules/ControlCenter/Components/DragDropGrid.qml:549, Modules/ControlCenter/Widgets/DndPill.qml:15, Modules/Notifications/Center/DndDurationMenu.qml:31",
     "comment": "bluetooth status"
   },
   {
     "term": "Office",
     "context": "Office",
-    "reference": "Services/AppSearchService.qml:675, Services/AppSearchService.qml:676, Services/AppSearchService.qml:677, Services/AppSearchService.qml:678",
+    "reference": "Services/AppSearchService.qml:679, Services/AppSearchService.qml:680, Services/AppSearchService.qml:681, Services/AppSearchService.qml:682",
     "comment": ""
   },
   {
@@ -11210,7 +11222,7 @@
   {
     "term": "Open",
     "context": "Open",
-    "reference": "Modals/DankLauncherV2/Controller.qml:1193, Modals/DankLauncherV2/Controller.qml:1197, Modals/DankLauncherV2/Controller.qml:1207, Modules/Notepad/NotepadTextEditor.qml:864, Modules/Settings/NetworkWifiTab.qml:566, Modules/Settings/NetworkWifiTab.qml:773, Modules/Settings/NetworkWifiTab.qml:969, Modules/Settings/NetworkWifiTab.qml:1134, Modules/ControlCenter/Details/NetworkDetail.qml:627, Modules/Notifications/Center/NotificationCard.qml:804, Modules/Notifications/Center/NotificationCard.qml:943",
+    "reference": "Modals/DankLauncherV2/Controller.qml:1244, Modals/DankLauncherV2/Controller.qml:1248, Modals/DankLauncherV2/Controller.qml:1262, Modules/Notepad/NotepadTextEditor.qml:864, Modules/Settings/NetworkWifiTab.qml:566, Modules/Settings/NetworkWifiTab.qml:773, Modules/Settings/NetworkWifiTab.qml:969, Modules/Settings/NetworkWifiTab.qml:1134, Modules/ControlCenter/Details/NetworkDetail.qml:627, Modules/Notifications/Center/NotificationCard.qml:804, Modules/Notifications/Center/NotificationCard.qml:943",
     "comment": ""
   },
   {
@@ -11282,7 +11294,7 @@
   {
     "term": "Open folder",
     "context": "Open folder",
-    "reference": "Modals/DankLauncherV2/Controller.qml:1207",
+    "reference": "Modals/DankLauncherV2/Controller.qml:1262",
     "comment": ""
   },
   {
@@ -11294,7 +11306,7 @@
   {
     "term": "Open in terminal",
     "context": "Open in terminal",
-    "reference": "Modals/DankLauncherV2/Controller.qml:1207",
+    "reference": "Modals/DankLauncherV2/Controller.qml:1262",
     "comment": ""
   },
   {
@@ -11408,7 +11420,7 @@
   {
     "term": "Outline",
     "context": "Outline",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1779, Modules/Settings/ThemeColorsTab.qml:1781, Modules/Settings/ThemeColorsTab.qml:1798, Modules/Settings/LauncherTab.qml:737",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1768, Modules/Settings/ThemeColorsTab.qml:1770, Modules/Settings/ThemeColorsTab.qml:1787, Modules/Settings/LauncherTab.qml:737",
     "comment": "outline color | surface border color"
   },
   {
@@ -11522,7 +11534,7 @@
   {
     "term": "Overview",
     "context": "Overview",
-    "reference": "Widgets/KeybindItem.qml:1133, Widgets/KeybindItem.qml:1136, Modules/DankDash/DankDashPopout.qml:18, Modules/Settings/DankDashTab.qml:22, Modules/DankBar/Widgets/WorkspaceSwitcher.qml:1016",
+    "reference": "Widgets/KeybindItem.qml:1133, Widgets/KeybindItem.qml:1136, Modules/DankDash/DankDashPopout.qml:18, Modules/Settings/DankDashTab.qml:22, Modules/DankBar/Widgets/WorkspaceSwitcher.qml:1078",
     "comment": ""
   },
   {
@@ -11588,7 +11600,7 @@
   {
     "term": "Pad",
     "context": "Pad",
-    "reference": "Modules/Settings/WallpaperTab.qml:307",
+    "reference": "Modules/Settings/WallpaperTab.qml:296",
     "comment": "wallpaper fill mode"
   },
   {
@@ -11612,7 +11624,7 @@
   {
     "term": "Pair",
     "context": "Pair",
-    "reference": "Modals/BluetoothPairingModal.qml:319, Modules/ControlCenter/Details/BluetoothDetail.qml:559",
+    "reference": "Modals/BluetoothPairingModal.qml:319, Modules/ControlCenter/Details/BluetoothDetail.qml:594",
     "comment": ""
   },
   {
@@ -11624,7 +11636,7 @@
   {
     "term": "Paired",
     "context": "Paired",
-    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:299",
+    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:334",
     "comment": ""
   },
   {
@@ -11636,7 +11648,7 @@
   {
     "term": "Pairing failed",
     "context": "Pairing failed",
-    "reference": "Modals/BluetoothPairingModal.qml:395, dms-plugins/DankKDEConnect/DankKDEConnect.qml:674, Modules/ControlCenter/Details/BluetoothDetail.qml:50",
+    "reference": "Modals/BluetoothPairingModal.qml:395, dms-plugins/DankKDEConnect/DankKDEConnect.qml:674, Modules/ControlCenter/Details/BluetoothDetail.qml:85",
     "comment": "Phone Connect error"
   },
   {
@@ -11660,7 +11672,7 @@
   {
     "term": "Pairing...",
     "context": "Pairing...",
-    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:531, Modules/ControlCenter/Details/BluetoothDetail.qml:556",
+    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:566, Modules/ControlCenter/Details/BluetoothDetail.qml:591",
     "comment": ""
   },
   {
@@ -11720,13 +11732,13 @@
   {
     "term": "Paste",
     "context": "Paste",
-    "reference": "dms-plugins/DankStickerSearch/DankStickerSearch.qml:248, dms-plugins/DankGifSearch/DankGifSearch.qml:195, Modals/DankLauncherV2/Controller.qml:1212, Modals/Clipboard/ClipboardContextMenu.qml:70, Modules/Settings/ClipboardTab.qml:156",
+    "reference": "dms-plugins/DankStickerSearch/DankStickerSearch.qml:248, dms-plugins/DankGifSearch/DankGifSearch.qml:195, Modals/DankLauncherV2/Controller.qml:1267, Modals/Clipboard/ClipboardContextMenu.qml:70, Modules/Settings/ClipboardTab.qml:156",
     "comment": ""
   },
   {
     "term": "Paste failed: %1",
     "context": "Paste failed: %1",
-    "reference": "Services/ClipboardService.qml:82",
+    "reference": "Services/ClipboardService.qml:81",
     "comment": ""
   },
   {
@@ -11780,13 +11792,13 @@
   {
     "term": "Per-Mode Wallpapers",
     "context": "Per-Mode Wallpapers",
-    "reference": "Modules/Settings/WallpaperTab.qml:390",
+    "reference": "Modules/Settings/WallpaperTab.qml:379",
     "comment": ""
   },
   {
     "term": "Per-Monitor Wallpapers",
     "context": "Per-Monitor Wallpapers",
-    "reference": "Modules/Settings/WallpaperTab.qml:821",
+    "reference": "Modules/Settings/WallpaperTab.qml:788",
     "comment": ""
   },
   {
@@ -11804,7 +11816,7 @@
   {
     "term": "Performance",
     "context": "Performance",
-    "reference": "Modals/ProcessListModal.qml:317, Common/Theme.qml:1644",
+    "reference": "Modals/ProcessListModal.qml:317, Common/Theme.qml:1646",
     "comment": "power profile option"
   },
   {
@@ -11816,7 +11828,7 @@
   {
     "term": "Permission denied to set profile image.",
     "context": "Permission denied to set profile image.",
-    "reference": "Services/PortalService.qml:157",
+    "reference": "Services/PortalService.qml:178",
     "comment": ""
   },
   {
@@ -11870,7 +11882,7 @@
   {
     "term": "Pin",
     "context": "Pin",
-    "reference": "Modals/WindowRuleModal.qml:1569, dms-plugins/DankLauncherKeys/DankLauncherKeys.qml:165, Modals/Clipboard/ClipboardContextMenu.qml:32, Modules/Settings/WindowRulesTab.qml:123, Modules/Settings/ClipboardTab.qml:156, Modules/ControlCenter/Details/BluetoothDetail.qml:357, Modules/ControlCenter/Details/BrightnessDetail.qml:239, Modules/ControlCenter/Details/AudioInputDetail.qml:297, Modules/ControlCenter/Details/AudioOutputDetail.qml:306, Modules/ControlCenter/Details/NetworkDetail.qml:696",
+    "reference": "Modals/WindowRuleModal.qml:1569, dms-plugins/DankLauncherKeys/DankLauncherKeys.qml:165, Modals/Clipboard/ClipboardContextMenu.qml:32, Modules/Settings/WindowRulesTab.qml:123, Modules/Settings/ClipboardTab.qml:156, Modules/ControlCenter/Details/BluetoothDetail.qml:392, Modules/ControlCenter/Details/BrightnessDetail.qml:239, Modules/ControlCenter/Details/AudioInputDetail.qml:297, Modules/ControlCenter/Details/AudioOutputDetail.qml:306, Modules/ControlCenter/Details/NetworkDetail.qml:696",
     "comment": ""
   },
   {
@@ -11894,7 +11906,7 @@
   {
     "term": "Pinned",
     "context": "Pinned",
-    "reference": "Modals/WindowRuleModal.qml:919, Modals/DankLauncherV2/Controller.qml:191, Modals/DankLauncherV2/Controller.qml:1215, Modules/Settings/WindowRulesTab.qml:56, Modules/ControlCenter/Details/BluetoothDetail.qml:357, Modules/ControlCenter/Details/BrightnessDetail.qml:239, Modules/ControlCenter/Details/AudioInputDetail.qml:297, Modules/ControlCenter/Details/AudioOutputDetail.qml:306, Modules/ControlCenter/Details/NetworkDetail.qml:696",
+    "reference": "Modals/WindowRuleModal.qml:919, Modals/DankLauncherV2/Controller.qml:191, Modals/DankLauncherV2/Controller.qml:1270, Modules/Settings/WindowRulesTab.qml:56, Modules/ControlCenter/Details/BluetoothDetail.qml:392, Modules/ControlCenter/Details/BrightnessDetail.qml:239, Modules/ControlCenter/Details/AudioInputDetail.qml:297, Modules/ControlCenter/Details/AudioOutputDetail.qml:306, Modules/ControlCenter/Details/NetworkDetail.qml:696",
     "comment": ""
   },
   {
@@ -11906,7 +11918,7 @@
   {
     "term": "Pixelate",
     "context": "Pixelate",
-    "reference": "Modules/Settings/WallpaperTab.qml:1193",
+    "reference": "Modules/Settings/WallpaperTab.qml:1160",
     "comment": "wallpaper transition option"
   },
   {
@@ -12008,7 +12020,7 @@
   {
     "term": "Please wait...",
     "context": "Please wait...",
-    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:523",
+    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:525",
     "comment": "network status"
   },
   {
@@ -12026,7 +12038,7 @@
   {
     "term": "Plugin",
     "context": "Plugin",
-    "reference": "Modals/DankLauncherV2/ResultItem.qml:224, Modals/DankLauncherV2/SpotlightResultRow.qml:64, Modules/Settings/DesktopWidgetBrowser.qml:411, Modules/ControlCenter/Models/WidgetModel.qml:321",
+    "reference": "Modals/DankLauncherV2/ResultItem.qml:224, Modals/DankLauncherV2/SpotlightResultRow.qml:63, Modules/Settings/DesktopWidgetBrowser.qml:411, Modules/ControlCenter/Models/WidgetModel.qml:321",
     "comment": ""
   },
   {
@@ -12092,7 +12104,7 @@
   {
     "term": "Plugins",
     "context": "Plugins",
-    "reference": "Modals/Greeter/GreeterWelcomePage.qml:121, Modals/Greeter/GreeterCompletePage.qml:476, Modals/DankLauncherV2/SpotlightLauncherContent.qml:452, Modals/DankLauncherV2/LauncherContent.qml:377, Modals/Settings/SettingsSidebar.qml:397, Modules/Settings/AboutTab.qml:290, Modules/Settings/AboutTab.qml:298",
+    "reference": "Modals/Greeter/GreeterWelcomePage.qml:121, Modals/Greeter/GreeterCompletePage.qml:476, Modals/DankLauncherV2/SpotlightLauncherContent.qml:452, Modals/DankLauncherV2/LauncherContent.qml:349, Modals/Settings/SettingsSidebar.qml:397, Modules/Settings/AboutTab.qml:290, Modules/Settings/AboutTab.qml:298",
     "comment": "greeter feature card title | greeter plugins link"
   },
   {
@@ -12116,7 +12128,7 @@
   {
     "term": "Popout Shadows",
     "context": "Popout Shadows",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2099",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2088",
     "comment": ""
   },
   {
@@ -12164,7 +12176,7 @@
   {
     "term": "Portal",
     "context": "Portal",
-    "reference": "Modules/Settings/WallpaperTab.qml:1195",
+    "reference": "Modules/Settings/WallpaperTab.qml:1162",
     "comment": "wallpaper transition option"
   },
   {
@@ -12254,7 +12266,7 @@
   {
     "term": "Power Saver",
     "context": "Power Saver",
-    "reference": "Common/Theme.qml:1640",
+    "reference": "Common/Theme.qml:1642",
     "comment": "power profile option"
   },
   {
@@ -12308,7 +12320,7 @@
   {
     "term": "Precipitation",
     "context": "Precipitation",
-    "reference": "Modules/DankDash/WeatherTab.qml:103",
+    "reference": "Modules/DankDash/WeatherTab.qml:102",
     "comment": ""
   },
   {
@@ -12356,7 +12368,7 @@
   {
     "term": "Pressure",
     "context": "Pressure",
-    "reference": "dms-plugins/DankDesktopWeather/DankDesktopWeather.qml:453, Modules/DankDash/WeatherTab.qml:98, Modules/DankDash/WeatherForecastCard.qml:90, Modules/Settings/TimeWeatherTab.qml:1065",
+    "reference": "dms-plugins/DankDesktopWeather/DankDesktopWeather.qml:453, Modules/DankDash/WeatherTab.qml:97, Modules/DankDash/WeatherForecastCard.qml:90, Modules/Settings/TimeWeatherTab.qml:1065",
     "comment": ""
   },
   {
@@ -12392,19 +12404,19 @@
   {
     "term": "Previous page",
     "context": "Previous page",
-    "reference": "Modules/DankDash/WallpaperTab.qml:634",
+    "reference": "Modules/DankDash/WallpaperTab.qml:645",
     "comment": ""
   },
   {
     "term": "Primary",
     "context": "Primary",
-    "reference": "dms-plugins/DankDesktopWeather/DankDesktopWeatherSettings.qml:39, Modules/Settings/ThemeColorsTab.qml:1679, Modules/Settings/ThemeColorsTab.qml:1681, Modules/Settings/ThemeColorsTab.qml:1695, Modules/Settings/ThemeColorsTab.qml:1717, Modules/Settings/ThemeColorsTab.qml:1719, Modules/Settings/ThemeColorsTab.qml:1733, Modules/Settings/ThemeColorsTab.qml:1779, Modules/Settings/ThemeColorsTab.qml:1782, Modules/Settings/ThemeColorsTab.qml:1790, Modules/Settings/ThemeColorsTab.qml:1802, Modules/Settings/ThemeColorsTab.qml:1973, Modules/Settings/ThemeColorsTab.qml:1977, Modules/Settings/ThemeColorsTab.qml:1986, Modules/Settings/ThemeColorsTab.qml:1997, Modules/Settings/DockTab.qml:403, Modules/Settings/DockTab.qml:688, Modules/Settings/WallpaperTab.qml:359, Modules/Settings/LauncherTab.qml:428, Modules/Settings/LauncherTab.qml:737, Modules/Settings/NetworkStatusTab.qml:131, Modules/Settings/DankBarTab.qml:1329, Modules/Settings/DankBarTab.qml:1775, Modules/Settings/WorkspaceAppearanceCard.qml:19, Modules/Settings/WorkspaceAppearanceCard.qml:60, Modules/Settings/WorkspaceAppearanceCard.qml:101, Modules/Settings/WorkspaceAppearanceCard.qml:130, Modules/Settings/WorkspaceAppearanceCard.qml:165, Modules/Settings/FrameTab.qml:231, Modules/Settings/Widgets/SettingsColorPicker.qml:42",
+    "reference": "dms-plugins/DankDesktopWeather/DankDesktopWeatherSettings.qml:39, Modules/Settings/ThemeColorsTab.qml:1668, Modules/Settings/ThemeColorsTab.qml:1670, Modules/Settings/ThemeColorsTab.qml:1684, Modules/Settings/ThemeColorsTab.qml:1706, Modules/Settings/ThemeColorsTab.qml:1708, Modules/Settings/ThemeColorsTab.qml:1722, Modules/Settings/ThemeColorsTab.qml:1768, Modules/Settings/ThemeColorsTab.qml:1771, Modules/Settings/ThemeColorsTab.qml:1779, Modules/Settings/ThemeColorsTab.qml:1791, Modules/Settings/ThemeColorsTab.qml:1962, Modules/Settings/ThemeColorsTab.qml:1966, Modules/Settings/ThemeColorsTab.qml:1975, Modules/Settings/ThemeColorsTab.qml:1986, Modules/Settings/DockTab.qml:403, Modules/Settings/DockTab.qml:688, Modules/Settings/WallpaperTab.qml:348, Modules/Settings/LauncherTab.qml:428, Modules/Settings/LauncherTab.qml:737, Modules/Settings/NetworkStatusTab.qml:131, Modules/Settings/DankBarTab.qml:1329, Modules/Settings/DankBarTab.qml:1775, Modules/Settings/WorkspaceAppearanceCard.qml:19, Modules/Settings/WorkspaceAppearanceCard.qml:60, Modules/Settings/WorkspaceAppearanceCard.qml:101, Modules/Settings/WorkspaceAppearanceCard.qml:130, Modules/Settings/WorkspaceAppearanceCard.qml:165, Modules/Settings/FrameTab.qml:231, Modules/Settings/Widgets/SettingsColorPicker.qml:42",
     "comment": "button color option | color option | primary color | shadow color option | surface border color | tile color option | workspace color option"
   },
   {
     "term": "Primary Container",
     "context": "Primary Container",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:53, Modules/Settings/ThemeColorsTab.qml:1679, Modules/Settings/ThemeColorsTab.qml:1682, Modules/Settings/ThemeColorsTab.qml:1689, Modules/Settings/ThemeColorsTab.qml:1699, Modules/Settings/ThemeColorsTab.qml:1717, Modules/Settings/ThemeColorsTab.qml:1720, Modules/Settings/ThemeColorsTab.qml:1727, Modules/Settings/ThemeColorsTab.qml:1737, Modules/Settings/WorkspaceAppearanceCard.qml:22, Modules/Settings/WorkspaceAppearanceCard.qml:63, Modules/Settings/WorkspaceAppearanceCard.qml:133, Modules/Settings/WorkspaceAppearanceCard.qml:168",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:53, Modules/Settings/ThemeColorsTab.qml:1668, Modules/Settings/ThemeColorsTab.qml:1671, Modules/Settings/ThemeColorsTab.qml:1678, Modules/Settings/ThemeColorsTab.qml:1688, Modules/Settings/ThemeColorsTab.qml:1706, Modules/Settings/ThemeColorsTab.qml:1709, Modules/Settings/ThemeColorsTab.qml:1716, Modules/Settings/ThemeColorsTab.qml:1726, Modules/Settings/WorkspaceAppearanceCard.qml:22, Modules/Settings/WorkspaceAppearanceCard.qml:63, Modules/Settings/WorkspaceAppearanceCard.qml:133, Modules/Settings/WorkspaceAppearanceCard.qml:168",
     "comment": "button color option | tile color option | widget background color option | workspace color option"
   },
   {
@@ -12470,7 +12482,7 @@
   {
     "term": "Prioritize performance",
     "context": "Prioritize performance",
-    "reference": "Common/Theme.qml:1657",
+    "reference": "Common/Theme.qml:1659",
     "comment": "power profile description"
   },
   {
@@ -12530,7 +12542,7 @@
   {
     "term": "Profile Image Error",
     "context": "Profile Image Error",
-    "reference": "Services/PortalService.qml:164",
+    "reference": "Services/PortalService.qml:185",
     "comment": ""
   },
   {
@@ -12554,7 +12566,7 @@
   {
     "term": "Profile image is too large. Please use a smaller image.",
     "context": "Profile image is too large. Please use a smaller image.",
-    "reference": "Services/PortalService.qml:155",
+    "reference": "Services/PortalService.qml:176",
     "comment": ""
   },
   {
@@ -12608,7 +12620,7 @@
   {
     "term": "Qt colors applied successfully",
     "context": "Qt colors applied successfully",
-    "reference": "Common/Theme.qml:1989",
+    "reference": "Common/Theme.qml:1991",
     "comment": ""
   },
   {
@@ -12698,13 +12710,13 @@
   {
     "term": "Rainbow",
     "context": "Rainbow",
-    "reference": "Common/Theme.qml:515",
+    "reference": "Common/Theme.qml:517",
     "comment": "matugen color scheme option"
   },
   {
     "term": "Random",
     "context": "Random",
-    "reference": "Modules/Settings/WallpaperTab.qml:1179, Modules/Settings/WallpaperTab.qml:1202, Modules/Settings/WallpaperTab.qml:1205",
+    "reference": "Modules/Settings/WallpaperTab.qml:1146, Modules/Settings/WallpaperTab.qml:1169, Modules/Settings/WallpaperTab.qml:1172",
     "comment": "wallpaper transition option"
   },
   {
@@ -12788,7 +12800,7 @@
   {
     "term": "Refresh Weather",
     "context": "Refresh Weather",
-    "reference": "Modules/DankDash/WeatherTab.qml:169, Modules/DankDash/WeatherTab.qml:911",
+    "reference": "Modules/DankDash/WeatherTab.qml:168, Modules/DankDash/WeatherTab.qml:891",
     "comment": ""
   },
   {
@@ -13046,7 +13058,7 @@
   {
     "term": "Required plugin: ",
     "context": "Required plugin: ",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2679",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2668",
     "comment": ""
   },
   {
@@ -13106,7 +13118,7 @@
   {
     "term": "Reset",
     "context": "Reset",
-    "reference": "Modals/DankLauncherV2/LauncherContent.qml:1041, Modules/Settings/WidgetsTab.qml:1268, Modules/Settings/KeybindsTab.qml:122, Modules/Settings/DankDashTab.qml:254, Modules/Settings/DankDashTab.qml:269, Modules/Settings/Widgets/SettingsSliderRow.qml:144, Modules/Settings/Widgets/SettingsSliderCard.qml:130, Modules/ControlCenter/Components/EditControls.qml:306",
+    "reference": "Modals/DankLauncherV2/AppEditView.qml:259, Modules/Settings/WidgetsTab.qml:1268, Modules/Settings/KeybindsTab.qml:122, Modules/Settings/DankDashTab.qml:254, Modules/Settings/DankDashTab.qml:269, Modules/Settings/Widgets/SettingsSliderRow.qml:144, Modules/Settings/Widgets/SettingsSliderCard.qml:130, Modules/ControlCenter/Components/EditControls.qml:306",
     "comment": ""
   },
   {
@@ -13340,13 +13352,13 @@
   {
     "term": "Run DMS Templates",
     "context": "Run DMS Templates",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2483",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2472",
     "comment": ""
   },
   {
     "term": "Run User Templates",
     "context": "Run User Templates",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2473",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2462",
     "comment": ""
   },
   {
@@ -13424,7 +13436,7 @@
   {
     "term": "Save",
     "context": "Save",
-    "reference": "Modals/DankColorPickerModal.qml:752, Widgets/KeybindItem.qml:1403, Widgets/KeybindItem.qml:1879, Modals/DankLauncherV2/LauncherContent.qml:1089, Modals/FileBrowser/FileBrowserSaveRow.qml:56, Modals/Clipboard/ClipboardEditor.qml:352, Modals/Clipboard/ClipboardEditor.qml:438, Modules/Notepad/NotepadTextEditor.qml:848, Modules/Notepad/Notepad.qml:771, Modules/Settings/DisplayConfigTab.qml:406, Modules/Settings/AudioTab.qml:694, Modules/DankDash/Overview/CalendarEventEditor.qml:332",
+    "reference": "Modals/DankColorPickerModal.qml:752, Widgets/KeybindItem.qml:1403, Widgets/KeybindItem.qml:1879, Modals/DankLauncherV2/AppEditView.qml:307, Modals/FileBrowser/FileBrowserSaveRow.qml:56, Modals/Clipboard/ClipboardEditor.qml:352, Modals/Clipboard/ClipboardEditor.qml:438, Modules/Notepad/NotepadTextEditor.qml:848, Modules/Notepad/Notepad.qml:771, Modules/Settings/DisplayConfigTab.qml:406, Modules/Settings/AudioTab.qml:694, Modules/DankDash/Overview/CalendarEventEditor.qml:332",
     "comment": ""
   },
   {
@@ -13520,7 +13532,7 @@
   {
     "term": "Saved item deleted",
     "context": "Saved item deleted",
-    "reference": "Services/ClipboardService.qml:355",
+    "reference": "Services/ClipboardService.qml:290",
     "comment": ""
   },
   {
@@ -13562,13 +13574,13 @@
   {
     "term": "Scan",
     "context": "Scan",
-    "reference": "Modules/Settings/PluginsTab.qml:245, Modules/ControlCenter/Details/BluetoothDetail.qml:134",
+    "reference": "Modules/Settings/PluginsTab.qml:245, Modules/ControlCenter/Details/BluetoothDetail.qml:169",
     "comment": ""
   },
   {
     "term": "Scanning",
     "context": "Scanning",
-    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:134",
+    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:169",
     "comment": ""
   },
   {
@@ -13580,13 +13592,13 @@
   {
     "term": "Science",
     "context": "Science",
-    "reference": "Services/AppSearchService.qml:679",
+    "reference": "Services/AppSearchService.qml:683",
     "comment": ""
   },
   {
     "term": "Score",
     "context": "Score",
-    "reference": "Modals/DankLauncherV2/LauncherContent.qml:725, Modals/DankLauncherV2/LauncherContent.qml:733, Modals/DankLauncherV2/LauncherContent.qml:736, Modals/DankLauncherV2/LauncherContent.qml:740",
+    "reference": "Modals/DankLauncherV2/LauncherContent.qml:697, Modals/DankLauncherV2/LauncherContent.qml:705, Modals/DankLauncherV2/LauncherContent.qml:708, Modals/DankLauncherV2/LauncherContent.qml:712",
     "comment": ""
   },
   {
@@ -13604,7 +13616,7 @@
   {
     "term": "Scroll",
     "context": "Scroll",
-    "reference": "Modules/Settings/WallpaperTab.qml:307, Modules/Settings/WindowRulesTab.qml:107",
+    "reference": "Modules/Settings/WallpaperTab.qml:296, Modules/Settings/WindowRulesTab.qml:107",
     "comment": "wallpaper fill mode"
   },
   {
@@ -13760,7 +13772,7 @@
   {
     "term": "Secondary",
     "context": "Secondary",
-    "reference": "dms-plugins/DankDesktopWeather/DankDesktopWeatherSettings.qml:43, Modules/Settings/ThemeColorsTab.qml:1679, Modules/Settings/ThemeColorsTab.qml:1683, Modules/Settings/ThemeColorsTab.qml:1691, Modules/Settings/ThemeColorsTab.qml:1701, Modules/Settings/ThemeColorsTab.qml:1717, Modules/Settings/ThemeColorsTab.qml:1721, Modules/Settings/ThemeColorsTab.qml:1729, Modules/Settings/ThemeColorsTab.qml:1739, Modules/Settings/ThemeColorsTab.qml:1779, Modules/Settings/ThemeColorsTab.qml:1783, Modules/Settings/ThemeColorsTab.qml:1792, Modules/Settings/ThemeColorsTab.qml:1804, Modules/Settings/DockTab.qml:688, Modules/Settings/LauncherTab.qml:737, Modules/Settings/DankBarTab.qml:1329, Modules/Settings/DankBarTab.qml:1775, Modules/Settings/WorkspaceAppearanceCard.qml:25, Modules/Settings/WorkspaceAppearanceCard.qml:66, Modules/Settings/WorkspaceAppearanceCard.qml:104, Modules/Settings/WorkspaceAppearanceCard.qml:136, Modules/Settings/WorkspaceAppearanceCard.qml:171, Modules/Settings/Widgets/SettingsColorPicker.qml:47",
+    "reference": "dms-plugins/DankDesktopWeather/DankDesktopWeatherSettings.qml:43, Modules/Settings/ThemeColorsTab.qml:1668, Modules/Settings/ThemeColorsTab.qml:1672, Modules/Settings/ThemeColorsTab.qml:1680, Modules/Settings/ThemeColorsTab.qml:1690, Modules/Settings/ThemeColorsTab.qml:1706, Modules/Settings/ThemeColorsTab.qml:1710, Modules/Settings/ThemeColorsTab.qml:1718, Modules/Settings/ThemeColorsTab.qml:1728, Modules/Settings/ThemeColorsTab.qml:1768, Modules/Settings/ThemeColorsTab.qml:1772, Modules/Settings/ThemeColorsTab.qml:1781, Modules/Settings/ThemeColorsTab.qml:1793, Modules/Settings/DockTab.qml:688, Modules/Settings/LauncherTab.qml:737, Modules/Settings/DankBarTab.qml:1329, Modules/Settings/DankBarTab.qml:1775, Modules/Settings/WorkspaceAppearanceCard.qml:25, Modules/Settings/WorkspaceAppearanceCard.qml:66, Modules/Settings/WorkspaceAppearanceCard.qml:104, Modules/Settings/WorkspaceAppearanceCard.qml:136, Modules/Settings/WorkspaceAppearanceCard.qml:171, Modules/Settings/Widgets/SettingsColorPicker.qml:47",
     "comment": "button color option | color option | secondary color | surface border color | tile color option | workspace color option"
   },
   {
@@ -13808,7 +13820,7 @@
   {
     "term": "Select",
     "context": "Select",
-    "reference": "Modals/DankLauncherV2/Controller.qml:1520",
+    "reference": "Modals/DankLauncherV2/Controller.qml:1575",
     "comment": ""
   },
   {
@@ -13826,7 +13838,7 @@
   {
     "term": "Select Custom Theme",
     "context": "Select Custom Theme",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2986",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2975",
     "comment": "custom theme file browser title"
   },
   {
@@ -13862,13 +13874,13 @@
   {
     "term": "Select Wallpaper",
     "context": "Select Wallpaper",
-    "reference": "Modals/Settings/SettingsModal.qml:159, Modules/Settings/WallpaperTab.qml:1334, Modules/Settings/WallpaperTab.qml:1356, Modules/Settings/WallpaperTab.qml:1376",
+    "reference": "Modals/Settings/SettingsModal.qml:159, Modules/Settings/WallpaperTab.qml:1301, Modules/Settings/WallpaperTab.qml:1323, Modules/Settings/WallpaperTab.qml:1343",
     "comment": "dark mode wallpaper file browser title | light mode wallpaper file browser title | wallpaper file browser title"
   },
   {
     "term": "Select Wallpaper Directory",
     "context": "Select Wallpaper Directory",
-    "reference": "Modules/DankDash/WallpaperTab.qml:420",
+    "reference": "Modules/DankDash/WallpaperTab.qml:403",
     "comment": "wallpaper directory file browser title"
   },
   {
@@ -13928,7 +13940,7 @@
   {
     "term": "Select device",
     "context": "Select device",
-    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:567, Modules/ControlCenter/Components/DragDropGrid.qml:578",
+    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:569, Modules/ControlCenter/Components/DragDropGrid.qml:580",
     "comment": "audio status"
   },
   {
@@ -13964,7 +13976,7 @@
   {
     "term": "Select monitor to configure wallpaper",
     "context": "Select monitor to configure wallpaper",
-    "reference": "Modules/Settings/WallpaperTab.qml:840",
+    "reference": "Modules/Settings/WallpaperTab.qml:807",
     "comment": ""
   },
   {
@@ -13976,7 +13988,7 @@
   {
     "term": "Select network",
     "context": "Select network",
-    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:539",
+    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:541",
     "comment": "network status"
   },
   {
@@ -13994,7 +14006,7 @@
   {
     "term": "Select the palette algorithm used for wallpaper-based colors",
     "context": "Select the palette algorithm used for wallpaper-based colors",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:622",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:611",
     "comment": ""
   },
   {
@@ -14012,7 +14024,7 @@
   {
     "term": "Select which transitions to include in randomization",
     "context": "Select which transitions to include in randomization",
-    "reference": "Modules/Settings/WallpaperTab.qml:1228",
+    "reference": "Modules/Settings/WallpaperTab.qml:1195",
     "comment": ""
   },
   {
@@ -14024,7 +14036,7 @@
   {
     "term": "Selected image file not found.",
     "context": "Selected image file not found.",
-    "reference": "Services/PortalService.qml:159",
+    "reference": "Services/PortalService.qml:180",
     "comment": ""
   },
   {
@@ -14066,7 +14078,7 @@
   {
     "term": "Separate Light & Dark Themes",
     "context": "Separate Light & Dark Themes",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2398",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2387",
     "comment": ""
   },
   {
@@ -14120,13 +14132,13 @@
   {
     "term": "Set different wallpapers for each connected monitor",
     "context": "Set different wallpapers for each connected monitor",
-    "reference": "Modules/Settings/WallpaperTab.qml:822",
+    "reference": "Modules/Settings/WallpaperTab.qml:789",
     "comment": ""
   },
   {
     "term": "Set different wallpapers for light and dark mode",
     "context": "Set different wallpapers for light and dark mode",
-    "reference": "Modules/Settings/WallpaperTab.qml:391",
+    "reference": "Modules/Settings/WallpaperTab.qml:380",
     "comment": ""
   },
   {
@@ -14168,19 +14180,19 @@
   {
     "term": "Setting",
     "context": "Setting",
-    "reference": "Services/AppSearchService.qml:325, Modals/DankLauncherV2/ResultItem.qml:226, Modals/DankLauncherV2/SpotlightResultRow.qml:66",
+    "reference": "Services/AppSearchService.qml:329, Modals/DankLauncherV2/ResultItem.qml:226, Modals/DankLauncherV2/SpotlightResultRow.qml:65",
     "comment": ""
   },
   {
     "term": "Setting up...",
     "context": "Setting up...",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2250, Modules/Settings/WindowRulesTab.qml:522, Modules/Settings/KeybindsTab.qml:420, Modules/Settings/CompositorLayoutTab.qml:227, Modules/Settings/DisplayConfig/IncludeWarningBox.qml:79",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2239, Modules/Settings/WindowRulesTab.qml:522, Modules/Settings/KeybindsTab.qml:420, Modules/Settings/CompositorLayoutTab.qml:227, Modules/Settings/DisplayConfig/IncludeWarningBox.qml:79",
     "comment": ""
   },
   {
     "term": "Settings",
     "context": "Settings",
-    "reference": "Services/AppSearchService.qml:171, Services/AppSearchService.qml:324, Services/AppSearchService.qml:680, Services/PopoutService.qml:447, Services/PopoutService.qml:464, Modals/DankLauncherV2/Controller.qml:205, Modals/Settings/SettingsSidebar.qml:128, Modals/Settings/SettingsModal.qml:88, Modals/Settings/SettingsModal.qml:232, Modules/DankDash/DankDashPopout.qml:34, Modules/Settings/DankDashTab.qml:42, Modules/Dock/DockTrashContextMenu.qml:48",
+    "reference": "Services/AppSearchService.qml:171, Services/AppSearchService.qml:328, Services/AppSearchService.qml:684, Services/PopoutService.qml:448, Services/PopoutService.qml:465, Modals/DankLauncherV2/Controller.qml:205, Modals/Settings/SettingsSidebar.qml:128, Modals/Settings/SettingsModal.qml:88, Modals/Settings/SettingsModal.qml:232, Modules/DankDash/DankDashPopout.qml:34, Modules/Settings/DankDashTab.qml:42, Modules/Dock/DockTrashContextMenu.qml:48",
     "comment": "settings window title"
   },
   {
@@ -14198,25 +14210,25 @@
   {
     "term": "Setup",
     "context": "Setup",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2250, Modules/Settings/WindowRulesTab.qml:522, Modules/Settings/KeybindsTab.qml:420, Modules/Settings/CompositorLayoutTab.qml:227, Modules/Settings/DisplayConfig/IncludeWarningBox.qml:79",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2239, Modules/Settings/WindowRulesTab.qml:522, Modules/Settings/KeybindsTab.qml:420, Modules/Settings/CompositorLayoutTab.qml:227, Modules/Settings/DisplayConfig/IncludeWarningBox.qml:79",
     "comment": ""
   },
   {
     "term": "Shadow Color",
     "context": "Shadow Color",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:203, Modules/Settings/ThemeColorsTab.qml:1971",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:203, Modules/Settings/ThemeColorsTab.qml:1960",
     "comment": ""
   },
   {
     "term": "Shadow Intensity",
     "context": "Shadow Intensity",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1941",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1930",
     "comment": ""
   },
   {
     "term": "Shadow Opacity",
     "context": "Shadow Opacity",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1956",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1945",
     "comment": ""
   },
   {
@@ -14234,25 +14246,25 @@
   {
     "term": "Shadow elevation on bars and panels",
     "context": "Shadow elevation on bars and panels",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2111",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2100",
     "comment": ""
   },
   {
     "term": "Shadow elevation on modals and dialogs",
     "context": "Shadow elevation on modals and dialogs",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2089",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2078",
     "comment": ""
   },
   {
     "term": "Shadow elevation on popouts, OSDs, and dropdowns",
     "context": "Shadow elevation on popouts, OSDs, and dropdowns",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2100",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2089",
     "comment": ""
   },
   {
     "term": "Shadows",
     "context": "Shadows",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1923, Modules/Settings/ThemeColorsTab.qml:1931",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1912, Modules/Settings/ThemeColorsTab.qml:1920",
     "comment": ""
   },
   {
@@ -14264,7 +14276,7 @@
   {
     "term": "Share Gamma Control Settings",
     "context": "Share Gamma Control Settings",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1194",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1183",
     "comment": ""
   },
   {
@@ -14282,13 +14294,13 @@
   {
     "term": "Shift+Enter to copy",
     "context": "Shift+Enter to copy",
-    "reference": "Modals/DankLauncherV2/Controller.qml:1214",
+    "reference": "Modals/DankLauncherV2/Controller.qml:1269",
     "comment": ""
   },
   {
     "term": "Shift+Enter to paste",
     "context": "Shift+Enter to paste",
-    "reference": "dms-plugins/DankStickerSearch/DankStickerSearch.qml:176, dms-plugins/DankGifSearch/DankGifSearch.qml:119, Modals/DankLauncherV2/Controller.qml:1214",
+    "reference": "dms-plugins/DankStickerSearch/DankStickerSearch.qml:176, dms-plugins/DankGifSearch/DankGifSearch.qml:119, Modals/DankLauncherV2/Controller.qml:1269",
     "comment": ""
   },
   {
@@ -14750,7 +14762,7 @@
   {
     "term": "Show darkened overlay behind modal dialogs",
     "context": "Show darkened overlay behind modal dialogs",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2137",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2126",
     "comment": ""
   },
   {
@@ -14780,7 +14792,7 @@
   {
     "term": "Show foreground surfaces on panels for stronger contrast",
     "context": "Show foreground surfaces on panels for stronger contrast",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1753",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1742",
     "comment": ""
   },
   {
@@ -15032,7 +15044,7 @@
   {
     "term": "Size",
     "context": "Size",
-    "reference": "Modals/WindowRuleModal.qml:1587, Modals/WindowRuleModal.qml:1799, Modals/DankLauncherV2/LauncherContent.qml:731, Modals/DankLauncherV2/LauncherContent.qml:736, Modals/DankLauncherV2/LauncherContent.qml:743, Modules/Settings/LauncherTab.qml:618, Modules/Settings/DankBarTab.qml:933, Modules/Settings/FrameTab.qml:128, Modules/Settings/WindowRulesTab.qml:125",
+    "reference": "Modals/WindowRuleModal.qml:1587, Modals/WindowRuleModal.qml:1799, Modals/DankLauncherV2/LauncherContent.qml:703, Modals/DankLauncherV2/LauncherContent.qml:708, Modals/DankLauncherV2/LauncherContent.qml:715, Modules/Settings/LauncherTab.qml:618, Modules/Settings/DankBarTab.qml:933, Modules/Settings/FrameTab.qml:128, Modules/Settings/WindowRulesTab.qml:125",
     "comment": "launcher size option"
   },
   {
@@ -15128,7 +15140,7 @@
   {
     "term": "Sort wallpapers",
     "context": "Sort wallpapers",
-    "reference": "Modules/DankDash/WallpaperTab.qml:696",
+    "reference": "Modules/DankDash/WallpaperTab.qml:707",
     "comment": ""
   },
   {
@@ -15254,7 +15266,7 @@
   {
     "term": "Start",
     "context": "Start",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1280, Modules/Settings/GammaControlTab.qml:252, Modules/DankDash/Overview/CalendarEventEditor.qml:254",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1269, Modules/Settings/GammaControlTab.qml:252, Modules/DankDash/Overview/CalendarEventEditor.qml:254",
     "comment": ""
   },
   {
@@ -15302,7 +15314,7 @@
   {
     "term": "Stretch",
     "context": "Stretch",
-    "reference": "Modules/Settings/WallpaperTab.qml:307",
+    "reference": "Modules/Settings/WallpaperTab.qml:296",
     "comment": "wallpaper fill mode"
   },
   {
@@ -15326,7 +15338,7 @@
   {
     "term": "Stripes",
     "context": "Stripes",
-    "reference": "Modules/Settings/WallpaperTab.qml:1189",
+    "reference": "Modules/Settings/WallpaperTab.qml:1156",
     "comment": "wallpaper transition option"
   },
   {
@@ -15344,13 +15356,13 @@
   {
     "term": "Sunrise",
     "context": "Sunrise",
-    "reference": "Services/WeatherService.qml:247, Modules/DankDash/WeatherTab.qml:108, Modules/Settings/GammaControlTab.qml:574",
+    "reference": "Services/WeatherService.qml:247, Modules/DankDash/WeatherTab.qml:107, Modules/Settings/GammaControlTab.qml:574",
     "comment": ""
   },
   {
     "term": "Sunset",
     "context": "Sunset",
-    "reference": "Services/WeatherService.qml:272, Modules/DankDash/WeatherTab.qml:113, Modules/Settings/GammaControlTab.qml:610",
+    "reference": "Services/WeatherService.qml:272, Modules/DankDash/WeatherTab.qml:112, Modules/Settings/GammaControlTab.qml:610",
     "comment": ""
   },
   {
@@ -15380,19 +15392,19 @@
   {
     "term": "Surface Border Color",
     "context": "Surface Border Color",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:194, Modules/Settings/ThemeColorsTab.qml:1777",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:194, Modules/Settings/ThemeColorsTab.qml:1766",
     "comment": ""
   },
   {
     "term": "Surface Border Opacity",
     "context": "Surface Border Opacity",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1821",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1810",
     "comment": ""
   },
   {
     "term": "Surface Container",
     "context": "Surface Container",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:47, Modules/Settings/WallpaperTab.qml:363, Modules/Settings/WorkspaceAppearanceCard.qml:40, Modules/Settings/WorkspaceAppearanceCard.qml:81, Modules/Settings/WorkspaceAppearanceCard.qml:113, Modules/Settings/WorkspaceAppearanceCard.qml:151",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:47, Modules/Settings/WallpaperTab.qml:352, Modules/Settings/WorkspaceAppearanceCard.qml:40, Modules/Settings/WorkspaceAppearanceCard.qml:81, Modules/Settings/WorkspaceAppearanceCard.qml:113, Modules/Settings/WorkspaceAppearanceCard.qml:151",
     "comment": "widget background color option | workspace color option"
   },
   {
@@ -15410,7 +15422,7 @@
   {
     "term": "Surface Opacity",
     "context": "Surface Opacity",
-    "reference": "Modules/Notepad/NotepadSettings.qml:355, Modules/Settings/ThemeColorsTab.qml:1762, Modules/Settings/ThemeColorsTab.qml:1862, Modules/Settings/FrameTab.qml:149",
+    "reference": "Modules/Notepad/NotepadSettings.qml:355, Modules/Settings/ThemeColorsTab.qml:1751, Modules/Settings/ThemeColorsTab.qml:1851, Modules/Settings/FrameTab.qml:149",
     "comment": ""
   },
   {
@@ -15422,7 +15434,7 @@
   {
     "term": "Surface Variant",
     "context": "Surface Variant",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1679, Modules/Settings/ThemeColorsTab.qml:1684, Modules/Settings/ThemeColorsTab.qml:1693, Modules/Settings/ThemeColorsTab.qml:1703, Modules/Settings/ThemeColorsTab.qml:1717, Modules/Settings/ThemeColorsTab.qml:1722, Modules/Settings/ThemeColorsTab.qml:1731, Modules/Settings/ThemeColorsTab.qml:1741, Modules/Settings/ThemeColorsTab.qml:1973, Modules/Settings/ThemeColorsTab.qml:1978, Modules/Settings/ThemeColorsTab.qml:1988, Modules/Settings/ThemeColorsTab.qml:1999",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1668, Modules/Settings/ThemeColorsTab.qml:1673, Modules/Settings/ThemeColorsTab.qml:1682, Modules/Settings/ThemeColorsTab.qml:1692, Modules/Settings/ThemeColorsTab.qml:1706, Modules/Settings/ThemeColorsTab.qml:1711, Modules/Settings/ThemeColorsTab.qml:1720, Modules/Settings/ThemeColorsTab.qml:1730, Modules/Settings/ThemeColorsTab.qml:1962, Modules/Settings/ThemeColorsTab.qml:1967, Modules/Settings/ThemeColorsTab.qml:1977, Modules/Settings/ThemeColorsTab.qml:1988",
     "comment": "button color option | shadow color option | tile color option"
   },
   {
@@ -15500,7 +15512,7 @@
   {
     "term": "Sync Mode with Portal",
     "context": "Sync Mode with Portal",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2155",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2144",
     "comment": ""
   },
   {
@@ -15530,7 +15542,7 @@
   {
     "term": "Sync dark mode with settings portals for system-wide theme hints",
     "context": "Sync dark mode with settings portals for system-wide theme hints",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2156",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2145",
     "comment": ""
   },
   {
@@ -15560,13 +15572,13 @@
   {
     "term": "System",
     "context": "System",
-    "reference": "Modals/ProcessListModal.qml:325, Modals/ProcessListModal.qml:383, Services/AppSearchService.qml:681, Widgets/DankIconPicker.qml:43, Modals/Settings/SettingsSidebar.qml:312, Modules/ProcessList/ProcessListPopout.qml:169",
+    "reference": "Modals/ProcessListModal.qml:325, Modals/ProcessListModal.qml:383, Services/AppSearchService.qml:685, Widgets/DankIconPicker.qml:43, Modals/Settings/SettingsSidebar.qml:312, Modules/ProcessList/ProcessListPopout.qml:169",
     "comment": ""
   },
   {
     "term": "System App Theming",
     "context": "System App Theming",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2884",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2873",
     "comment": ""
   },
   {
@@ -15770,7 +15782,7 @@
   {
     "term": "Terminals - Always use Dark Theme",
     "context": "Terminals - Always use Dark Theme",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2165",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2154",
     "comment": ""
   },
   {
@@ -15812,13 +15824,13 @@
   {
     "term": "Text",
     "context": "Text",
-    "reference": "dms-plugins/DankKDEConnect/components/ShareDialog.qml:354, Modals/DankLauncherV2/Controller.qml:1215, Modals/Clipboard/ClipboardEntry.qml:199, Modals/Clipboard/ClipboardContent.qml:16, Modules/Settings/LauncherTab.qml:737",
+    "reference": "dms-plugins/DankKDEConnect/components/ShareDialog.qml:354, Modals/DankLauncherV2/Controller.qml:1270, Modals/Clipboard/ClipboardEntry.qml:199, Modals/Clipboard/ClipboardContent.qml:16, Modules/Settings/LauncherTab.qml:737",
     "comment": "KDE Connect share text button | text color"
   },
   {
     "term": "Text Color",
     "context": "Text Color",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1779, Modules/Settings/ThemeColorsTab.qml:1784, Modules/Settings/ThemeColorsTab.qml:1794, Modules/Settings/ThemeColorsTab.qml:1806, Modules/Settings/ThemeColorsTab.qml:1973, Modules/Settings/ThemeColorsTab.qml:1976, Modules/Settings/ThemeColorsTab.qml:1984, Modules/Settings/ThemeColorsTab.qml:2004",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1768, Modules/Settings/ThemeColorsTab.qml:1773, Modules/Settings/ThemeColorsTab.qml:1783, Modules/Settings/ThemeColorsTab.qml:1795, Modules/Settings/ThemeColorsTab.qml:1962, Modules/Settings/ThemeColorsTab.qml:1965, Modules/Settings/ThemeColorsTab.qml:1973, Modules/Settings/ThemeColorsTab.qml:1993",
     "comment": "shadow color option | surface border color"
   },
   {
@@ -15848,7 +15860,7 @@
   {
     "term": "The below settings will modify your GTK and Qt settings. If you wish to preserve your current configurations, please back them up (qt5ct.conf|qt6ct.conf and ~/.config/gtk-3.0|gtk-4.0).",
     "context": "The below settings will modify your GTK and Qt settings. If you wish to preserve your current configurations, please back them up (qt5ct.conf|qt6ct.conf and ~/.config/gtk-3.0|gtk-4.0).",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2873",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2862",
     "comment": ""
   },
   {
@@ -15902,7 +15914,7 @@
   {
     "term": "Theme worker failed (%1)",
     "context": "Theme worker failed (%1)",
-    "reference": "Common/Theme.qml:2155",
+    "reference": "Common/Theme.qml:2157",
     "comment": ""
   },
   {
@@ -15956,7 +15968,7 @@
   {
     "term": "This install is still using hyprland.conf. Run dms setup to migrate before editing cursor settings.",
     "context": "This install is still using hyprland.conf. Run dms setup to migrate before editing cursor settings.",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:146, Modules/Settings/ThemeColorsTab.qml:2234",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:146, Modules/Settings/ThemeColorsTab.qml:2223",
     "comment": ""
   },
   {
@@ -16022,7 +16034,7 @@
   {
     "term": "This will permanently remove this saved clipboard item. This action cannot be undone.",
     "context": "This will permanently remove this saved clipboard item. This action cannot be undone.",
-    "reference": "Services/ClipboardService.qml:345",
+    "reference": "Services/ClipboardService.qml:280",
     "comment": ""
   },
   {
@@ -16040,19 +16052,19 @@
   {
     "term": "Tile",
     "context": "Tile",
-    "reference": "Modals/WindowRuleModal.qml:1537, Modules/Settings/WallpaperTab.qml:307, Modules/Settings/WindowRulesTab.qml:115",
+    "reference": "Modals/WindowRuleModal.qml:1537, Modules/Settings/WallpaperTab.qml:296, Modules/Settings/WindowRulesTab.qml:115",
     "comment": "wallpaper fill mode"
   },
   {
     "term": "Tile Horizontally",
     "context": "Tile Horizontally",
-    "reference": "Modules/Settings/WallpaperTab.qml:307",
+    "reference": "Modules/Settings/WallpaperTab.qml:296",
     "comment": "wallpaper fill mode"
   },
   {
     "term": "Tile Vertically",
     "context": "Tile Vertically",
-    "reference": "Modules/Settings/WallpaperTab.qml:307",
+    "reference": "Modules/Settings/WallpaperTab.qml:296",
     "comment": "wallpaper fill mode"
   },
   {
@@ -16076,7 +16088,7 @@
   {
     "term": "Time",
     "context": "Time",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1212, Modules/Settings/GammaControlTab.qml:184, Modules/Settings/WallpaperTab.qml:980",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1201, Modules/Settings/GammaControlTab.qml:184, Modules/Settings/WallpaperTab.qml:947",
     "comment": "theme auto mode tab | wallpaper cycling mode tab"
   },
   {
@@ -16262,7 +16274,7 @@
   {
     "term": "Tonal Spot",
     "context": "Tonal Spot",
-    "reference": "Common/Theme.qml:483",
+    "reference": "Common/Theme.qml:485",
     "comment": "matugen color scheme option"
   },
   {
@@ -16304,7 +16316,7 @@
   {
     "term": "Top (Default)",
     "context": "Top (Default)",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2018, Modules/Settings/ThemeColorsTab.qml:2030",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2007, Modules/Settings/ThemeColorsTab.qml:2019",
     "comment": "shadow direction option"
   },
   {
@@ -16322,7 +16334,7 @@
   {
     "term": "Top Left",
     "context": "Top Left",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2018, Modules/Settings/ThemeColorsTab.qml:2024, Modules/Settings/ThemeColorsTab.qml:2037, Modules/Settings/DankBarTab.qml:1717, Modules/Settings/DankBarTab.qml:1721, Modules/Settings/DankBarTab.qml:1731, Modules/Settings/OSDTab.qml:37, Modules/Settings/OSDTab.qml:54, Modules/Settings/OSDTab.qml:58, Modules/Settings/NotificationsTab.qml:250, Modules/Settings/NotificationsTab.qml:259, Modules/Settings/NotificationsTab.qml:265, Modules/Settings/DisplayConfig/NiriOutputSettings.qml:154",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2007, Modules/Settings/ThemeColorsTab.qml:2013, Modules/Settings/ThemeColorsTab.qml:2026, Modules/Settings/DankBarTab.qml:1717, Modules/Settings/DankBarTab.qml:1721, Modules/Settings/DankBarTab.qml:1731, Modules/Settings/OSDTab.qml:37, Modules/Settings/OSDTab.qml:54, Modules/Settings/OSDTab.qml:58, Modules/Settings/NotificationsTab.qml:250, Modules/Settings/NotificationsTab.qml:259, Modules/Settings/NotificationsTab.qml:265, Modules/Settings/DisplayConfig/NiriOutputSettings.qml:154",
     "comment": "screen position option | shadow direction option"
   },
   {
@@ -16334,7 +16346,7 @@
   {
     "term": "Top Right",
     "context": "Top Right",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2018, Modules/Settings/ThemeColorsTab.qml:2026, Modules/Settings/ThemeColorsTab.qml:2039, Modules/Settings/DankBarTab.qml:1717, Modules/Settings/DankBarTab.qml:1723, Modules/Settings/DankBarTab.qml:1735, Modules/Settings/OSDTab.qml:35, Modules/Settings/OSDTab.qml:54, Modules/Settings/OSDTab.qml:56, Modules/Settings/NotificationsTab.qml:246, Modules/Settings/NotificationsTab.qml:256, Modules/Settings/NotificationsTab.qml:259, Modules/Settings/NotificationsTab.qml:262, Modules/Settings/DisplayConfig/NiriOutputSettings.qml:154",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2007, Modules/Settings/ThemeColorsTab.qml:2015, Modules/Settings/ThemeColorsTab.qml:2028, Modules/Settings/DankBarTab.qml:1717, Modules/Settings/DankBarTab.qml:1723, Modules/Settings/DankBarTab.qml:1735, Modules/Settings/OSDTab.qml:35, Modules/Settings/OSDTab.qml:54, Modules/Settings/OSDTab.qml:56, Modules/Settings/NotificationsTab.qml:246, Modules/Settings/NotificationsTab.qml:256, Modules/Settings/NotificationsTab.qml:259, Modules/Settings/NotificationsTab.qml:262, Modules/Settings/DisplayConfig/NiriOutputSettings.qml:154",
     "comment": "screen position option | shadow direction option"
   },
   {
@@ -16370,7 +16382,7 @@
   {
     "term": "Transition Effect",
     "context": "Transition Effect",
-    "reference": "Modules/Settings/WallpaperTab.qml:1173",
+    "reference": "Modules/Settings/WallpaperTab.qml:1140",
     "comment": ""
   },
   {
@@ -16424,13 +16436,13 @@
   {
     "term": "Trigger: %1",
     "context": "Trigger: %1",
-    "reference": "Modals/DankLauncherV2/Controller.qml:1368, Modules/Settings/LauncherTab.qml:1028",
+    "reference": "Modals/DankLauncherV2/Controller.qml:1423, Modules/Settings/LauncherTab.qml:1028",
     "comment": ""
   },
   {
     "term": "Trust",
     "context": "Trust",
-    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:674",
+    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:711",
     "comment": ""
   },
   {
@@ -16490,7 +16502,7 @@
   {
     "term": "Type at least 2 characters",
     "context": "Type at least 2 characters",
-    "reference": "Modals/DankLauncherV2/ResultsList.qml:538",
+    "reference": "Modals/DankLauncherV2/ResultsList.qml:555",
     "comment": ""
   },
   {
@@ -16508,7 +16520,7 @@
   {
     "term": "Type to search files",
     "context": "Type to search files",
-    "reference": "Modals/DankLauncherV2/ResultsList.qml:536",
+    "reference": "Modals/DankLauncherV2/ResultsList.qml:553",
     "comment": ""
   },
   {
@@ -16586,7 +16598,7 @@
   {
     "term": "Uninstall failed: %1",
     "context": "Uninstall failed: %1",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:884, Modules/Settings/ThemeBrowser.qml:98, Modules/Settings/PluginListItem.qml:249",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:873, Modules/Settings/ThemeBrowser.qml:98, Modules/Settings/PluginListItem.qml:249",
     "comment": "uninstallation error"
   },
   {
@@ -16598,19 +16610,19 @@
   {
     "term": "Uninstalled: %1",
     "context": "Uninstalled: %1",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:887, Modules/Settings/ThemeBrowser.qml:101",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:876, Modules/Settings/ThemeBrowser.qml:101",
     "comment": "uninstallation success"
   },
   {
     "term": "Uninstalling: %1",
     "context": "Uninstalling: %1",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:881, Modules/Settings/ThemeBrowser.qml:95",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:870, Modules/Settings/ThemeBrowser.qml:95",
     "comment": "uninstallation progress"
   },
   {
     "term": "Unknown",
     "context": "Unknown",
-    "reference": "Common/Theme.qml:1646, Services/WeatherService.qml:153, Services/WeatherService.qml:716, Services/WeatherService.qml:717, Services/WeatherService.qml:758, Services/WeatherService.qml:759, Services/WeatherService.qml:794, Services/WeatherService.qml:795, Services/WeatherService.qml:993, Services/WeatherService.qml:994, Services/BatteryService.qml:300, dms-plugins/DankKDEConnect/DankKDEConnect.qml:1582, dms-plugins/DankKDEConnect/components/DeviceCard.qml:298, dms-plugins/DankKDEConnect/components/KDEConnectDetailContent.qml:741, Modules/Lock/LockScreenContent.qml:451, Modules/Lock/LockScreenContent.qml:571, Modules/Lock/LockScreenContent.qml:667, Modules/Settings/PluginBrowser.qml:1077, Modules/Settings/NetworkStatusTab.qml:79, Modules/Settings/NetworkStatusTab.qml:121, Modules/Settings/PrinterTab.qml:1638, Modules/Settings/ThemeBrowser.qml:506, Modules/Settings/NetworkEthernetTab.qml:146, Modules/Settings/NetworkEthernetTab.qml:169, Modules/Settings/NetworkEthernetTab.qml:317, Modules/Settings/NetworkEthernetTab.qml:428, Modules/Settings/NotificationsTab.qml:711, Modules/Settings/NetworkWifiTab.qml:537, Modules/Settings/NetworkWifiTab.qml:947, Modules/ControlCenter/Details/BatteryDetail.qml:184, Modules/ControlCenter/Components/HeaderPane.qml:63, Modules/ControlCenter/Components/DragDropGrid.qml:515, Modules/ControlCenter/Components/DragDropGrid.qml:753, Modules/DankDash/Overview/MediaOverviewCard.qml:91, Modules/DankBar/Popouts/BatteryPopout.qml:340",
+    "reference": "Common/Theme.qml:1648, Services/WeatherService.qml:153, Services/WeatherService.qml:716, Services/WeatherService.qml:717, Services/WeatherService.qml:758, Services/WeatherService.qml:759, Services/WeatherService.qml:794, Services/WeatherService.qml:795, Services/WeatherService.qml:993, Services/WeatherService.qml:994, Services/BatteryService.qml:300, dms-plugins/DankKDEConnect/DankKDEConnect.qml:1582, dms-plugins/DankKDEConnect/components/DeviceCard.qml:298, dms-plugins/DankKDEConnect/components/KDEConnectDetailContent.qml:741, Modules/Lock/LockScreenContent.qml:451, Modules/Lock/LockScreenContent.qml:571, Modules/Lock/LockScreenContent.qml:667, Modules/Settings/PluginBrowser.qml:1077, Modules/Settings/NetworkStatusTab.qml:79, Modules/Settings/NetworkStatusTab.qml:121, Modules/Settings/PrinterTab.qml:1638, Modules/Settings/ThemeBrowser.qml:506, Modules/Settings/NetworkEthernetTab.qml:146, Modules/Settings/NetworkEthernetTab.qml:169, Modules/Settings/NetworkEthernetTab.qml:317, Modules/Settings/NetworkEthernetTab.qml:428, Modules/Settings/NotificationsTab.qml:711, Modules/Settings/NetworkWifiTab.qml:537, Modules/Settings/NetworkWifiTab.qml:947, Modules/ControlCenter/Details/BatteryDetail.qml:184, Modules/ControlCenter/Components/HeaderPane.qml:63, Modules/ControlCenter/Components/DragDropGrid.qml:517, Modules/ControlCenter/Components/DragDropGrid.qml:755, Modules/DankDash/Overview/MediaOverviewCard.qml:91, Modules/DankBar/Popouts/BatteryPopout.qml:340",
     "comment": "KDE Connect unknown device status | Status | battery status | power profile option | unknown author | widget status"
   },
   {
@@ -16622,7 +16634,7 @@
   {
     "term": "Unknown Artist",
     "context": "Unknown Artist",
-    "reference": "dms-plugins/DankKDEConnect/DankKDEConnect.qml:1836, dms-plugins/DankKDEConnect/DankKDEConnect.qml:1842, dms-plugins/DankKDEConnect/components/KDEConnectDetailContent.qml:1388, dms-plugins/DankKDEConnect/components/KDEConnectDetailContent.qml:1394, Modules/DankDash/MediaDropdownOverlay.qml:551, Modules/DankDash/MediaPlayerTab.qml:426, Modules/OSD/MediaPlaybackOSD.qml:280, Modules/DankDash/Overview/MediaOverviewCard.qml:102",
+    "reference": "dms-plugins/DankKDEConnect/DankKDEConnect.qml:1836, dms-plugins/DankKDEConnect/DankKDEConnect.qml:1842, dms-plugins/DankKDEConnect/components/KDEConnectDetailContent.qml:1388, dms-plugins/DankKDEConnect/components/KDEConnectDetailContent.qml:1394, Modules/DankDash/MediaDropdownOverlay.qml:555, Modules/DankDash/MediaPlayerTab.qml:484, Modules/OSD/MediaPlaybackOSD.qml:264, Modules/DankDash/Overview/MediaOverviewCard.qml:102",
     "comment": ""
   },
   {
@@ -16634,7 +16646,7 @@
   {
     "term": "Unknown Device",
     "context": "Unknown Device",
-    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:227, Modules/ControlCenter/Details/BluetoothDetail.qml:489",
+    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:262, Modules/ControlCenter/Details/BluetoothDetail.qml:524",
     "comment": ""
   },
   {
@@ -16664,13 +16676,13 @@
   {
     "term": "Unknown Title",
     "context": "Unknown Title",
-    "reference": "Modules/OSD/MediaPlaybackOSD.qml:269",
+    "reference": "Modules/OSD/MediaPlaybackOSD.qml:253",
     "comment": ""
   },
   {
     "term": "Unknown Track",
     "context": "Unknown Track",
-    "reference": "Modules/DankDash/MediaPlayerTab.qml:414",
+    "reference": "Modules/DankDash/MediaPlayerTab.qml:472",
     "comment": ""
   },
   {
@@ -16766,13 +16778,13 @@
   {
     "term": "Untitled",
     "context": "Untitled",
-    "reference": "Services/NotepadStorageService.qml:125, Services/NotepadStorageService.qml:225, Services/NotepadStorageService.qml:293",
+    "reference": "Services/NotepadStorageService.qml:129, Services/NotepadStorageService.qml:221, Services/NotepadStorageService.qml:289",
     "comment": ""
   },
   {
     "term": "Untrust",
     "context": "Untrust",
-    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:674",
+    "reference": "Modules/ControlCenter/Details/BluetoothDetail.qml:711",
     "comment": ""
   },
   {
@@ -16880,7 +16892,7 @@
   {
     "term": "Use IP Location",
     "context": "Use IP Location",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1370, Modules/Settings/GammaControlTab.qml:345",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1359, Modules/Settings/GammaControlTab.qml:345",
     "comment": ""
   },
   {
@@ -16952,7 +16964,7 @@
   {
     "term": "Use an external wallpaper manager like swww, hyprpaper, or swaybg.",
     "context": "Use an external wallpaper manager like swww, hyprpaper, or swaybg.",
-    "reference": "Modules/Settings/WallpaperTab.qml:1271",
+    "reference": "Modules/Settings/WallpaperTab.qml:1238",
     "comment": "wallpaper settings disable description"
   },
   {
@@ -16988,7 +17000,7 @@
   {
     "term": "Use different icon themes for light and dark mode",
     "context": "Use different icon themes for light and dark mode",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:2399",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:2388",
     "comment": ""
   },
   {
@@ -17012,7 +17024,7 @@
   {
     "term": "Use light theme instead of dark theme",
     "context": "Use light theme instead of dark theme",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1604",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1593",
     "comment": ""
   },
   {
@@ -17156,7 +17168,7 @@
   {
     "term": "Uses sunrise/sunset times based on your location.",
     "context": "Uses sunrise/sunset times based on your location.",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1449",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1438",
     "comment": ""
   },
   {
@@ -17192,13 +17204,13 @@
   {
     "term": "Using shared settings from Gamma Control",
     "context": "Using shared settings from Gamma Control",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1461",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1450",
     "comment": ""
   },
   {
     "term": "Utilities",
     "context": "Utilities",
-    "reference": "Services/AppSearchService.qml:682, Services/AppSearchService.qml:683, Services/AppSearchService.qml:684, Services/AppSearchService.qml:685, Modules/Settings/DefaultAppsTab.qml:286",
+    "reference": "Services/AppSearchService.qml:686, Services/AppSearchService.qml:687, Services/AppSearchService.qml:688, Services/AppSearchService.qml:689, Modules/Settings/DefaultAppsTab.qml:286",
     "comment": "Utilities"
   },
   {
@@ -17318,13 +17330,13 @@
   {
     "term": "Vibrant",
     "context": "Vibrant",
-    "reference": "Common/Theme.qml:487",
+    "reference": "Common/Theme.qml:489",
     "comment": "matugen color scheme option"
   },
   {
     "term": "Vibrant palette with playful saturation.",
     "context": "Vibrant palette with playful saturation.",
-    "reference": "Common/Theme.qml:496",
+    "reference": "Common/Theme.qml:498",
     "comment": ""
   },
   {
@@ -17384,7 +17396,7 @@
   {
     "term": "Visual effect used when wallpaper changes",
     "context": "Visual effect used when wallpaper changes",
-    "reference": "Modules/Settings/WallpaperTab.qml:1174",
+    "reference": "Modules/Settings/WallpaperTab.qml:1141",
     "comment": ""
   },
   {
@@ -17432,13 +17444,13 @@
   {
     "term": "Wallpaper Error",
     "context": "Wallpaper Error",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:583",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:572",
     "comment": "wallpaper error status"
   },
   {
     "term": "Wallpaper Monitor",
     "context": "Wallpaper Monitor",
-    "reference": "Modules/Settings/WallpaperTab.qml:839",
+    "reference": "Modules/Settings/WallpaperTab.qml:806",
     "comment": ""
   },
   {
@@ -17450,7 +17462,7 @@
   {
     "term": "Wallpaper processing failed",
     "context": "Wallpaper processing failed",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:600",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:589",
     "comment": "wallpaper processing error"
   },
   {
@@ -17546,7 +17558,7 @@
   {
     "term": "White",
     "context": "White",
-    "reference": "Modules/Settings/WallpaperTab.qml:355",
+    "reference": "Modules/Settings/WallpaperTab.qml:344",
     "comment": ""
   },
   {
@@ -17600,7 +17612,7 @@
   {
     "term": "WiFi off",
     "context": "WiFi off",
-    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:498",
+    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:500",
     "comment": "network status"
   },
   {
@@ -17612,7 +17624,7 @@
   {
     "term": "Widget Background Color",
     "context": "Widget Background Color",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1639, Modules/Settings/ThemeColorsTab.qml:1645",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1628, Modules/Settings/ThemeColorsTab.qml:1634",
     "comment": ""
   },
   {
@@ -17636,13 +17648,13 @@
   {
     "term": "Widget Styling",
     "context": "Widget Styling",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1616",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1605",
     "comment": ""
   },
   {
     "term": "Widget Text Style",
     "context": "Widget Text Style",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1624",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1613",
     "comment": ""
   },
   {
@@ -17708,7 +17720,7 @@
   {
     "term": "Wind",
     "context": "Wind",
-    "reference": "dms-plugins/DankDesktopWeather/DankDesktopWeather.qml:425, Modules/DankDash/WeatherTab.qml:93, Modules/Settings/TimeWeatherTab.qml:1008",
+    "reference": "dms-plugins/DankDesktopWeather/DankDesktopWeather.qml:425, Modules/DankDash/WeatherTab.qml:92, Modules/Settings/TimeWeatherTab.qml:1008",
     "comment": ""
   },
   {
@@ -17762,7 +17774,7 @@
   {
     "term": "Wipe",
     "context": "Wipe",
-    "reference": "Modules/Settings/WallpaperTab.qml:1185",
+    "reference": "Modules/Settings/WallpaperTab.qml:1152",
     "comment": "wallpaper transition option"
   },
   {
@@ -17876,7 +17888,7 @@
   {
     "term": "Xray options are in Compositor → Layout",
     "context": "Xray options are in Compositor → Layout",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1905",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1894",
     "comment": ""
   },
   {
@@ -17954,7 +17966,7 @@
   {
     "term": "Your compositor does not support background blur (ext-background-effect-v1)",
     "context": "Your compositor does not support background blur (ext-background-effect-v1)",
-    "reference": "Modules/Settings/ThemeColorsTab.qml:1879",
+    "reference": "Modules/Settings/ThemeColorsTab.qml:1868",
     "comment": ""
   },
   {
@@ -17966,7 +17978,7 @@
   {
     "term": "actions",
     "context": "actions",
-    "reference": "Modals/DankLauncherV2/LauncherContent.qml:446",
+    "reference": "Modals/DankLauncherV2/LauncherContent.qml:418",
     "comment": ""
   },
   {
@@ -18098,7 +18110,7 @@
   {
     "term": "ext",
     "context": "ext",
-    "reference": "Modals/DankLauncherV2/LauncherContent.qml:753",
+    "reference": "Modals/DankLauncherV2/LauncherContent.qml:725",
     "comment": ""
   },
   {
@@ -18164,13 +18176,13 @@
   {
     "term": "matugen not available or disabled - cannot apply GTK colors",
     "context": "matugen not available or disabled - cannot apply GTK colors",
-    "reference": "Common/Theme.qml:1959",
+    "reference": "Common/Theme.qml:1961",
     "comment": ""
   },
   {
     "term": "matugen not available or disabled - cannot apply Qt colors",
     "context": "matugen not available or disabled - cannot apply Qt colors",
-    "reference": "Common/Theme.qml:1981",
+    "reference": "Common/Theme.qml:1983",
     "comment": ""
   },
   {
@@ -18194,7 +18206,7 @@
   {
     "term": "nav",
     "context": "nav",
-    "reference": "Modals/DankLauncherV2/LauncherContent.qml:432",
+    "reference": "Modals/DankLauncherV2/LauncherContent.qml:404",
     "comment": ""
   },
   {
@@ -18284,7 +18296,7 @@
   {
     "term": "open",
     "context": "open",
-    "reference": "Modals/DankLauncherV2/LauncherContent.qml:439",
+    "reference": "Modals/DankLauncherV2/LauncherContent.qml:411",
     "comment": ""
   },
   {
@@ -18380,7 +18392,7 @@
   {
     "term": "update dms for NM integration.",
     "context": "update dms for NM integration.",
-    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:462",
+    "reference": "Modules/ControlCenter/Components/DragDropGrid.qml:464",
     "comment": ""
   },
   {

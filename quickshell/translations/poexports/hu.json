@@ -50,9 +50,6 @@
   "%1 displays": {
     "%1 displays": "%1 kijelző"
   },
-  "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": {
-    "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": "A(z) %1 létezik, de nincs befoglalva a konfigurációba. Az egyéni gyorsbillentyűk nem fognak működni, amíg ezt nem lesz javítva."
-  },
   "%1 exists but is not included. Window rules won't apply.": {
     "%1 exists but is not included. Window rules won't apply.": "%1 létezik, de nincs befoglalva. Az ablakszabályok nem fognak érvényesülni."
   },
@@ -142,9 +139,6 @@
   },
   "1 day before": {
     "1 day before": "1 nappal előtte"
-  },
-  "1 device connected": {
-    "1 device connected": "1 eszköz csatlakoztatva"
   },
   "1 hour": {
     "1 hour": "1 óra"
@@ -401,9 +395,6 @@
   "Active Color": {
     "Active Color": "Aktív szín"
   },
-  "Active Lock Screen Monitor": {
-    "Active Lock Screen Monitor": "Aktív zárolásiképernyő-monitor"
-  },
   "Active VPN": {
     "Active VPN": "Aktív VPN"
   },
@@ -520,9 +511,6 @@
   },
   "All": {
     "All": "Összes"
-  },
-  "All Monitors": {
-    "All Monitors": "Minden monitor"
   },
   "All checks passed": {
     "All checks passed": "Minden ellenőrzés sikeres"
@@ -977,6 +965,9 @@
   "Available Screens (%1)": {
     "Available Screens (%1)": "Elérhető kijelzők (%1)"
   },
+  "Available Updates (%1)": {
+    "Available Updates (%1)": ""
+  },
   "Available in Detailed and Forecast view modes": {
     "Available in Detailed and Forecast view modes": "Részletes és Előrejelzés nézetmódokban érhető el"
   },
@@ -1073,6 +1064,9 @@
   "Battery %1": {
     "Battery %1": "Akkumulátor: %1"
   },
+  "Battery Alerts": {
+    "Battery Alerts": ""
+  },
   "Battery Charge Limit": {
     "Battery Charge Limit": "Akkumulátor töltési korlát"
   },
@@ -1081,6 +1075,9 @@
   },
   "Battery Power": {
     "Battery Power": "Akkumulátoros tápellátás"
+  },
+  "Battery Protection": {
+    "Battery Protection": ""
   },
   "Battery Protection & Charging": {
     "Battery Protection & Charging": "Akkumulátorvédelem és töltés"
@@ -1277,6 +1274,9 @@
   "Button Color": {
     "Button Color": "Gomb színe"
   },
+  "By %1": {
+    "By %1": ""
+  },
   "CPU": {
     "CPU": "CPU"
   },
@@ -1466,6 +1466,15 @@
   "Choose how to be notified about battery alerts.": {
     "Choose how to be notified about battery alerts.": "Válaszd ki, hogyan szeretnél értesülni az akkumulátorriasztásokról."
   },
+  "Choose how to be notified about critical battery alerts.": {
+    "Choose how to be notified about critical battery alerts.": ""
+  },
+  "Choose how to be notified about low battery alerts.": {
+    "Choose how to be notified about low battery alerts.": ""
+  },
+  "Choose how to be notified when charge limit is reached.": {
+    "Choose how to be notified when charge limit is reached.": ""
+  },
   "Choose icon": {
     "Choose icon": "Ikon kiválasztása"
   },
@@ -1502,8 +1511,8 @@
   "Choose which displays show this widget": {
     "Choose which displays show this widget": "Mely kijelzők mutassák ezt a widgetet"
   },
-  "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
-    "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": "Válaszd ki, melyik monitor jelenítse meg a zárolási képernyő felületét. A többi monitor egy színt fog mutatni az OLED beégés elleni védelem miatt."
+  "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
+    "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": ""
   },
   "Chroma Style": {
     "Chroma Style": "Chroma stílus"
@@ -1540,9 +1549,6 @@
   },
   "Clear at Startup": {
     "Clear at Startup": "Törlés indításkor"
-  },
-  "Click 'Setup' to create %1 and add include to config.": {
-    "Click 'Setup' to create %1 and add include to config.": "Kattints a „Beállítás” gombra a(z) %1 létrehozásához és a konfigurációhoz való hozzáadásához."
   },
   "Click 'Setup' to create %1 and add include to your compositor config.": {
     "Click 'Setup' to create %1 and add include to your compositor config.": "Kattints a „Beállítás” gombra a %1 létrehozásához és az include bejegyzés hozzáadásához a kompozitor konfigurációhoz."
@@ -1618,6 +1624,9 @@
   },
   "Close Window": {
     "Close Window": "Ablak bezárása"
+  },
+  "Codec switching is unavailable because pactl was not found": {
+    "Codec switching is unavailable because pactl was not found": ""
   },
   "Color": {
     "Color": "Szín"
@@ -2084,12 +2093,6 @@
   "Current: %1": {
     "Current: %1": "Jelenleg: %1"
   },
-  "Cursor Config Not Configured": {
-    "Cursor Config Not Configured": "Mutatókonfiguráció nincs beállítva"
-  },
-  "Cursor Include Missing": {
-    "Cursor Include Missing": "A mutató include bejegyzés hiányzik"
-  },
   "Cursor Size": {
     "Cursor Size": "Mutatóméret"
   },
@@ -2449,6 +2452,9 @@
   },
   "Device unpaired": {
     "Device unpaired": "Eszköz párosítása megszüntetve"
+  },
+  "Diff": {
+    "Diff": ""
   },
   "Digital": {
     "Digital": "Digitális"
@@ -2894,9 +2900,6 @@
   "Enter URI or text to share": {
     "Enter URI or text to share": "Add meg a megosztani kívánt URI-t vagy szöveget"
   },
-  "Enter URL or text to share": {
-    "Enter URL or text to share": "Adj meg egy URL-t vagy szöveget a megosztáshoz"
-  },
   "Enter a new name for session \"%1": {
     "Enter a new name for session \"%1\"": "Add meg a(z) „%1” munkamenet új nevét"
   },
@@ -3272,6 +3275,9 @@
   "Failed to unpin entry": {
     "Failed to unpin entry": "Nem sikerült a bejegyzés rögzítésének feloldása"
   },
+  "Failed to update %1: %2": {
+    "Failed to update %1: %2": ""
+  },
   "Failed to update VPN": {
     "Failed to update VPN": "Nem sikerült frissíteni a VPN-t"
   },
@@ -3355,6 +3361,9 @@
   },
   "Fill": {
     "Fill": "Kitöltés"
+  },
+  "Fill Mode": {
+    "Fill Mode": ""
   },
   "Filter": {
     "Filter": "Szűrő"
@@ -3875,9 +3884,6 @@
   "Hidden Apps": {
     "Hidden Apps": "Rejtett alkalmazások"
   },
-  "Hidden Network": {
-    "Hidden Network": "Rejtett hálózat"
-  },
   "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": {
     "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": "A rejtett alkalmazások nem jelennek meg az indítóban. Kattints jobb gombbal egy alkalmazásra, és válaszd az „Alkalmazás elrejtése” lehetőséget az elrejtéshez."
   },
@@ -4016,6 +4022,9 @@
   "How the background image is scaled": {
     "How the background image is scaled": "A háttérkép méretezésének módja"
   },
+  "How the wallpaper is scaled to fit the screen": {
+    "How the wallpaper is scaled to fit the screen": ""
+  },
   "Humidity": {
     "Humidity": "Páratartalom"
   },
@@ -4078,6 +4087,9 @@
   },
   "Identical alerts stack as separate notification cards": {
     "Identical alerts stack as separate notification cards": "Az azonos riasztások különálló értesítési kártyákként halmozódnak"
+  },
+  "Identify": {
+    "Identify": ""
   },
   "Idle": {
     "Idle": "Tétlen"
@@ -4715,6 +4727,9 @@
   "Material": {
     "Material": "Material"
   },
+  "Material Battery Style": {
+    "Material Battery Style": ""
+  },
   "Material Colors": {
     "Material Colors": "Material színek"
   },
@@ -5270,14 +5285,14 @@
   "No checks passed": {
     "No checks passed": "Nincs sikeres ellenőrzés"
   },
+  "No codecs found": {
+    "No codecs found": ""
+  },
   "No custom theme file": {
     "No custom theme file": "Nincs egyéni témafájl"
   },
   "No devices": {
     "No devices": "Nincsenek eszközök"
-  },
-  "No devices connected": {
-    "No devices connected": "Nincsenek csatlakoztatott eszközök"
   },
   "No devices found": {
     "No devices found": "Nem található eszköz"
@@ -5434,6 +5449,9 @@
   },
   "No trigger": {
     "No trigger": "Nincs indító"
+  },
+  "No updates available.": {
+    "No updates available.": ""
   },
   "No user specified": {
     "No user specified": "Nincs felhasználó megadva"
@@ -5675,9 +5693,6 @@
   "Open From": {
     "Open From": "Megnyitás innen"
   },
-  "Open KDE Connect on your phone": {
-    "Open KDE Connect on your phone": "Nyisd meg a KDE Connectet a telefonodon"
-  },
   "Open Notepad File": {
     "Open Notepad File": "Jegyzettömb-fájl megnyitása"
   },
@@ -5717,17 +5732,11 @@
   "Open with...": {
     "Open with...": "Megnyitás ezzel…"
   },
-  "Opening SMS": {
-    "Opening SMS": "SMS megnyitása"
-  },
   "Opening SMS app": {
     "Opening SMS app": "SMS-alkalmazás megnyitása"
   },
   "Opening file browser": {
     "Opening file browser": "Fájlkezelő megnyitása"
-  },
-  "Opening files": {
-    "Opening files": "Fájlok megnyitása"
   },
   "Opening terminal to update greetd": {
     "Opening terminal to update greetd": "Terminál megnyitása a greetd frissítéséhez"
@@ -5806,9 +5815,6 @@
   },
   "Override Corner Radius": {
     "Override Corner Radius": "Sarokkerekítés felülbírálása"
-  },
-  "Override Gaps": {
-    "Override Gaps": "Térközök felülbírálása"
   },
   "Override global layout settings for this output": {
     "Override global layout settings for this output": "Globális elrendezési beállítások felülbírálása ehhez a kimenethez"
@@ -5930,6 +5936,9 @@
   "Paste": {
     "Paste": "Beillesztés"
   },
+  "Paste failed: %1": {
+    "Paste failed: %1": ""
+  },
   "Path copied to clipboard": {
     "Path copied to clipboard": "Útmutató a vágólapra másolva"
   },
@@ -6010,9 +6019,6 @@
   },
   "Ping": {
     "Ping": "Ping"
-  },
-  "Ping sent": {
-    "Ping sent": "Ping elküldve"
   },
   "Ping sent to": {
     "Ping sent to": "Ping elküldve ide:"
@@ -6193,6 +6199,9 @@
   },
   "Power Profile Degradation": {
     "Power Profile Degradation": "Energiaprofil visszavétele"
+  },
+  "Power Profiles & Saving": {
+    "Power Profiles & Saving": ""
   },
   "Power Profiles Auto-Switching": {
     "Power Profiles Auto-Switching": "Energiaprofilok automatikus váltása"
@@ -7217,9 +7226,6 @@
   "Share Text": {
     "Share Text": "Szöveg megosztása"
   },
-  "Share URL": {
-    "Share URL": "URL megosztása"
-  },
   "Shared": {
     "Shared": "Megosztva"
   },
@@ -8123,8 +8129,14 @@
   "Tile H": {
     "Tile H": "Vízszintes mozaik"
   },
+  "Tile Horizontally": {
+    "Tile Horizontally": ""
+  },
   "Tile V": {
     "Tile V": "Függőleges mozaik"
+  },
+  "Tile Vertically": {
+    "Tile Vertically": ""
   },
   "Tiled": {
     "Tiled": "Csempézett"
@@ -8429,6 +8441,9 @@
   "Unknown GPU": {
     "Unknown GPU": "Ismeretlen GPU"
   },
+  "Unknown Model": {
+    "Unknown Model": ""
+  },
   "Unknown Monitor": {
     "Unknown Monitor": "Ismeretlen monitor"
   },
@@ -8507,6 +8522,12 @@
   "Update failed: %1": {
     "Update failed: %1": "Frissítés sikertelen: %1"
   },
+  "Updating %1...": {
+    "Updating %1...": ""
+  },
+  "Updating plugins...": {
+    "Updating plugins...": ""
+  },
   "Upgrading...": {
     "Upgrading...": "Frissítés…"
   },
@@ -8584,9 +8605,6 @@
   },
   "Use custom border/focus-ring width": {
     "Use custom border/focus-ring width": "Egyéni szegély/fókuszgyűrű szélesség használata"
-  },
-  "Use custom gaps instead of bar spacing": {
-    "Use custom gaps instead of bar spacing": "Egyéni térközök használata a sáv térközei helyett"
   },
   "Use custom window radius instead of theme radius": {
     "Use custom window radius instead of theme radius": "Egyéni ablaksugár használata a téma sugara helyett"
@@ -9137,9 +9155,6 @@
   "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": {
     "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": "A dms egy nagymértékben testreszabható, modern asztali héj, <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 ihlette</a> dizájnnal.<br /><br/>A <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>-lel, egy QT6 keretrendszerrel asztali héjak építéséhez, és a <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a> statikusan típusos, fordított programozási nyelvvel készült."
   },
-  "dms/cursor config exists but is not included. Cursor settings won't apply.": {
-    "dms/cursor config exists but is not included. Cursor settings won't apply.": "A dms/cursor konfiguráció létezik, de nincs befoglalva. A kurzorbeállítások nem lesznek érvényesek."
-  },
   "e.g. /usr/bin/my-script --flag": {
     "e.g. /usr/bin/my-script --flag": "Például /usr/bin/my-script --flag"
   },
@@ -9290,6 +9305,9 @@
   "source": {
     "source": "forrás"
   },
+  "the Qt 6 Multimedia QML module": {
+    "the Qt 6 Multimedia QML module": ""
+  },
   "this app": {
     "this app": "ez az alkalmazás"
   },
@@ -9319,9 +9337,6 @@
   },
   "verified": {
     "verified": "ellenőrzött"
-  },
-  "wtype not available - install wtype for paste support": {
-    "wtype not available - install wtype for paste support": "A wtype nem érhető el - telepítsd a wtype csomagot a beillesztés támogatásához"
   },
   "• Install only from trusted sources": {
     "• Install only from trusted sources": "• Csak megbízható forrásokból telepíts"

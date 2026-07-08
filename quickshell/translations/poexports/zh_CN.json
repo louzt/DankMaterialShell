@@ -50,9 +50,6 @@
   "%1 displays": {
     "%1 displays": "%1 个显示器"
   },
-  "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": {
-    "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": "%1 配置存在，但未被合成器配置文件引用。在此问题修复前，自定义快捷键绑定将不会生效。"
-  },
   "%1 exists but is not included. Window rules won't apply.": {
     "%1 exists but is not included. Window rules won't apply.": "%1 配置存在，但未被合成器配置文件引用。窗口规则将不会生效。"
   },
@@ -142,9 +139,6 @@
   },
   "1 day before": {
     "1 day before": "1 天前"
-  },
-  "1 device connected": {
-    "1 device connected": "已连接 1 个设备"
   },
   "1 hour": {
     "1 hour": "1 小时"
@@ -401,9 +395,6 @@
   "Active Color": {
     "Active Color": "活动颜色"
   },
-  "Active Lock Screen Monitor": {
-    "Active Lock Screen Monitor": "活动锁屏显示器"
-  },
   "Active VPN": {
     "Active VPN": "活动 VPN"
   },
@@ -465,7 +456,7 @@
     "Add a border around the dock": "在程序坞周围添加边框"
   },
   "Add a custom prefix to all application launches. This can be used for things like 'uwsm-app', 'systemd-run', or other command wrappers.": {
-    "Add a custom prefix to all application launches. This can be used for things like 'uwsm-app', 'systemd-run', or other command wrappers.": "在所有应用启动前添加自定义前缀。可用于 uwsm-app、systemd-run 或其他命令封装器。"
+    "Add a custom prefix to all application launches. This can be used for things like 'uwsm-app', 'systemd-run', or other command wrappers.": "在所有应用启动前添加自定义前缀。可用于 uwsm-app、systemd-run 或其他命令封装器"
   },
   "Add a task...": {
     "Add a task...": "添加任务..."
@@ -498,7 +489,7 @@
     "Adjust the bar height via inner padding": "通过内边距调整状态栏高度"
   },
   "Adjust the number of columns in grid view mode.": {
-    "Adjust the number of columns in grid view mode.": "在网格模式中按需调整列的数量。"
+    "Adjust the number of columns in grid view mode.": "调整网格视图模式中的列数"
   },
   "Adjust volume per scroll indent": {
     "Adjust volume per scroll indent": "每滚动一格调节的音量"
@@ -520,9 +511,6 @@
   },
   "All": {
     "All": "全部"
-  },
-  "All Monitors": {
-    "All Monitors": "所有显示器"
   },
   "All checks passed": {
     "All checks passed": "所有检查均已通过"
@@ -909,7 +897,7 @@
     "Autoconnect enabled": "自动连接已启用"
   },
   "Autofill last remembered query when opened": {
-    "Autofill last remembered query when opened": "打开时自动填充上次记忆的查询"
+    "Autofill last remembered query when opened": "打开时自动填充上次记住的查询"
   },
   "Automatic Color Mode": {
     "Automatic Color Mode": "自动颜色模式"
@@ -976,6 +964,9 @@
   },
   "Available Screens (%1)": {
     "Available Screens (%1)": "可用屏幕（%1）"
+  },
+  "Available Updates (%1)": {
+    "Available Updates (%1)": ""
   },
   "Available in Detailed and Forecast view modes": {
     "Available in Detailed and Forecast view modes": "提供详细视图和预测视图两种模式"
@@ -1073,6 +1064,9 @@
   "Battery %1": {
     "Battery %1": "剩余电量 %1"
   },
+  "Battery Alerts": {
+    "Battery Alerts": ""
+  },
   "Battery Charge Limit": {
     "Battery Charge Limit": "电池充电限制"
   },
@@ -1081,6 +1075,9 @@
   },
   "Battery Power": {
     "Battery Power": "电池电量"
+  },
+  "Battery Protection": {
+    "Battery Protection": ""
   },
   "Battery Protection & Charging": {
     "Battery Protection & Charging": "电池保护与充电"
@@ -1277,6 +1274,9 @@
   "Button Color": {
     "Button Color": "按钮颜色"
   },
+  "By %1": {
+    "By %1": ""
+  },
   "CPU": {
     "CPU": "CPU"
   },
@@ -1466,6 +1466,15 @@
   "Choose how to be notified about battery alerts.": {
     "Choose how to be notified about battery alerts.": "选择电量警报通知方式"
   },
+  "Choose how to be notified about critical battery alerts.": {
+    "Choose how to be notified about critical battery alerts.": ""
+  },
+  "Choose how to be notified about low battery alerts.": {
+    "Choose how to be notified about low battery alerts.": ""
+  },
+  "Choose how to be notified when charge limit is reached.": {
+    "Choose how to be notified when charge limit is reached.": ""
+  },
   "Choose icon": {
     "Choose icon": "选择图标"
   },
@@ -1502,8 +1511,8 @@
   "Choose which displays show this widget": {
     "Choose which displays show this widget": "选择要在哪个显示器显示该小部件"
   },
-  "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
-    "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": "选择哪个显示器显示锁屏界面。其他显示器将显示纯色以防止 OLED 屏幕烧伤。"
+  "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
+    "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": ""
   },
   "Chroma Style": {
     "Chroma Style": "浓度风格"
@@ -1540,9 +1549,6 @@
   },
   "Clear at Startup": {
     "Clear at Startup": "启动时清除"
-  },
-  "Click 'Setup' to create %1 and add include to config.": {
-    "Click 'Setup' to create %1 and add include to config.": "点击“设置”以创建%1配置，并添加引用至合成器配置文件。"
   },
   "Click 'Setup' to create %1 and add include to your compositor config.": {
     "Click 'Setup' to create %1 and add include to your compositor config.": "点击“设置”以创建%1配置，并添加引用至合成器配置文件。"
@@ -1614,10 +1620,13 @@
     "Close All Windows": "关闭所有窗口"
   },
   "Close Overview on Launch": {
-    "Close Overview on Launch": "在启动时关闭概览"
+    "Close Overview on Launch": "启动时关闭概览"
   },
   "Close Window": {
     "Close Window": "关闭窗口"
+  },
+  "Codec switching is unavailable because pactl was not found": {
+    "Codec switching is unavailable because pactl was not found": ""
   },
   "Color": {
     "Color": "颜色"
@@ -1809,7 +1818,7 @@
     "Connected Frame Mode uses the connected launcher for default launcher shortcuts.": "连接框架模式会将连接式启动器用于默认启动器快捷键。"
   },
   "Connected Options": {
-    "Connected Options": "连接选项"
+    "Connected Options": "连接模式选项"
   },
   "Connected to %1": {
     "Connected to %1": "已连接至 %1"
@@ -2083,12 +2092,6 @@
   },
   "Current: %1": {
     "Current: %1": "当前：%1"
-  },
-  "Cursor Config Not Configured": {
-    "Cursor Config Not Configured": "光标未配置"
-  },
-  "Cursor Include Missing": {
-    "Cursor Include Missing": "光标引用缺失"
   },
   "Cursor Size": {
     "Cursor Size": "光标尺寸"
@@ -2450,6 +2453,9 @@
   "Device unpaired": {
     "Device unpaired": "设备已取消配对"
   },
+  "Diff": {
+    "Diff": ""
+  },
   "Digital": {
     "Digital": "数字式"
   },
@@ -2652,13 +2658,13 @@
     "Downloads": "下载"
   },
   "Drag a widget by its handle here to reorder it or drop it into another group": {
-    "Drag a widget by its handle here to reorder it or drop it into another group": ""
+    "Drag a widget by its handle here to reorder it or drop it into another group": "拖拽部件把手到此以重排序或放置到另一个分组"
   },
   "Drag to Reorder": {
     "Drag to Reorder": "拖动以重新排序"
   },
   "Drag to reorder or click to hide tabs. Use ↑/↓ to highlight a tab and Ctrl+↑/↓ to move it.": {
-    "Drag to reorder or click to hide tabs. Use ↑/↓ to highlight a tab and Ctrl+↑/↓ to move it.": ""
+    "Drag to reorder or click to hide tabs. Use ↑/↓ to highlight a tab and Ctrl+↑/↓ to move it.": "拖拽重排序或点击隐藏标签页。使用 ↑/↓ 高亮选择标签页，使用 Ctrl+↑/↓ 移动标签页。"
   },
   "Drag widgets to reorder within sections. Use the eye icon to hide/show widgets (maintains spacing), or X to remove them completely.": {
     "Drag widgets to reorder within sections. Use the eye icon to hide/show widgets (maintains spacing), or X to remove them completely.": "拖动部件以在各区域内重新排序。点击眼睛图标可隐藏/显示部件（保留占位），点击 X 可彻底移除。"
@@ -2676,7 +2682,7 @@
     "Drizzle": "细雨"
   },
   "Drop here": {
-    "Drop here": ""
+    "Drop here": "放置于此"
   },
   "Drop your override for %1 so the DMS default action re-applies?": {
     "Drop your override for %1 so the DMS default action re-applies?": "删除 %1 的覆盖设置并重新应用 DMS 默认动作吗？"
@@ -2893,9 +2899,6 @@
   },
   "Enter URI or text to share": {
     "Enter URI or text to share": "输入 URI 或文本以分享"
-  },
-  "Enter URL or text to share": {
-    "Enter URL or text to share": "请输入想要共享的网址或文本"
   },
   "Enter a new name for session \"%1": {
     "Enter a new name for session \"%1\"": "为会话“%1” 设置新名称"
@@ -3272,6 +3275,9 @@
   "Failed to unpin entry": {
     "Failed to unpin entry": "取消固定项目失败"
   },
+  "Failed to update %1: %2": {
+    "Failed to update %1: %2": ""
+  },
   "Failed to update VPN": {
     "Failed to update VPN": "更新 VPN 失败"
   },
@@ -3355,6 +3361,9 @@
   },
   "Fill": {
     "Fill": "填充"
+  },
+  "Fill Mode": {
+    "Fill Mode": ""
   },
   "Filter": {
     "Filter": "筛选"
@@ -3486,7 +3495,7 @@
     "Follow focus": "跟随焦点"
   },
   "Follows the default launcher choice selected above.": {
-    "Follows the default launcher choice selected above.": "遵循上方选择的默认启动器。"
+    "Follows the default launcher choice selected above.": "遵循上方选择的默认启动器"
   },
   "Font": {
     "Font": "字体"
@@ -3603,7 +3612,7 @@
     "Frame Xray": ""
   },
   "Free VRAM/memory when the launcher is closed. May cause a slight delay when reopening.": {
-    "Free VRAM/memory when the launcher is closed. May cause a slight delay when reopening.": "启动器关闭时释放显存/内存。重新打开时可能会有轻微延迟。"
+    "Free VRAM/memory when the launcher is closed. May cause a slight delay when reopening.": "启动器关闭时释放显存/内存。重新打开时可能会有轻微延迟"
   },
   "Freezing Drizzle": {
     "Freezing Drizzle": "冰冷细雨"
@@ -3780,7 +3789,7 @@
     "Grid": "网格"
   },
   "Grid Columns": {
-    "Grid Columns": "网格列"
+    "Grid Columns": "网格列数"
   },
   "Grid: OFF": {
     "Grid: OFF": "网格：关闭"
@@ -3874,9 +3883,6 @@
   },
   "Hidden Apps": {
     "Hidden Apps": "已隐藏应用"
-  },
-  "Hidden Network": {
-    "Hidden Network": "隐藏的网络"
   },
   "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": {
     "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": "已隐藏应用不会出现在启动器中。右键应用选择“隐藏应用”以隐藏。"
@@ -4016,6 +4022,9 @@
   "How the background image is scaled": {
     "How the background image is scaled": "背景图片如何缩放"
   },
+  "How the wallpaper is scaled to fit the screen": {
+    "How the wallpaper is scaled to fit the screen": ""
+  },
   "Humidity": {
     "Humidity": "湿度"
   },
@@ -4078,6 +4087,9 @@
   },
   "Identical alerts stack as separate notification cards": {
     "Identical alerts stack as separate notification cards": "相同提醒堆叠为单独的通知卡片"
+  },
+  "Identify": {
+    "Identify": ""
   },
   "Idle": {
     "Idle": "待机"
@@ -4715,6 +4727,9 @@
   "Material": {
     "Material": "Material"
   },
+  "Material Battery Style": {
+    "Material Battery Style": ""
+  },
   "Material Colors": {
     "Material Colors": "Material 配色"
   },
@@ -4866,10 +4881,10 @@
     "Memory usage indicator": "内存占用指示器"
   },
   "Merge indexed file results into the All tab (requires dsearch).": {
-    "Merge indexed file results into the All tab (requires dsearch).": "将索引文件结果合并到全部标签页（需要 dsearch）。"
+    "Merge indexed file results into the All tab (requires dsearch).": "将索引文件结果合并到全部标签页（需要 dsearch）"
   },
   "Merge indexed folder results into the All tab (requires dsearch).": {
-    "Merge indexed folder results into the All tab (requires dsearch).": "将索引文件夹结果合并到全部标签页（需要 dsearch）。"
+    "Merge indexed folder results into the All tab (requires dsearch).": "将索引文件夹结果合并到全部标签页（需要 dsearch）"
   },
   "Message": {
     "Message": "消息"
@@ -5270,14 +5285,14 @@
   "No checks passed": {
     "No checks passed": "检查未通过"
   },
+  "No codecs found": {
+    "No codecs found": ""
+  },
   "No custom theme file": {
     "No custom theme file": "缺失自定义主题文件"
   },
   "No devices": {
     "No devices": "无设备"
-  },
-  "No devices connected": {
-    "No devices connected": "未连接设备"
   },
   "No devices found": {
     "No devices found": "未找到设备"
@@ -5434,6 +5449,9 @@
   },
   "No trigger": {
     "No trigger": "无触发器"
+  },
+  "No updates available.": {
+    "No updates available.": ""
   },
   "No user specified": {
     "No user specified": "未指定用户"
@@ -5675,9 +5693,6 @@
   "Open From": {
     "Open From": "打开位置"
   },
-  "Open KDE Connect on your phone": {
-    "Open KDE Connect on your phone": "在你的手机上打开 KDE Connect"
-  },
   "Open Notepad File": {
     "Open Notepad File": "打开便签"
   },
@@ -5717,17 +5732,11 @@
   "Open with...": {
     "Open with...": "打开方式..."
   },
-  "Opening SMS": {
-    "Opening SMS": "正在打开短信"
-  },
   "Opening SMS app": {
     "Opening SMS app": "正在打开短信应用"
   },
   "Opening file browser": {
     "Opening file browser": "正在打开文件浏览器"
-  },
-  "Opening files": {
-    "Opening files": "正在打开文件"
   },
   "Opening terminal to update greetd": {
     "Opening terminal to update greetd": "正在打开终端以更新 greetd"
@@ -5806,9 +5815,6 @@
   },
   "Override Corner Radius": {
     "Override Corner Radius": "覆盖圆角半径"
-  },
-  "Override Gaps": {
-    "Override Gaps": "覆盖间隙"
   },
   "Override global layout settings for this output": {
     "Override global layout settings for this output": "为此输出覆盖全局布局设置"
@@ -5930,6 +5936,9 @@
   "Paste": {
     "Paste": "粘贴"
   },
+  "Paste failed: %1": {
+    "Paste failed: %1": ""
+  },
   "Path copied to clipboard": {
     "Path copied to clipboard": "路径已复制至剪切板"
   },
@@ -6011,9 +6020,6 @@
   "Ping": {
     "Ping": "Ping"
   },
-  "Ping sent": {
-    "Ping sent": "Ping 已发送"
-  },
   "Ping sent to": {
     "Ping sent to": "Ping 已发送至"
   },
@@ -6093,7 +6099,7 @@
     "Plugin Management": "插件管理"
   },
   "Plugin Visibility": {
-    "Plugin Visibility": "插件可视化"
+    "Plugin Visibility": "插件可见性"
   },
   "Plugin dependency missing": {
     "Plugin dependency missing": ""
@@ -6193,6 +6199,9 @@
   },
   "Power Profile Degradation": {
     "Power Profile Degradation": "电源配置性能下降"
+  },
+  "Power Profiles & Saving": {
+    "Power Profiles & Saving": ""
   },
   "Power Profiles Auto-Switching": {
     "Power Profiles Auto-Switching": "性能模式自动切换"
@@ -6510,7 +6519,7 @@
     "Remember Last Mode": "记住上次模式"
   },
   "Remember Last Query": {
-    "Remember Last Query": "记忆上次查询"
+    "Remember Last Query": "记住上次查询"
   },
   "Remember Type Filter": {
     "Remember Type Filter": "记住筛选类型"
@@ -7217,9 +7226,6 @@
   "Share Text": {
     "Share Text": "共享文本"
   },
-  "Share URL": {
-    "Share URL": "共享网址"
-  },
   "Shared": {
     "Shared": "已共享"
   },
@@ -7257,7 +7263,7 @@
     "Show All Tags": "显示所有标签"
   },
   "Show All, Apps, Files, and Plugins chips beside the Spotlight Bar input.": {
-    "Show All, Apps, Files, and Plugins chips beside the Spotlight Bar input.": "在聚焦搜索栏输入框旁显示“全部”、“应用”、“文件”和“插件”筛选项。"
+    "Show All, Apps, Files, and Plugins chips beside the Spotlight Bar input.": "在聚焦搜索栏输入框旁显示“全部”、“应用”、“文件”和“插件”筛选项"
   },
   "Show Badge": {
     "Show Badge": "显示标记"
@@ -7560,7 +7566,7 @@
     "Show workspace index numbers in the top bar workspace switcher": "在状态栏工作区切换器中显示工作区索引号"
   },
   "Show workspace name on horizontal bars, and first letter on vertical bars": {
-    "Show workspace name on horizontal bars, and first letter on vertical bars": "在水平状态栏上显示工作区名称，而在垂直状态栏上显示首字母。"
+    "Show workspace name on horizontal bars, and first letter on vertical bars": "在水平状态栏上显示工作区名称，而在垂直状态栏上显示首字母"
   },
   "Show workspaces of the currently focused monitor": {
     "Show workspaces of the currently focused monitor": "显示当前聚焦显示器的工作区"
@@ -8123,8 +8129,14 @@
   "Tile H": {
     "Tile H": "水平平铺"
   },
+  "Tile Horizontally": {
+    "Tile Horizontally": ""
+  },
   "Tile V": {
     "Tile V": "垂直平铺"
+  },
+  "Tile Vertically": {
+    "Tile Vertically": ""
   },
   "Tiled": {
     "Tiled": "平铺"
@@ -8429,6 +8441,9 @@
   "Unknown GPU": {
     "Unknown GPU": "未知 GPU"
   },
+  "Unknown Model": {
+    "Unknown Model": ""
+  },
   "Unknown Monitor": {
     "Unknown Monitor": "未知显示器"
   },
@@ -8507,6 +8522,12 @@
   "Update failed: %1": {
     "Update failed: %1": "更新失败：%1"
   },
+  "Updating %1...": {
+    "Updating %1...": ""
+  },
+  "Updating plugins...": {
+    "Updating plugins...": ""
+  },
   "Upgrading...": {
     "Upgrading...": "正在更新..."
   },
@@ -8584,9 +8605,6 @@
   },
   "Use custom border/focus-ring width": {
     "Use custom border/focus-ring width": "使用自定义边框/聚焦环宽度"
-  },
-  "Use custom gaps instead of bar spacing": {
-    "Use custom gaps instead of bar spacing": "使用自定义间隙替代状态栏空隙"
   },
   "Use custom window radius instead of theme radius": {
     "Use custom window radius instead of theme radius": "使用自定义窗口半径替代主题半径"
@@ -8685,7 +8703,7 @@
     "Uses sunrise/sunset times to automatically adjust night mode based on your location.": "使用所在位置的日出/日落时间，自动调节夜间模式。"
   },
   "Uses the spotlight-bar IPC action and always opens the minimal bar.": {
-    "Uses the spotlight-bar IPC action and always opens the minimal bar.": "使用 spotlight-bar IPC 动作，并始终打开聚焦搜索栏。"
+    "Uses the spotlight-bar IPC action and always opens the minimal bar.": "使用 spotlight-bar IPC 动作，并始终打开聚焦搜索栏"
   },
   "Using DankCalendar%1": {
     "Using DankCalendar%1": "使用 DankCalendar%1"
@@ -9006,7 +9024,7 @@
     "Workspace Names": "工作区名称"
   },
   "Workspace Padding": {
-    "Workspace Padding": "工作区内边距"
+    "Workspace Padding": "工作区填充"
   },
   "Workspace Settings": {
     "Workspace Settings": "工作区设置"
@@ -9136,9 +9154,6 @@
   },
   "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": {
     "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": "DMS 是一款高度可自定义的现代桌面 Shell，采用受 <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">Material 3</a> 启发的设计。<br /><br/>DMS 基于 <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>（用于构建桌面 Shell 的 QT6 框架）和 <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>（静态类型编译型编程语言）开发。"
-  },
-  "dms/cursor config exists but is not included. Cursor settings won't apply.": {
-    "dms/cursor config exists but is not included. Cursor settings won't apply.": "dms/cursor 配置存在，但未被合成器配置文件引用。光标设置将不会生效。"
   },
   "e.g. /usr/bin/my-script --flag": {
     "e.g. /usr/bin/my-script --flag": "例如：/usr/bin/my-script --flag"
@@ -9290,6 +9305,9 @@
   "source": {
     "source": "源"
   },
+  "the Qt 6 Multimedia QML module": {
+    "the Qt 6 Multimedia QML module": ""
+  },
   "this app": {
     "this app": "此应用"
   },
@@ -9319,9 +9337,6 @@
   },
   "verified": {
     "verified": "已验证"
-  },
-  "wtype not available - install wtype for paste support": {
-    "wtype not available - install wtype for paste support": "wtype 不可用 - 安装 wtype 已支持粘贴功能"
   },
   "• Install only from trusted sources": {
     "• Install only from trusted sources": "• 仅从可信来源安装"

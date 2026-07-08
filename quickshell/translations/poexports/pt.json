@@ -50,9 +50,6 @@
   "%1 displays": {
     "%1 displays": ""
   },
-  "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": {
-    "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": "%1 existe, mas não está incluído na configuração. Os atalhos personalizados não funcionarão até que isso seja corrigido."
-  },
   "%1 exists but is not included. Window rules won't apply.": {
     "%1 exists but is not included. Window rules won't apply.": "%1 existe mas não está incluído. Regras de janela não serão aplicadas."
   },
@@ -142,9 +139,6 @@
   },
   "1 day before": {
     "1 day before": ""
-  },
-  "1 device connected": {
-    "1 device connected": "1 dispositivo conectado"
   },
   "1 hour": {
     "1 hour": "1 hora"
@@ -401,9 +395,6 @@
   "Active Color": {
     "Active Color": "Cor Ativa"
   },
-  "Active Lock Screen Monitor": {
-    "Active Lock Screen Monitor": "Monitor de Tela de Bloqueio Atual"
-  },
   "Active VPN": {
     "Active VPN": ""
   },
@@ -520,9 +511,6 @@
   },
   "All": {
     "All": "Todos"
-  },
-  "All Monitors": {
-    "All Monitors": "Todos os Monitores"
   },
   "All checks passed": {
     "All checks passed": "Todas as verificações passaram"
@@ -977,6 +965,9 @@
   "Available Screens (%1)": {
     "Available Screens (%1)": "Telas Disponíveis (%1)"
   },
+  "Available Updates (%1)": {
+    "Available Updates (%1)": ""
+  },
   "Available in Detailed and Forecast view modes": {
     "Available in Detailed and Forecast view modes": "Disponível em modos de visualização Detalhada e Previsão"
   },
@@ -1073,6 +1064,9 @@
   "Battery %1": {
     "Battery %1": ""
   },
+  "Battery Alerts": {
+    "Battery Alerts": ""
+  },
   "Battery Charge Limit": {
     "Battery Charge Limit": "Limite de Carga da Bateria"
   },
@@ -1081,6 +1075,9 @@
   },
   "Battery Power": {
     "Battery Power": ""
+  },
+  "Battery Protection": {
+    "Battery Protection": ""
   },
   "Battery Protection & Charging": {
     "Battery Protection & Charging": ""
@@ -1277,6 +1274,9 @@
   "Button Color": {
     "Button Color": "Cor do Botão"
   },
+  "By %1": {
+    "By %1": ""
+  },
   "CPU": {
     "CPU": "CPU"
   },
@@ -1466,6 +1466,15 @@
   "Choose how to be notified about battery alerts.": {
     "Choose how to be notified about battery alerts.": ""
   },
+  "Choose how to be notified about critical battery alerts.": {
+    "Choose how to be notified about critical battery alerts.": ""
+  },
+  "Choose how to be notified about low battery alerts.": {
+    "Choose how to be notified about low battery alerts.": ""
+  },
+  "Choose how to be notified when charge limit is reached.": {
+    "Choose how to be notified when charge limit is reached.": ""
+  },
   "Choose icon": {
     "Choose icon": "Escolher Ícone"
   },
@@ -1502,8 +1511,8 @@
   "Choose which displays show this widget": {
     "Choose which displays show this widget": "Escolha quais monitores mostrarão este widget"
   },
-  "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
-    "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": "Escolha qual monitor mostra a interface de tela de bloqueio. Outros monitores vão mostrar uma cor sólida evitar burn-in no OLED."
+  "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
+    "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": ""
   },
   "Chroma Style": {
     "Chroma Style": "Estilo Chroma"
@@ -1540,9 +1549,6 @@
   },
   "Clear at Startup": {
     "Clear at Startup": "Limpar ao Iniciar"
-  },
-  "Click 'Setup' to create %1 and add include to config.": {
-    "Click 'Setup' to create %1 and add include to config.": "Clique em 'Configurar' para criar %1 e adicionar à configuração"
   },
   "Click 'Setup' to create %1 and add include to your compositor config.": {
     "Click 'Setup' to create %1 and add include to your compositor config.": "Clique em 'Configurar' para criar %1 e adicionar inclusão na configuração do seu compositor"
@@ -1618,6 +1624,9 @@
   },
   "Close Window": {
     "Close Window": "Fechar Janela"
+  },
+  "Codec switching is unavailable because pactl was not found": {
+    "Codec switching is unavailable because pactl was not found": ""
   },
   "Color": {
     "Color": "Cor"
@@ -2084,12 +2093,6 @@
   "Current: %1": {
     "Current: %1": "Atual: %1"
   },
-  "Cursor Config Not Configured": {
-    "Cursor Config Not Configured": "Configuração de Cursor Não Configurada"
-  },
-  "Cursor Include Missing": {
-    "Cursor Include Missing": "Inclusão de Cursor Ausente"
-  },
   "Cursor Size": {
     "Cursor Size": "Tamanho do Cursor"
   },
@@ -2449,6 +2452,9 @@
   },
   "Device unpaired": {
     "Device unpaired": "Dispositivo desemparelhado"
+  },
+  "Diff": {
+    "Diff": ""
   },
   "Digital": {
     "Digital": "Digital"
@@ -2894,9 +2900,6 @@
   "Enter URI or text to share": {
     "Enter URI or text to share": ""
   },
-  "Enter URL or text to share": {
-    "Enter URL or text to share": "Digite URL ou texto para compartilhar"
-  },
   "Enter a new name for session \"%1": {
     "Enter a new name for session \"%1\"": ""
   },
@@ -3272,6 +3275,9 @@
   "Failed to unpin entry": {
     "Failed to unpin entry": "Falha ao remover entrada"
   },
+  "Failed to update %1: %2": {
+    "Failed to update %1: %2": ""
+  },
   "Failed to update VPN": {
     "Failed to update VPN": "Falha ao atualizar VPN"
   },
@@ -3355,6 +3361,9 @@
   },
   "Fill": {
     "Fill": "Preenchimento"
+  },
+  "Fill Mode": {
+    "Fill Mode": ""
   },
   "Filter": {
     "Filter": ""
@@ -3875,9 +3884,6 @@
   "Hidden Apps": {
     "Hidden Apps": "Aplicativos Ocultos"
   },
-  "Hidden Network": {
-    "Hidden Network": "Rede Oculta"
-  },
   "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": {
     "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": "Aplicativos ocultos não aparecerão no launcher. Clique com o botão direito em um aplicativo e selecione 'Ocultar Aplicativo' para ocultá-lo."
   },
@@ -4016,6 +4022,9 @@
   "How the background image is scaled": {
     "How the background image is scaled": "Como a imagem de fundo é dimensionada"
   },
+  "How the wallpaper is scaled to fit the screen": {
+    "How the wallpaper is scaled to fit the screen": ""
+  },
   "Humidity": {
     "Humidity": "Umidade"
   },
@@ -4078,6 +4087,9 @@
   },
   "Identical alerts stack as separate notification cards": {
     "Identical alerts stack as separate notification cards": ""
+  },
+  "Identify": {
+    "Identify": ""
   },
   "Idle": {
     "Idle": "Em espera"
@@ -4715,6 +4727,9 @@
   "Material": {
     "Material": ""
   },
+  "Material Battery Style": {
+    "Material Battery Style": ""
+  },
   "Material Colors": {
     "Material Colors": "Cores Material"
   },
@@ -5270,14 +5285,14 @@
   "No checks passed": {
     "No checks passed": "Nenhuma verificação passou"
   },
+  "No codecs found": {
+    "No codecs found": ""
+  },
   "No custom theme file": {
     "No custom theme file": "Nenhum arquivo de tema personalizado"
   },
   "No devices": {
     "No devices": "Sem dispositivos"
-  },
-  "No devices connected": {
-    "No devices connected": "Nenhum dispositivo conectado"
   },
   "No devices found": {
     "No devices found": "Nenhum dispositivo encontrado"
@@ -5434,6 +5449,9 @@
   },
   "No trigger": {
     "No trigger": "Sem gatilho"
+  },
+  "No updates available.": {
+    "No updates available.": ""
   },
   "No user specified": {
     "No user specified": ""
@@ -5675,9 +5693,6 @@
   "Open From": {
     "Open From": ""
   },
-  "Open KDE Connect on your phone": {
-    "Open KDE Connect on your phone": "Abra o KDE Connect em seu telefone"
-  },
   "Open Notepad File": {
     "Open Notepad File": "Abrir Arquivo do Bloco de Notas"
   },
@@ -5717,17 +5732,11 @@
   "Open with...": {
     "Open with...": "Abrir com..."
   },
-  "Opening SMS": {
-    "Opening SMS": "Abrindo SMS"
-  },
   "Opening SMS app": {
     "Opening SMS app": "Abrindo aplicativo de SMS"
   },
   "Opening file browser": {
     "Opening file browser": "Abrindo navegador de arquivos"
-  },
-  "Opening files": {
-    "Opening files": "Abrindo arquivos"
   },
   "Opening terminal to update greetd": {
     "Opening terminal to update greetd": ""
@@ -5806,9 +5815,6 @@
   },
   "Override Corner Radius": {
     "Override Corner Radius": "Sobrescrever Arredondamento"
-  },
-  "Override Gaps": {
-    "Override Gaps": "Substituir Espaçamentos"
   },
   "Override global layout settings for this output": {
     "Override global layout settings for this output": "Substituir configurações de layout global para esta saída"
@@ -5930,6 +5936,9 @@
   "Paste": {
     "Paste": "Colar"
   },
+  "Paste failed: %1": {
+    "Paste failed: %1": ""
+  },
   "Path copied to clipboard": {
     "Path copied to clipboard": ""
   },
@@ -6010,9 +6019,6 @@
   },
   "Ping": {
     "Ping": "Ping"
-  },
-  "Ping sent": {
-    "Ping sent": "Ping enviado"
   },
   "Ping sent to": {
     "Ping sent to": "Ping enviado para"
@@ -6193,6 +6199,9 @@
   },
   "Power Profile Degradation": {
     "Power Profile Degradation": "Degradação do Perfil de Energia"
+  },
+  "Power Profiles & Saving": {
+    "Power Profiles & Saving": ""
   },
   "Power Profiles Auto-Switching": {
     "Power Profiles Auto-Switching": ""
@@ -7217,9 +7226,6 @@
   "Share Text": {
     "Share Text": "Compartilhar Texto"
   },
-  "Share URL": {
-    "Share URL": "Compartilhar URL"
-  },
   "Shared": {
     "Shared": "Compartilhado"
   },
@@ -8123,8 +8129,14 @@
   "Tile H": {
     "Tile H": "Azulejo H"
   },
+  "Tile Horizontally": {
+    "Tile Horizontally": ""
+  },
   "Tile V": {
     "Tile V": "Azulejo V"
+  },
+  "Tile Vertically": {
+    "Tile Vertically": ""
   },
   "Tiled": {
     "Tiled": "Em Mosaico"
@@ -8429,6 +8441,9 @@
   "Unknown GPU": {
     "Unknown GPU": "GPU Desconhecida"
   },
+  "Unknown Model": {
+    "Unknown Model": ""
+  },
   "Unknown Monitor": {
     "Unknown Monitor": "Monitor Desconhecido"
   },
@@ -8507,6 +8522,12 @@
   "Update failed: %1": {
     "Update failed: %1": ""
   },
+  "Updating %1...": {
+    "Updating %1...": ""
+  },
+  "Updating plugins...": {
+    "Updating plugins...": ""
+  },
   "Upgrading...": {
     "Upgrading...": ""
   },
@@ -8584,9 +8605,6 @@
   },
   "Use custom border/focus-ring width": {
     "Use custom border/focus-ring width": "Usar largura de borda/anel de foco personalizada"
-  },
-  "Use custom gaps instead of bar spacing": {
-    "Use custom gaps instead of bar spacing": "Usar espaçamentos personalizados em vez de espaçamento da barra"
   },
   "Use custom window radius instead of theme radius": {
     "Use custom window radius instead of theme radius": "Usar raio de janela personalizado em vez do raio do tema"
@@ -9137,9 +9155,6 @@
   "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": {
     "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": ""
   },
-  "dms/cursor config exists but is not included. Cursor settings won't apply.": {
-    "dms/cursor config exists but is not included. Cursor settings won't apply.": "arquivo de configuração dms/cursor existe, mas não está incluído. As configurações de cursor não serão aplicadas."
-  },
   "e.g. /usr/bin/my-script --flag": {
     "e.g. /usr/bin/my-script --flag": ""
   },
@@ -9290,6 +9305,9 @@
   "source": {
     "source": "fonte"
   },
+  "the Qt 6 Multimedia QML module": {
+    "the Qt 6 Multimedia QML module": ""
+  },
   "this app": {
     "this app": "este aplicativo"
   },
@@ -9319,9 +9337,6 @@
   },
   "verified": {
     "verified": ""
-  },
-  "wtype not available - install wtype for paste support": {
-    "wtype not available - install wtype for paste support": "wtype não disponível - installe wtype para suporte de colagem"
   },
   "• Install only from trusted sources": {
     "• Install only from trusted sources": "Instale apenas de fontes confiáveis"
