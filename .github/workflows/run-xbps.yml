@@ -7,6 +7,10 @@ on:
     types: [published]
   workflow_dispatch:
     inputs:
+      version:
+        description: 'Stable release tag/version to build (e.g. v1.5.0 or 1.5.0). Leave blank to use the selected ref/template version'
+        type: string
+        required: false
       force_rebuild:
         description: 'Force rebuilding packages even if they already exist in the repository'
         type: boolean
@@ -40,6 +44,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
+          ref: ${{ github.event.release.tag_name || (github.event.inputs.version && (startsWith(github.event.inputs.version, 'v') && github.event.inputs.version || format('v{0}', github.event.inputs.version))) || github.ref }}
           fetch-depth: 0
 
       - name: Checkout gh-pages branch
@@ -157,6 +162,25 @@ jobs:
             BUILD_GIT="false"
           fi
 
+          RELEASE_TAG=""
+          if [ "${{ github.event_name }}" = "release" ]; then
+            RELEASE_TAG="${{ github.event.release.tag_name }}"
+          elif [ -n "${{ github.event.inputs.version || '' }}" ]; then
+            RELEASE_TAG="${{ github.event.inputs.version }}"
+          elif [ "${{ github.ref_type }}" = "tag" ]; then
+            RELEASE_TAG="${{ github.ref_name }}"
+          fi
+
+          if [ -n "$RELEASE_TAG" ]; then
+            RELEASE_VER="${RELEASE_TAG#v}"
+            ARCHIVE_TAG="v${RELEASE_VER}"
+            echo "Stable release tag:          $ARCHIVE_TAG"
+          else
+            RELEASE_VER=""
+            ARCHIVE_TAG=""
+            echo "Stable release tag:          (template version)"
+          fi
+
           echo "=== Starting Builds ==="
           echo "DMS stable build enabled:     $BUILD_DMS"
           echo "Greeter stable build enabled: $BUILD_GREETER"
@@ -164,6 +188,19 @@ jobs:
           echo "Force rebuild:                $FORCE_REBUILD"
 
           cd void-packages
+
+          if [ -n "$RELEASE_VER" ] && { [ "$BUILD_DMS" = "true" ] || [ "$BUILD_GREETER" = "true" ]; }; then
+            echo "🔧 Updating stable templates for $ARCHIVE_TAG"
+            TARBALL="$(mktemp)"
+            curl -fsSL -o "$TARBALL" "https://github.com/${{ github.repository }}/archive/refs/tags/${ARCHIVE_TAG}.tar.gz"
+            RELEASE_CHECKSUM="$(sha256sum "$TARBALL" | cut -d' ' -f1)"
+            rm -f "$TARBALL"
+
+            for pkg in dms dms-greeter; do
+              sed -i "s/^version=.*/version=${RELEASE_VER}/" "srcpkgs/${pkg}/template"
+              sed -i "s/^checksum=.*/checksum=${RELEASE_CHECKSUM}/" "srcpkgs/${pkg}/template"
+            done
+          fi
 
           # 1. Build dms-git (development package)
           if [ "$BUILD_GIT" = "true" ]; then
