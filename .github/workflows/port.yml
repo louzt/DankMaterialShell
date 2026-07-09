@@ -1,0 +1,111 @@
+name: Port to release branch
+
+# Ports flagged commits from master onto release/X.Y branches:
+#   - "Port: 1.5" trailer in a commit message pushed to master
+#   - "port release/1.5" label on a merged PR
+# Conflicts are reported to the "Port status: <branch>" tracking issue.
+
+on:
+  push:
+    branches: [master]
+  pull_request_target:
+    types: [closed, labeled]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  trailer:
+    name: Port trailer-flagged commits
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: port-engine
+      cancel-in-progress: false
+    steps:
+      - name: Create GitHub App token
+        id: app_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app_token.outputs.token }}
+
+      - name: Port flagged commits
+        env:
+          GH_TOKEN: ${{ steps.app_token.outputs.token }}
+          COMMITS: ${{ toJSON(github.event.commits) }}
+        run: |
+          set -euo pipefail
+          git config user.name "dms-ci[bot]"
+          git config user.email "dms-ci[bot]@users.noreply.github.com"
+
+          for sha in $(jq -r '.[].id' <<<"$COMMITS"); do
+            git cat-file -e "$sha" 2>/dev/null || continue
+            # skip merge commits (handled by the label path)
+            [ "$(git rev-list --no-walk --count --min-parents=2 "$sha")" -eq 0 ] || continue
+
+            targets=$(git log -1 --format=%B "$sha" |
+              { grep -iE '^Port:' || true; } | sed 's/^port: *//I' | tr ',' '\n' |
+              sed 's/[[:space:]]//g; /^$/d' | sed 's|^release/||I' | sort -u)
+            for ver in $targets; do
+              echo "::group::port $sha -> release/$ver"
+              bash scripts/port.sh "release/$ver" "$sha"
+              echo "::endgroup::"
+            done
+          done
+
+  label:
+    name: Port label-flagged PR
+    if: >
+      github.event_name == 'pull_request_target' &&
+      github.event.pull_request.merged == true &&
+      (github.event.action == 'closed' ||
+       (github.event.action == 'labeled' && startsWith(github.event.label.name, 'port ')))
+    runs-on: ubuntu-latest
+    concurrency:
+      group: port-engine
+      cancel-in-progress: false
+    steps:
+      - name: Create GitHub App token
+        id: app_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      # Base-repo code only; PR head code is never checked out or executed.
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: master
+          fetch-depth: 0
+          token: ${{ steps.app_token.outputs.token }}
+
+      - name: Port merge commit
+        env:
+          GH_TOKEN: ${{ steps.app_token.outputs.token }}
+          LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+          PORT_SOURCE_PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          git config user.name "dms-ci[bot]"
+          git config user.email "dms-ci[bot]@users.noreply.github.com"
+
+          targets=$(jq -r '.[] | select(startswith("port ")) | sub("^port +"; "")' <<<"$LABELS" |
+            sed 's|^release/||' | sort -u)
+          [ -n "$targets" ] || { echo "no port labels, nothing to do"; exit 0; }
+          [ -n "$MERGE_SHA" ] || { echo "::error::PR has no merge commit sha"; exit 1; }
+
+          for ver in $targets; do
+            echo "::group::port PR #${PORT_SOURCE_PR} ($MERGE_SHA) -> release/$ver"
+            bash scripts/port.sh "release/$ver" "$MERGE_SHA"
+            echo "::endgroup::"
+          done

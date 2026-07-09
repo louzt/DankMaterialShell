@@ -3,8 +3,9 @@ name: Void Linux XBPS Repository
 on:
   schedule:
     - cron: "0 2,5,14,17,20,23 * * *" # 9am, 12pm, 3pm, 6pm, 9pm, 12am EST (UTC times shown)
-  release:
-    types: [published]
+  # release trigger disabled; dispatch manually after a release
+  # release:
+  #   types: [published]
   workflow_dispatch:
     inputs:
       version:
