@@ -18,6 +18,17 @@ Item {
 
     readonly property bool _descriptionIsHtml: /<[a-z][^>]*>/i.test((eventData && eventData.description) || "")
 
+    // _locationUrl returns the location when it is nothing but a URL so the
+    // row can open it; links inside a street address surface as meetingUrl.
+    function _locationUrl() {
+        const loc = ((eventData && eventData.location) || "").trim();
+        if (/^https?:\/\/\S+$/i.test(loc))
+            return loc;
+        if (/^www\.\S+$/i.test(loc))
+            return "https://" + loc;
+        return "";
+    }
+
     function _styleAnchors(html) {
         return html.replace(/<a\s([^>]*)>/gi, (m, attrs) => {
             const cleaned = attrs.replace(/style="[^"]*"/gi, "");
@@ -214,7 +225,7 @@ Item {
                     DankIcon {
                         name: "place"
                         size: 14
-                        color: Theme.surfaceVariantText
+                        color: root._locationUrl() !== "" ? Theme.primary : Theme.surfaceVariantText
                         anchors.top: parent.top
                         anchors.topMargin: 2
                     }
@@ -223,10 +234,48 @@ Item {
                         width: parent.width - 14 - Theme.spacingXS
                         text: root.eventData ? root.eventData.location : ""
                         font.pixelSize: Theme.fontSizeSmall
-                        color: Theme.surfaceVariantText
+                        color: root._locationUrl() !== "" ? Theme.primary : Theme.surfaceVariantText
                         wrapMode: Text.Wrap
                         maximumLineCount: 2
                         elide: Text.ElideRight
+
+                        MouseArea {
+                            anchors.fill: parent
+                            enabled: root._locationUrl() !== ""
+                            cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                            onClicked: Qt.openUrlExternally(root._locationUrl())
+                        }
+                    }
+                }
+
+                Row {
+                    width: parent.width
+                    spacing: Theme.spacingXS
+                    visible: root.eventData && root.eventData.meetingUrl
+
+                    DankIcon {
+                        name: "videocam"
+                        size: 14
+                        color: Theme.primary
+                        anchors.top: parent.top
+                        anchors.topMargin: 2
+                    }
+
+                    StyledText {
+                        width: parent.width - 14 - Theme.spacingXS
+                        text: I18n.tr("Join video call")
+                        font.pixelSize: Theme.fontSizeSmall
+                        color: Theme.primary
+                        elide: Text.ElideRight
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                if (root.eventData && root.eventData.meetingUrl)
+                                    Qt.openUrlExternally(root.eventData.meetingUrl);
+                            }
+                        }
                     }
                 }
 

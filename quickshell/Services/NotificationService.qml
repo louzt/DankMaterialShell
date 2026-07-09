@@ -700,9 +700,13 @@ Singleton {
 
             // Honor the freedesktop "suppress-sound" hint: the sender
             // plays its own audio for this notification and asks the
-            // server not to double up.
-            const suppressSound = !!(notif.hints && notif.hints["suppress-sound"]);
-            if (SettingsData.soundsEnabled && SettingsData.soundNewNotification && !suppressSound) {
+            // server not to double up. "sound-name" is the opposite — an
+            // explicit request for audio — so it plays even when the
+            // global new-notification sound is off.
+            const soundHints = notif.hints || {};
+            const suppressSound = !!soundHints["suppress-sound"];
+            const requestsSound = !!soundHints["sound-name"];
+            if (SettingsData.soundsEnabled && (SettingsData.soundNewNotification || requestsSound) && !suppressSound) {
                 if (policy.urgency === NotificationUrgency.Critical) {
                     AudioService.playCriticalNotificationSound();
                 } else {
