@@ -15,29 +15,32 @@ permissions:
   contents: write
   issues: write
 
+concurrency:
+  group: port-engine
+  cancel-in-progress: false
+
 jobs:
-  trailer:
-    name: Port trailer-flagged commits
-    if: github.event_name == 'push'
+  port:
+    name: Port flagged commits
     runs-on: ubuntu-latest
-    concurrency:
-      group: port-engine
-      cancel-in-progress: false
     steps:
       - name: Create GitHub App token
         id: app_token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v2
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
+      # Base-repo code only; PR head code is never checked out or executed.
       - name: Checkout
         uses: actions/checkout@v6
         with:
+          ref: master
           fetch-depth: 0
           token: ${{ steps.app_token.outputs.token }}
 
-      - name: Port flagged commits
+      - name: Port trailer-flagged commits
+        if: github.event_name == 'push'
         env:
           GH_TOKEN: ${{ steps.app_token.outputs.token }}
           COMMITS: ${{ toJSON(github.event.commits) }}
@@ -61,34 +64,12 @@ jobs:
             done
           done
 
-  label:
-    name: Port label-flagged PR
-    if: >
-      github.event_name == 'pull_request_target' &&
-      github.event.pull_request.merged == true &&
-      (github.event.action == 'closed' ||
-       (github.event.action == 'labeled' && startsWith(github.event.label.name, 'port ')))
-    runs-on: ubuntu-latest
-    concurrency:
-      group: port-engine
-      cancel-in-progress: false
-    steps:
-      - name: Create GitHub App token
-        id: app_token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
-
-      # Base-repo code only; PR head code is never checked out or executed.
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          ref: master
-          fetch-depth: 0
-          token: ${{ steps.app_token.outputs.token }}
-
-      - name: Port merge commit
+      - name: Port label-flagged PR
+        if: >
+          github.event_name == 'pull_request_target' &&
+          github.event.pull_request.merged == true &&
+          (github.event.action == 'closed' ||
+           (github.event.action == 'labeled' && startsWith(github.event.label.name, 'port ')))
         env:
           GH_TOKEN: ${{ steps.app_token.outputs.token }}
           LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
