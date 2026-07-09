@@ -18,15 +18,21 @@ Item {
 
     readonly property bool _descriptionIsHtml: /<[a-z][^>]*>/i.test((eventData && eventData.description) || "")
 
-    // _locationUrl returns the location when it is nothing but a URL so the
-    // row can open it; links inside a street address surface as meetingUrl.
+    // _locationUrl makes the location row clickable: the location itself when
+    // it is a URL, the meeting link when the event has one (conference
+    // events carry placeholder locations like "Microsoft Teams Meeting"),
+    // otherwise a geo: search (RFC 5870) so addresses open in the maps app.
     function _locationUrl() {
         const loc = ((eventData && eventData.location) || "").trim();
+        if (loc === "")
+            return "";
         if (/^https?:\/\/\S+$/i.test(loc))
             return loc;
         if (/^www\.\S+$/i.test(loc))
             return "https://" + loc;
-        return "";
+        if (eventData && eventData.meetingUrl)
+            return eventData.meetingUrl;
+        return "geo:0,0?q=" + encodeURIComponent(loc);
     }
 
     function _styleAnchors(html) {
