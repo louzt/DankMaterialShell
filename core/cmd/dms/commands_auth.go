@@ -35,9 +35,31 @@ var authSyncCmd = &cobra.Command{
 	},
 }
 
+var authResolveLockCmd = &cobra.Command{
+	Use:   "resolve-lock",
+	Short: "Generate the lock-screen PAM config from the system auth stack",
+	Long: "Resolve the distribution's PAM auth stack into a self-contained lock-screen config under the user state directory.\n" +
+		"Runs unprivileged (reads /etc/pam.d, writes to the user's state dir) and is used by the shell as a fallback when /etc/pam.d/dankshell is not managed.\n" +
+		"Prints the path of the generated file.",
+	Run: func(cmd *cobra.Command, args []string) {
+		quiet, _ := cmd.Flags().GetBool("quiet")
+		logFunc := func(msg string) {
+			if !quiet {
+				fmt.Println(msg)
+			}
+		}
+		path, err := sharedpam.WriteUserLockscreenPamConfig(logFunc)
+		if err != nil {
+			log.Fatalf("Error resolving lock-screen PAM config: %v", err)
+		}
+		fmt.Println(path)
+	},
+}
+
 func init() {
 	authSyncCmd.Flags().BoolP("yes", "y", false, "Non-interactive mode: skip prompts")
 	authSyncCmd.Flags().BoolP("terminal", "t", false, "Run auth sync in a new terminal (for entering sudo password)")
+	authResolveLockCmd.Flags().BoolP("quiet", "q", false, "Only print the resulting file path")
 }
 
 func syncAuth(nonInteractive bool) error {

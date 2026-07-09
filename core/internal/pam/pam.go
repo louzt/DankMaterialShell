@@ -12,6 +12,7 @@ import (
 
 	"github.com/AvengeMedia/DankMaterialShell/core/internal/distros"
 	"github.com/AvengeMedia/DankMaterialShell/core/internal/privesc"
+	"github.com/AvengeMedia/DankMaterialShell/core/internal/utils"
 )
 
 const (
@@ -31,6 +32,32 @@ const (
 	DankshellPamPath    = "/etc/pam.d/dankshell"
 	DankshellU2FPamPath = "/etc/pam.d/dankshell-u2f"
 )
+
+// lockscreenPamEntryCandidates are the /etc/pam.d entry-point services tried in
+// order. "login" is first so systems that ship it behave exactly as before; the
+// rest cover distros (or minimal installs) with no /etc/pam.d/login.
+// lockscreenPamBaseDirs mirrors libpam's search order: /etc overrides, then the
+// vendor dir (/usr/lib) and the stateless-distro default (/usr/share).
+var lockscreenPamBaseDirs = []string{"/etc/pam.d", "/usr/lib/pam.d", "/usr/share/pam.d"}
+
+// Standalone auth+account services, most universal first. login exists almost
+// everywhere (util-linux); system-* cover Fedora/Arch/Gentoo/SUSE-Leap.
+var lockscreenPamEntryCandidates = []string{
+	"login",
+	"system-auth",
+	"system-login",
+	"system-local-login",
+}
+
+// Fallback for distros with no standalone login service, only shared building
+// blocks: openSUSE/Debian (common-*), Alpine/postmarketOS (base-*).
+var lockscreenPamSharedIncludePairs = []struct {
+	auth    string
+	account string
+}{
+	{auth: "common-auth", account: "common-account"},
+	{auth: "base-auth", account: "base-account"},
+}
 
 var includedPamAuthFiles = []string{
 	"system-auth",
@@ -75,8 +102,48 @@ type lockscreenPamIncludeDirective struct {
 }
 
 type lockscreenPamResolver struct {
-	pamDir   string
+	baseDirs []string
 	readFile func(string) ([]byte, error)
+}
+
+// locate resolves a service/include name across baseDirs (libpam vendor-dir
+// fallback). Targets may not escape the base dirs.
+func (r lockscreenPamResolver) locate(target string) (string, error) {
+	target = strings.TrimSpace(target)
+	if target == "" {
+		return "", fmt.Errorf("empty PAM include target")
+	}
+
+	if filepath.IsAbs(target) {
+		clean := filepath.Clean(target)
+		for _, dir := range r.baseDirs {
+			if filepath.Dir(clean) == filepath.Clean(dir) {
+				return clean, nil
+			}
+		}
+		return "", fmt.Errorf("unsupported PAM include outside PAM dirs: %s", target)
+	}
+
+	clean := filepath.Clean(target)
+	if clean == "." || clean == ".." || strings.HasPrefix(clean, ".."+string(os.PathSeparator)) {
+		return "", fmt.Errorf("invalid PAM include target: %s", target)
+	}
+
+	var firstErr error
+	for _, dir := range r.baseDirs {
+		path := filepath.Join(filepath.Clean(dir), clean)
+		if _, err := r.readFile(path); err != nil {
+			if firstErr == nil {
+				firstErr = err
+			}
+			continue
+		}
+		return path, nil
+	}
+	if firstErr == nil {
+		firstErr = os.ErrNotExist
+	}
+	return "", firstErr
 }
 
 func defaultSyncDeps() syncDeps {
@@ -375,32 +442,10 @@ func parseLockscreenPamIncludeDirective(trimmed string, inheritedFilter string) 
 	return lockscreenPamIncludeDirective{}, false
 }
 
-func resolveLockscreenPamIncludePath(pamDir, target string) (string, error) {
-	if strings.TrimSpace(target) == "" {
-		return "", fmt.Errorf("empty PAM include target")
-	}
-
-	cleanPamDir := filepath.Clean(pamDir)
-	if filepath.IsAbs(target) {
-		cleanTarget := filepath.Clean(target)
-		if filepath.Dir(cleanTarget) != cleanPamDir {
-			return "", fmt.Errorf("unsupported PAM include outside %s: %s", cleanPamDir, target)
-		}
-		return cleanTarget, nil
-	}
-
-	cleanTarget := filepath.Clean(target)
-	if cleanTarget == "." || cleanTarget == ".." || strings.HasPrefix(cleanTarget, ".."+string(os.PathSeparator)) {
-		return "", fmt.Errorf("invalid PAM include target: %s", target)
-	}
-
-	return filepath.Join(cleanPamDir, cleanTarget), nil
-}
-
 func (r lockscreenPamResolver) resolveService(serviceName string, filterType string, stack []string) ([]string, error) {
-	path, err := resolveLockscreenPamIncludePath(r.pamDir, serviceName)
+	path, err := r.locate(serviceName)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to read PAM file %s: %w", serviceName, err)
 	}
 
 	for _, seen := range stack {
@@ -458,29 +503,73 @@ func (r lockscreenPamResolver) resolveService(serviceName string, filterType str
 	return resolved, nil
 }
 
-func buildManagedLockscreenPamContent(pamDir string, readFile func(string) ([]byte, error)) (string, error) {
-	resolver := lockscreenPamResolver{
-		pamDir:   pamDir,
-		readFile: readFile,
-	}
-
-	resolvedLines, err := resolver.resolveService("login", "", nil)
-	if err != nil {
-		return "", err
-	}
-	if len(resolvedLines) == 0 {
-		return "", fmt.Errorf("no auth directives remained after filtering %s", filepath.Join(pamDir, "login"))
-	}
-
-	hasAuth := false
-	for _, line := range resolvedLines {
+func resolvedLinesHaveAuth(lines []string) bool {
+	for _, line := range lines {
 		if pamDirectiveType(strings.TrimSpace(line)) == "auth" {
-			hasAuth = true
-			break
+			return true
 		}
 	}
-	if !hasAuth {
-		return "", fmt.Errorf("no auth directives remained after filtering %s", filepath.Join(pamDir, "login"))
+	return false
+}
+
+func (r lockscreenPamResolver) resolveLines() ([]string, error) {
+	var lastErr error
+
+	// Standalone login-like services: an existing one is authoritative.
+	for _, service := range lockscreenPamEntryCandidates {
+		if _, err := r.locate(service); err != nil {
+			lastErr = err
+			continue
+		}
+		lines, err := r.resolveService(service, "", nil)
+		if err != nil {
+			return nil, err
+		}
+		if !resolvedLinesHaveAuth(lines) {
+			return nil, fmt.Errorf("no auth directives remained after filtering %s", service)
+		}
+		return lines, nil
+	}
+
+	// Shared building blocks for distros without a login service (openSUSE,
+	// Alpine): stitch the auth stanza to the account stanza when present.
+	for _, pair := range lockscreenPamSharedIncludePairs {
+		if _, err := r.locate(pair.auth); err != nil {
+			lastErr = err
+			continue
+		}
+		authLines, err := r.resolveService(pair.auth, "auth", nil)
+		if err != nil {
+			return nil, err
+		}
+		if !resolvedLinesHaveAuth(authLines) {
+			lastErr = fmt.Errorf("no auth directives remained after filtering %s", pair.auth)
+			continue
+		}
+
+		resolved := append([]string{}, authLines...)
+		if _, err := r.locate(pair.account); err == nil {
+			acctLines, err := r.resolveService(pair.account, "account", nil)
+			if err != nil {
+				return nil, err
+			}
+			resolved = append(resolved, acctLines...)
+		}
+		return resolved, nil
+	}
+
+	if lastErr != nil {
+		return nil, fmt.Errorf("no usable PAM auth service found: %w", lastErr)
+	}
+	return nil, fmt.Errorf("no usable PAM auth service found")
+}
+
+func buildManagedLockscreenPamContent(baseDirs []string, readFile func(string) ([]byte, error)) (string, error) {
+	resolver := lockscreenPamResolver{baseDirs: baseDirs, readFile: readFile}
+
+	resolvedLines, err := resolver.resolveLines()
+	if err != nil {
+		return "", err
 	}
 
 	var b strings.Builder
@@ -492,6 +581,41 @@ func buildManagedLockscreenPamContent(pamDir string, readFile func(string) ([]by
 	}
 	b.WriteString(LockscreenPamManagedBlockEnd + "\n")
 	return b.String(), nil
+}
+
+const UserLockscreenPamService = "dankshell"
+
+func UserLockscreenPamDir() string {
+	return filepath.Join(utils.XDGStateHome(), "DankMaterialShell", "pam")
+}
+
+// WriteUserLockscreenPamConfig resolves the distro's real auth stack into a
+// self-contained lock-screen service under the user state dir, unprivileged
+// (reads world-readable PAM dirs, writes the user's own state dir). Rewrites
+// only on change to avoid inotify churn. Returns the written path.
+func WriteUserLockscreenPamConfig(logFunc func(string)) (string, error) {
+	content, err := buildManagedLockscreenPamContent(lockscreenPamBaseDirs, os.ReadFile)
+	if err != nil {
+		return "", fmt.Errorf("failed to resolve system PAM auth stack: %w", err)
+	}
+
+	dir := UserLockscreenPamDir()
+	if err := os.MkdirAll(dir, 0o700); err != nil {
+		return "", fmt.Errorf("failed to create %s: %w", dir, err)
+	}
+
+	path := filepath.Join(dir, UserLockscreenPamService)
+	if existing, err := os.ReadFile(path); err == nil && string(existing) == content {
+		return path, nil
+	}
+	if err := os.WriteFile(path, []byte(content), 0o600); err != nil {
+		return "", fmt.Errorf("failed to write %s: %w", path, err)
+	}
+
+	if logFunc != nil {
+		logFunc("✓ Wrote lock-screen PAM config " + path)
+	}
+	return path, nil
 }
 
 func buildManagedLockscreenU2FPamContent() string {
@@ -522,7 +646,7 @@ func syncLockscreenPamConfigWithDeps(logFunc func(string), sudoPassword string, 
 		return fmt.Errorf("failed to read %s: %w", deps.dankshellPath, err)
 	}
 
-	content, err := buildManagedLockscreenPamContent(deps.pamDir, deps.readFile)
+	content, err := buildManagedLockscreenPamContent([]string{deps.pamDir}, deps.readFile)
 	if err != nil {
 		return fmt.Errorf("failed to build %s from %s: %w", deps.dankshellPath, filepath.Join(deps.pamDir, "login"), err)
 	}

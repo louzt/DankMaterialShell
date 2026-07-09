@@ -18,10 +18,9 @@ Item {
 
     readonly property bool _descriptionIsHtml: /<[a-z][^>]*>/i.test((eventData && eventData.description) || "")
 
-    // _locationUrl makes the location row clickable: the location itself when
-    // it is a URL, the meeting link when the event has one (conference
-    // events carry placeholder locations like "Microsoft Teams Meeting"),
-    // otherwise a geo: search (RFC 5870) so addresses open in the maps app.
+    // _locationUrl makes the location row clickable: a URL location opens
+    // directly, conference placeholders open the meeting link, and anything
+    // else opens as a geo: search in the maps app.
     function _locationUrl() {
         const loc = ((eventData && eventData.location) || "").trim();
         if (loc === "")
@@ -249,7 +248,21 @@ Item {
                             anchors.fill: parent
                             enabled: root._locationUrl() !== ""
                             cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
-                            onClicked: Qt.openUrlExternally(root._locationUrl())
+                            // Qt.openUrlExternally can't handle geo: URIs, so
+                            // route those through the dankcal daemon's opener.
+                            onClicked: {
+                                const url = root._locationUrl();
+                                if (url.startsWith("geo:") && CalendarDankBackend.connected) {
+                                    CalendarDankBackend.sendRequest("system.openUri", {
+                                        "uri": url
+                                    }, response => {
+                                        if (response && response.error)
+                                            Qt.openUrlExternally(url);
+                                    });
+                                    return;
+                                }
+                                Qt.openUrlExternally(url);
+                            }
                         }
                     }
                 }

@@ -111,14 +111,60 @@ Scope {
         printErrors: false
     }
 
+    // Fallback stack written by `dms auth resolve-lock` when no managed
+    // /etc/pam.d/dankshell exists. See #2789.
+    readonly property string userPamDir: Paths.strip(Paths.state) + "/pam"
+
+    FileView {
+        id: userPamWatcher
+
+        path: root.userPamDir + "/dankshell"
+        printErrors: false
+    }
+
+    Process {
+        id: resolveUserPam
+
+        command: ["dms", "auth", "resolve-lock", "--quiet"]
+        running: false
+        onExited: exitCode => {
+            if (exitCode === 0)
+                userPamWatcher.reload();
+        }
+    }
+
+    function ensureUserPamConfig(): void {
+        if (root.runningFromNixStore || resolveUserPam.running)
+            return;
+        resolveUserPam.running = true;
+    }
+
+    Component.onCompleted: ensureUserPamConfig()
+
     // Detects Nix-installed DMS on non-NixOS systems
     readonly property bool runningFromNixStore: Quickshell.shellDir.startsWith("/nix/store/")
 
     PamContext {
         id: passwd
 
-        config: dankshellConfigWatcher.loaded ? "dankshell" : "login"
-        configDirectory: (dankshellConfigWatcher.loaded || nixosMarker.loaded || root.runningFromNixStore) ? "/etc/pam.d" : Quickshell.shellDir + "/assets/pam"
+        config: {
+            if (dankshellConfigWatcher.loaded)
+                return "dankshell";
+            if (nixosMarker.loaded || root.runningFromNixStore)
+                return "login";
+            if (userPamWatcher.loaded)
+                return "dankshell";
+            return "login";
+        }
+        configDirectory: {
+            if (dankshellConfigWatcher.loaded)
+                return "/etc/pam.d";
+            if (nixosMarker.loaded || root.runningFromNixStore)
+                return "/etc/pam.d";
+            if (userPamWatcher.loaded)
+                return root.userPamDir;
+            return Quickshell.shellDir + "/assets/pam";
+        }
 
         onMessageChanged: {
             // collected by position, not text, so it works in any locale
@@ -415,6 +461,8 @@ Scope {
         root.attemptInfoMessages = [];
         root.lockoutAnnouncedThisAttempt = false;
         root.resetAuthFlows();
+        if (!dankshellConfigWatcher.loaded && !nixosMarker.loaded && !userPamWatcher.loaded)
+            ensureUserPamConfig();
         fprint.checkAvail();
         u2f.checkAvail();
     }

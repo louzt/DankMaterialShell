@@ -20,7 +20,7 @@ func init() {
 	runCmd.Flags().MarkHidden("daemon-child")
 
 	greeterCmd.AddCommand(greeterInstallCmd, greeterSyncCmd, greeterEnableCmd, greeterStatusCmd, greeterUninstallCmd, greeterLaunchSessionCmd)
-	authCmd.AddCommand(authSyncCmd)
+	authCmd.AddCommand(authSyncCmd, authResolveLockCmd)
 	setupCmd.AddCommand(setupBindsCmd, setupLayoutCmd, setupColorsCmd, setupAlttabCmd, setupOutputsCmd, setupCursorCmd, setupWindowrulesCmd)
 	updateCmd.AddCommand(updateCheckCmd)
 	pluginsCmd.AddCommand(pluginsBrowseCmd, pluginsListCmd, pluginsInstallCmd, pluginsUninstallCmd, pluginsUpdateCmd)

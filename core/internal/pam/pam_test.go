@@ -247,6 +247,31 @@ func TestBuildManagedLockscreenPamContent(t *testing.T) {
 			},
 		},
 		{
+			name: "falls back to system-auth when login is absent",
+			files: map[string]string{
+				"system-auth": "#%PAM-1.0\nauth sufficient pam_unix.so try_first_pass nullok\naccount required pam_unix.so\n",
+			},
+			wantContains: []string{
+				"auth sufficient pam_unix.so try_first_pass nullok",
+				"account required pam_unix.so",
+			},
+		},
+		{
+			name: "no usable service when none of the candidates exist",
+			files: map[string]string{
+				"other": "#%PAM-1.0\nauth required pam_deny.so\n",
+			},
+			wantErr: "no usable PAM auth service found",
+		},
+		{
+			name: "existing login with bad include is authoritative and does not fall back",
+			files: map[string]string{
+				"login":       "#%PAM-1.0\nauth include missing-auth\n",
+				"system-auth": "#%PAM-1.0\nauth sufficient pam_unix.so\naccount required pam_unix.so\n",
+			},
+			wantErr: "failed to read PAM file",
+		},
+		{
 			name: "missing include fails",
 			files: map[string]string{
 				"login": "#%PAM-1.0\nauth include missing-auth\n",
@@ -281,7 +306,7 @@ func TestBuildManagedLockscreenPamContent(t *testing.T) {
 				env.writePamFile(t, name, content)
 			}
 
-			content, err := buildManagedLockscreenPamContent(env.pamDir, os.ReadFile)
+			content, err := buildManagedLockscreenPamContent([]string{env.pamDir}, os.ReadFile)
 			if tt.wantErr != "" {
 				if err == nil {
 					t.Fatalf("expected error containing %q, got nil", tt.wantErr)
@@ -311,6 +336,192 @@ func TestBuildManagedLockscreenPamContent(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+// Real /etc/pam.d layouts of the non-Arch-shaped distros (#2789).
+func TestBuildManagedLockscreenPamContent_DistroShapes(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name            string
+		files           map[string]string
+		wantContains    []string
+		wantNotContains []string
+	}{
+		{
+			// openSUSE: `include` (not @include), common-auth symlinked to
+			// common-auth-pc (here just a plain file), bracketed securetty
+			// control, keyring modules, pam_sss.
+			name: "openSUSE include + common-auth + bracket control",
+			files: map[string]string{
+				"login": "#%PAM-1.0\n" +
+					"auth     requisite      pam_nologin.so\n" +
+					"auth     [user_unknown=ignore success=ok ignore=ignore auth_err=die default=bad] pam_securetty.so\n" +
+					"auth     include        common-auth\n" +
+					"account  include        common-account\n" +
+					"session  required       pam_loginuid.so\n" +
+					"session  include        common-session\n",
+				"common-auth": "auth    required    pam_env.so\n" +
+					"auth    optional    pam_gnome_keyring.so\n" +
+					"auth    sufficient  pam_unix.so try_first_pass\n" +
+					"auth    required    pam_sss.so use_first_pass\n",
+				"common-account": "account required pam_unix.so try_first_pass\naccount sufficient pam_localuser.so\n",
+				"common-session": "session optional pam_gnome_keyring.so auto_start\n",
+			},
+			wantContains: []string{
+				"pam_securetty.so",
+				"auth    sufficient  pam_unix.so try_first_pass",
+				"auth    required    pam_sss.so use_first_pass",
+				"account required pam_unix.so try_first_pass",
+			},
+		},
+		{
+			name: "openSUSE without login stitches common-auth and common-account",
+			files: map[string]string{
+				"common-auth": "auth    required    pam_env.so\n" +
+					"auth    optional    pam_gnome_keyring.so\n" +
+					"auth    sufficient  pam_unix.so try_first_pass\n" +
+					"auth    required    pam_sss.so use_first_pass\n",
+				"common-account": "account required pam_unix.so try_first_pass\n" +
+					"account sufficient pam_localuser.so\n" +
+					"account required pam_sss.so use_first_pass\n",
+			},
+			wantContains: []string{
+				"auth    sufficient  pam_unix.so try_first_pass",
+				"auth    required    pam_sss.so use_first_pass",
+				"account required pam_unix.so try_first_pass",
+				"account required pam_sss.so use_first_pass",
+			},
+		},
+		{
+			name: "openSUSE with only common-auth resolves auth-only",
+			files: map[string]string{
+				"common-auth": "auth sufficient pam_unix.so try_first_pass\nauth required pam_deny.so\n",
+			},
+			wantContains: []string{"auth sufficient pam_unix.so try_first_pass"},
+			wantNotContains: []string{
+				"account",
+			},
+		},
+		{
+			name: "Debian @include common-auth and common-account",
+			files: map[string]string{
+				"login": "#%PAM-1.0\n" +
+					"auth       requisite  pam_nologin.so\n" +
+					"@include common-auth\n" +
+					"@include common-account\n" +
+					"session    required   pam_loginuid.so\n" +
+					"@include common-session\n",
+				"common-auth": "auth\t[success=1 default=ignore]\tpam_unix.so nullok\n" +
+					"auth\trequisite\t\t\tpam_deny.so\n" +
+					"auth\trequired\t\t\tpam_permit.so\n",
+				"common-account": "account\t[success=1 new_authtok_reqd=done default=ignore]\tpam_unix.so\naccount\trequisite\t\t\tpam_deny.so\n",
+				"common-session": "session\t[default=1]\t\t\tpam_permit.so\n",
+			},
+			wantContains: []string{
+				"auth\t[success=1 default=ignore]\tpam_unix.so nullok",
+				"account\t[success=1 new_authtok_reqd=done default=ignore]\tpam_unix.so",
+			},
+		},
+		{
+			name: "NixOS flat login with absolute paths and dash directives",
+			files: map[string]string{
+				"login": "#%PAM-1.0\n" +
+					"auth required /nix/store/abc-pam/lib/security/pam_unix.so likeauth nullok try_first_pass\n" +
+					"auth sufficient /nix/store/abc-pam-u2f/lib/security/pam_u2f.so\n" +
+					"-auth optional /nix/store/abc-kbd/lib/security/pam_gnome_keyring.so\n" +
+					"account required /nix/store/abc-pam/lib/security/pam_unix.so\n" +
+					"-session optional /nix/store/abc-sd/lib/security/pam_systemd.so\n",
+			},
+			wantContains: []string{
+				"auth required /nix/store/abc-pam/lib/security/pam_unix.so likeauth nullok try_first_pass",
+				"-auth optional /nix/store/abc-kbd/lib/security/pam_gnome_keyring.so",
+				"account required /nix/store/abc-pam/lib/security/pam_unix.so",
+			},
+			wantNotContains: []string{"pam_u2f"},
+		},
+		{
+			name: "Gentoo deep include chain login->system-local-login->system-login->system-auth",
+			files: map[string]string{
+				"login":              "#%PAM-1.0\nauth\tinclude\t\tsystem-local-login\naccount\tinclude\t\tsystem-local-login\n",
+				"system-local-login": "auth\trequired\tpam_group.so\nauth\tinclude\t\tsystem-login\naccount\tinclude\t\tsystem-login\n",
+				"system-login":       "auth\tinclude\t\tsystem-auth\naccount\tinclude\t\tsystem-auth\n",
+				"system-auth":        "auth\trequired\tpam_env.so\nauth\tsufficient\tpam_unix.so try_first_pass likeauth nullok\nauth\trequired\tpam_deny.so\naccount\trequired\tpam_unix.so\n",
+			},
+			wantContains: []string{
+				"auth\trequired\tpam_group.so",
+				"auth\tsufficient\tpam_unix.so try_first_pass likeauth nullok",
+				"account\trequired\tpam_unix.so",
+			},
+		},
+		{
+			name: "no login, entry falls through to system-auth",
+			files: map[string]string{
+				"system-auth": "#%PAM-1.0\n" +
+					"auth        required      pam_env.so\n" +
+					"auth        sufficient    pam_unix.so nullok\n" +
+					"auth        sufficient    pam_sss.so forward_pass\n" +
+					"auth        required      pam_deny.so\n" +
+					"account     required      pam_unix.so\n" +
+					"account     [default=bad success=ok user_unknown=ignore] pam_sss.so\n",
+			},
+			wantContains: []string{
+				"auth        sufficient    pam_unix.so nullok",
+				"auth        sufficient    pam_sss.so forward_pass",
+				"account     required      pam_unix.so",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			env := newPamTestEnv(t)
+			for name, content := range tt.files {
+				env.writePamFile(t, name, content)
+			}
+
+			content, err := buildManagedLockscreenPamContent([]string{env.pamDir}, os.ReadFile)
+			if err != nil {
+				t.Fatalf("buildManagedLockscreenPamContent returned error: %v", err)
+			}
+			if !strings.Contains(content, "auth") {
+				t.Fatalf("resolved content has no auth line:\n%s", content)
+			}
+			for _, want := range tt.wantContains {
+				if !strings.Contains(content, want) {
+					t.Errorf("missing expected string %q in output:\n%s", want, content)
+				}
+			}
+			for _, notWant := range tt.wantNotContains {
+				if strings.Contains(content, notWant) {
+					t.Errorf("unexpected string %q found in output:\n%s", notWant, content)
+				}
+			}
+		})
+	}
+}
+
+func TestBuildManagedLockscreenPamContent_VendorDirFallback(t *testing.T) {
+	t.Parallel()
+
+	// Stateless/vendored-PAM systems (Clear Linux) ship the stack in
+	// /usr/lib|share/pam.d with /etc/pam.d empty; includes resolve in that dir.
+	etcDir := t.TempDir()
+	vendorDir := t.TempDir()
+	writeTestFile(t, filepath.Join(vendorDir, "login"), "#%PAM-1.0\nauth include system-auth\naccount include system-auth\n")
+	writeTestFile(t, filepath.Join(vendorDir, "system-auth"), "auth sufficient pam_unix.so nullok\naccount required pam_unix.so\n")
+
+	content, err := buildManagedLockscreenPamContent([]string{etcDir, vendorDir}, os.ReadFile)
+	if err != nil {
+		t.Fatalf("buildManagedLockscreenPamContent returned error: %v", err)
+	}
+	for _, want := range []string{"auth sufficient pam_unix.so nullok", "account required pam_unix.so"} {
+		if !strings.Contains(content, want) {
+			t.Errorf("missing %q in output:\n%s", want, content)
+		}
 	}
 }
 
