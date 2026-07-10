@@ -90,6 +90,42 @@ Singleton {
             "write": []
         })
 
+    function hasValidTemperature(temp) {
+        return temp !== undefined && temp !== null && temp >= 0;
+    }
+
+    function formatTemperature(temp, suffix = "°", emptyText = "--°") {
+        if (!hasValidTemperature(temp)) {
+            return emptyText;
+        }
+        return Math.round(temp) + suffix;
+    }
+
+    function cpuTemperatureState(temp) {
+        const resolvedTemp = temp === undefined ? cpuTemperature : temp;
+        if (!hasValidTemperature(resolvedTemp)) {
+            return "unknown";
+        }
+        if (resolvedTemp > cpuTemperatureDangerThreshold) {
+            return "danger";
+        }
+        if (resolvedTemp > cpuTemperatureWarningThreshold) {
+            return "warning";
+        }
+        return "normal";
+    }
+
+    function cpuTemperatureColor(normalColor, warningColor, dangerColor, temp) {
+        switch (cpuTemperatureState(temp)) {
+        case "danger":
+            return dangerColor;
+        case "warning":
+            return warningColor;
+        default:
+            return normalColor;
+        }
+    }
+
     function addRef(modules = null) {
         refCount++;
         let modulesChanged = false;

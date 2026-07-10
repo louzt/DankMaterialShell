@@ -93,13 +93,7 @@ Card {
                     radius: parent.radius
                     anchors.bottom: parent.bottom
                     anchors.horizontalCenter: parent.horizontalCenter
-                    color: {
-                        if (DgopService.cpuTemperature > 85)
-                            return Theme.error;
-                        if (DgopService.cpuTemperature > 69)
-                            return Theme.warning;
-                        return Theme.primary;
-                    }
+                    color: DgopService.cpuTemperatureColor(Theme.primary, Theme.warning, Theme.error)
 
                     Behavior on height {
                         NumberAnimation {
@@ -119,13 +113,7 @@ Card {
                     size: Theme.iconSizeSmall
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
-                    color: {
-                        if (DgopService.cpuTemperature > 85)
-                            return Theme.error;
-                        if (DgopService.cpuTemperature > 69)
-                            return Theme.warning;
-                        return Theme.primary;
-                    }
+                    color: DgopService.cpuTemperatureColor(Theme.primary, Theme.warning, Theme.error)
                 }
             }
         }

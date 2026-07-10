@@ -37,17 +37,7 @@ BasePill {
                 DankIcon {
                     name: "device_thermostat"
                     size: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
-                    color: {
-                        if (DgopService.cpuTemperature > 85) {
-                            return Theme.tempDanger;
-                        }
-
-                        if (DgopService.cpuTemperature > 69) {
-                            return Theme.tempWarning;
-                        }
-
-                        return Theme.widgetIconColor;
-                    }
+                    color: DgopService.cpuTemperatureColor(Theme.widgetIconColor, Theme.tempWarning, Theme.tempDanger)
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
 
@@ -75,17 +65,7 @@ BasePill {
                     id: cpuTempIcon
                     name: "device_thermostat"
                     size: Theme.barIconSize(root.barThickness, undefined, root.barConfig?.maximizeWidgetIcons, root.barConfig?.iconScale)
-                    color: {
-                        if (DgopService.cpuTemperature > 85) {
-                            return Theme.tempDanger;
-                        }
-
-                        if (DgopService.cpuTemperature > 69) {
-                            return Theme.tempWarning;
-                        }
-
-                        return Theme.widgetIconColor;
-                    }
+                    color: DgopService.cpuTemperatureColor(Theme.widgetIconColor, Theme.tempWarning, Theme.tempDanger)
                     anchors.verticalCenter: parent.verticalCenter
                 }
 

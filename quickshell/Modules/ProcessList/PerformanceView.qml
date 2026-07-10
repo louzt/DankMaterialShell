@@ -81,8 +81,8 @@ Item {
                 history: root.cpuHistory
                 maxValue: 100
                 showSecondary: false
-                extraInfo: DgopService.cpuTemperature > 0 ? (DgopService.cpuTemperature.toFixed(0) + "°C") : ""
-                extraInfoColor: DgopService.cpuTemperature > 80 ? Theme.error : (DgopService.cpuTemperature > 60 ? Theme.warning : Theme.surfaceVariantText)
+                extraInfo: DgopService.hasValidTemperature(DgopService.cpuTemperature) ? DgopService.formatTemperature(DgopService.cpuTemperature, "°C", "") : ""
+                extraInfoColor: DgopService.cpuTemperatureColor(Theme.surfaceVariantText, Theme.warning, Theme.error)
             }
 
             PerformanceCard {

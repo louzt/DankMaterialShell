@@ -471,10 +471,10 @@ Item {
 
                                 StyledText {
                                     visible: tile.tileType === "cpu" && root.showCpuTemp && DgopService.cpuTemperature > 0
-                                    text: DgopService.cpuTemperature.toFixed(0) + "°"
+                                    text: DgopService.formatTemperature(DgopService.cpuTemperature)
                                     isMonospace: true
                                     font.pixelSize: Theme.fontSizeSmall
-                                    color: DgopService.cpuTemperature > 80 ? Theme.error : (DgopService.cpuTemperature > 60 ? Theme.warning : root.dimColor)
+                                    color: DgopService.cpuTemperatureColor(root.dimColor, Theme.warning, Theme.error)
                                 }
 
                                 StyledText {

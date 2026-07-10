@@ -322,7 +322,7 @@ DankPopout {
                             sublabel: "CPU"
                             detail: DgopService.cpuTemperature > 0 ? (DgopService.cpuTemperature.toFixed(0) + "°") : ""
                             accentColor: DgopService.cpuUsage > 80 ? Theme.error : (DgopService.cpuUsage > 50 ? Theme.warning : Theme.primary)
-                            detailColor: DgopService.cpuTemperature > 85 ? Theme.error : (DgopService.cpuTemperature > 70 ? Theme.warning : Theme.surfaceVariantText)
+                            detailColor: DgopService.cpuTemperatureColor(Theme.surfaceVariantText, Theme.warning, Theme.error)
                         }
 
                         CircleGauge {
