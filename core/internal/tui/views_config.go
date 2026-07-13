@@ -9,6 +9,7 @@ import (
 
 	"github.com/AvengeMedia/DankMaterialShell/core/internal/config"
 	"github.com/AvengeMedia/DankMaterialShell/core/internal/deps"
+	"github.com/AvengeMedia/DankMaterialShell/core/internal/distros"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -129,13 +130,36 @@ func (m Model) deployConfigurations() tea.Cmd {
 
 		deployer := config.NewConfigDeployer(m.logChan)
 
-		results, err := deployer.DeployConfigurationsSelectiveWithReinstalls(context.Background(), wm, terminal, m.dependencies, m.replaceConfigs, m.reinstallItems)
+		results, err := deployer.DeployConfigurationsSelectiveWithReinstallsAndSystemd(context.Background(), wm, terminal, m.dependencies, m.replaceConfigs, m.reinstallItems, m.useSystemdConfig())
 
 		return configDeploymentResult{
 			results: results,
 			error:   err,
 		}
 	}
+}
+
+func (m Model) optionalDepSelected(name string) bool {
+	if m.disabledItems[name] {
+		return false
+	}
+	for _, dep := range m.dependencies {
+		if dep.Name == name {
+			return true
+		}
+	}
+	return false
+}
+
+func (m Model) useSystemdConfig() bool {
+	if m.osInfo == nil {
+		return true
+	}
+	distroConfig, exists := distros.Registry[m.osInfo.Distribution.ID]
+	if !exists {
+		return true
+	}
+	return distroConfig.Family != distros.FamilyVoid
 }
 
 func (m Model) viewConfigConfirmation() string {
@@ -195,10 +219,48 @@ func (m Model) viewConfigConfirmation() string {
 	b.WriteString(backup)
 	b.WriteString("\n\n")
 
+	if note := m.configReplacementNote(); note != "" {
+		b.WriteString(m.styles.Subtle.Render(note))
+		b.WriteString("\n\n")
+	}
+
 	help := m.styles.Subtle.Render("↑/↓: Navigate, Space: Toggle replace/keep, Enter: Continue")
 	b.WriteString(help)
 
 	return b.String()
+}
+
+func (m Model) configReplacementNote() string {
+	if m.selectedConfig < 0 || m.selectedConfig >= len(m.existingConfigs) {
+		return ""
+	}
+	configInfo := m.existingConfigs[m.selectedConfig]
+	if !configInfo.Exists {
+		return ""
+	}
+
+	switch configInfo.ConfigType {
+	case "Niri":
+		if m.useSystemdConfig() {
+			return "Replacing Niri writes the DMS Niri template and uses the user systemd dms service for shell autostart."
+		}
+		return `Replacing Niri writes the DMS Niri template and starts DMS from Niri with spawn-at-startup "dms" "run".`
+	case "Hyprland":
+		if m.useSystemdConfig() {
+			return "Replacing Hyprland writes the DMS Lua template and uses the user systemd dms service for shell autostart."
+		}
+		return `Replacing Hyprland writes the DMS Lua template and starts DMS from Hyprland with hl.exec_cmd("dms run").`
+	case "Mango":
+		return "Replacing Mango writes the DMS Mango template and starts DMS from Mango with exec-once=dms run."
+	case "Ghostty":
+		return "Replacing Ghostty writes the DMS terminal defaults and theme include."
+	case "Kitty":
+		return "Replacing Kitty writes the DMS terminal defaults, theme include, and tab styling."
+	case "Alacritty":
+		return "Replacing Alacritty writes the DMS terminal defaults and theme import."
+	default:
+		return ""
+	}
 }
 
 func (m Model) updateConfigConfirmationState(msg tea.Msg) (tea.Model, tea.Cmd) {

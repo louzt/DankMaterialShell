@@ -140,7 +140,7 @@ func dmsPackageName(distroID string, dependencies []deps.Dependency) string {
 			return "dms-shell-git"
 		}
 		return "dms-shell"
-	case distros.FamilyFedora, distros.FamilyUbuntu, distros.FamilyDebian, distros.FamilySUSE:
+	case distros.FamilyFedora, distros.FamilyUbuntu, distros.FamilyDebian, distros.FamilySUSE, distros.FamilyVoid:
 		if isGit {
 			return "dms-git"
 		}
@@ -168,6 +168,8 @@ func uninstallCommand(distroID string, dependencies []deps.Dependency) string {
 		return "sudo apt remove " + pkg
 	case distros.FamilySUSE:
 		return "sudo zypper remove " + pkg
+	case distros.FamilyVoid:
+		return "sudo xbps-remove -R " + pkg
 	default:
 		return ""
 	}
@@ -201,15 +203,26 @@ func (m Model) viewInstallComplete() string {
 
 	wm := m.selectedWindowManager()
 
-	// mango launches DMS via `exec-once=dms run` (not a systemd session target)
 	loginHint := "If you do not have a greeter, login with \"niri-session\" or \"Hyprland\""
-	switch wm {
-	case deps.WindowManagerNiri:
-		loginHint = "If you do not have a greeter, login with \"niri-session\""
-	case deps.WindowManagerHyprland:
-		loginHint = "If you do not have a greeter, login with \"Hyprland\""
-	case deps.WindowManagerMango:
-		loginHint = "If you do not have a greeter, login with \"mango\""
+	if !m.useSystemdConfig() {
+		switch wm {
+		case deps.WindowManagerNiri:
+			loginHint = "If you do not have a greeter, from a TTY run: dbus-run-session niri"
+		case deps.WindowManagerHyprland:
+			loginHint = "If you do not have a greeter, from a TTY run: dbus-run-session Hyprland"
+		case deps.WindowManagerMango:
+			loginHint = "If you do not have a greeter, from a TTY run: dbus-run-session mango"
+		}
+	} else {
+		// mango launches DMS via `exec-once=dms run` (not a systemd session target)
+		switch wm {
+		case deps.WindowManagerNiri:
+			loginHint = "If you do not have a greeter, login with \"niri-session\""
+		case deps.WindowManagerHyprland:
+			loginHint = "If you do not have a greeter, login with \"Hyprland\""
+		case deps.WindowManagerMango:
+			loginHint = "If you do not have a greeter, login with \"mango\""
+		}
 	}
 
 	b.WriteString("\n")
@@ -222,7 +235,17 @@ func (m Model) viewInstallComplete() string {
 	labelStyle := lipgloss.NewStyle().Foreground(lipgloss.Color(theme.Subtle))
 
 	b.WriteString(labelStyle.Render("Troubleshooting:") + "\n")
-	if wm == deps.WindowManagerMango {
+	if !m.useSystemdConfig() {
+		switch wm {
+		case deps.WindowManagerNiri:
+			b.WriteString(labelStyle.Render("  Disable autostart: ") + cmdStyle.Render(`remove spawn-at-startup "dms" "run" from ~/.config/niri/config.kdl`) + "\n")
+		case deps.WindowManagerHyprland:
+			b.WriteString(labelStyle.Render("  Disable autostart: ") + cmdStyle.Render(`remove hl.exec_cmd("dms run") from ~/.config/hypr/hyprland.lua`) + "\n")
+		case deps.WindowManagerMango:
+			b.WriteString(labelStyle.Render("  Disable autostart: ") + cmdStyle.Render("remove 'exec-once=dms run' from ~/.config/mango/config.conf") + "\n")
+		}
+		b.WriteString(labelStyle.Render("  View logs:         ") + cmdStyle.Render("quickshell --path ~/.config/quickshell/dms log") + "\n")
+	} else if wm == deps.WindowManagerMango {
 		b.WriteString(labelStyle.Render("  Disable autostart: ") + cmdStyle.Render("remove 'exec-once=dms run' from ~/.config/mango/config.conf") + "\n")
 		b.WriteString(labelStyle.Render("  View logs:         ") + cmdStyle.Render("qs -p ~/.config/quickshell/dms log") + "\n")
 	} else {

@@ -10,6 +10,19 @@ Item {
     property bool showSettings: false
     property int currentTab: 0
     property bool showDndMenu: false
+    property var transientSurfaceTracker: null
+
+    onShowDndMenuChanged: transientSurfaceTracker?.setActive(root, showDndMenu, null)
+    Component.onDestruction: transientSurfaceTracker?.unregister(root)
+
+    Connections {
+        target: root.transientSurfaceTracker
+        ignoreUnknownSignals: true
+
+        function onCloseRequested() {
+            root.showDndMenu = false;
+        }
+    }
 
     onCurrentTabChanged: {
         if (currentTab === 1 && !SettingsData.notificationHistoryEnabled)

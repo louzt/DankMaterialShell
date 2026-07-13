@@ -9,6 +9,7 @@ FloatingWindow {
     id: win
 
     property alias shouldBeVisible: win.visible
+    property alias notepad: notepad
 
     function show() {
         visible = true;

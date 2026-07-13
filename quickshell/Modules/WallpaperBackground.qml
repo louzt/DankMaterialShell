@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Effects
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Wayland
 import qs.Common
 import qs.Widgets
@@ -149,24 +150,49 @@ Variants {
             property bool useNextForEffect: false
             property string pendingWallpaper: ""
             property string _deferredSource: ""
+            // Held true from the moment a wallpaper change is initiated until it
+            // settles, so the paused render loop wakes and drives the async load
+            // and transition even when nothing else marks the window dirty.
+            property bool changePending: false
             readonly property bool overviewBlurActive: CompositorService.isNiri && SettingsData.blurWallpaperOnOverview && NiriService.inOverview && currentWallpaper.source !== ""
             readonly property var backingWindow: Window.window
-            readonly property bool renderActive: !source || effectActive || overviewBlurActive || pendingWallpaper !== "" || _deferredSource !== "" || frameAnim.running || currentWallpaper.status === Image.Loading || nextWallpaper.status === Image.Loading
+            readonly property bool renderActive: !source || effectActive || overviewBlurActive || pendingWallpaper !== "" || _deferredSource !== "" || changePending || frameAnim.running || currentWallpaper.status === Image.Loading || nextWallpaper.status === Image.Loading
             property int _settleFrames: 3
 
             function invalidate() {
                 _settleFrames = 3;
                 backingWindow?.update();
+                if (!_wedgeBounced)
+                    wedgeWatchdog.restart();
             }
 
             onRenderActiveChanged: invalidate()
             onBackingWindowChanged: invalidate()
+
+            // No swap after a requested frame: dropped frame callback left the window
+            // unexposed (qtwayland mFrameCallbackTimedOut); only surface re-attach recovers.
+            property bool _wedgeBounced: false
+
+            Timer {
+                id: wedgeWatchdog
+                interval: 3000
+                repeat: false
+                onTriggered: {
+                    if (!root.backingWindow || !wallpaperWindow.visible || IdleService.isShellLocked)
+                        return;
+                    log.warn("no frame swapped on", modelData.name, "since last invalidate, re-attaching surface");
+                    root._wedgeBounced = true;
+                    surfaceReattach.restart();
+                }
+            }
 
             Connections {
                 target: root.backingWindow
                 function onFrameSwapped() {
                     if (root._settleFrames > 0)
                         root._settleFrames--;
+                    root._wedgeBounced = false;
+                    wedgeWatchdog.stop();
                 }
                 function onVisibleChanged() {
                     root.invalidate();
@@ -192,10 +218,29 @@ Variants {
                 function onWallpaperFillModeChanged() {
                     root.invalidate();
                 }
-                function onWallpaperBackgroundColorModeChanged() {
+                function onEffectiveWallpaperBackgroundColorChanged() {
                     root.invalidate();
                 }
-                function onWallpaperBackgroundCustomColorChanged() {
+            }
+
+            Connections {
+                target: SessionData
+                function onMonitorWallpaperFillModesChanged() {
+                    root.invalidate();
+                }
+                function onPerMonitorWallpaperChanged() {
+                    root.invalidate();
+                }
+            }
+
+            // Theme changes repaint DankBackdrop but nothing else wakes the render loop
+            Connections {
+                target: Theme
+                enabled: root.isColorSource || currentWallpaper.status === Image.Error
+                function onPrimaryChanged() {
+                    root.invalidate();
+                }
+                function onBackgroundChanged() {
                     root.invalidate();
                 }
             }
@@ -285,6 +330,7 @@ Variants {
                 root.useNextForEffect = false;
                 root.effectActive = false;
                 root.transitionProgress = 0.0;
+                root.changePending = false;
                 currentWallpaper.layer.enabled = false;
                 nextWallpaper.layer.enabled = false;
                 nextWallpaper.source = "";
@@ -517,10 +563,13 @@ Variants {
             }
 
             onSourceChanged: {
+                invalidate();
                 if (!source || source.startsWith("#")) {
                     setWallpaperImmediate("");
                     return;
                 }
+
+                root.changePending = true;
 
                 const formattedSource = source.startsWith("file://") ? source : encodeFileUrl(source);
 
@@ -540,10 +589,14 @@ Variants {
             }
 
             function setWallpaperImmediate(newSource) {
+                transitionDelayTimer.stop();
                 transitionAnimation.stop();
                 root.transitionProgress = 0.0;
                 root.effectActive = false;
                 root.screenScale = CompositorService.getScreenScale(modelData);
+                // No status change coming to clear the flag
+                if (!newSource || currentWallpaper.source.toString() === newSource)
+                    root.changePending = false;
                 currentWallpaper.source = newSource;
                 nextWallpaper.source = "";
 
@@ -579,10 +632,14 @@ Variants {
             }
 
             function changeWallpaper(newPath, force) {
-                if (!force && newPath === currentWallpaper.source)
+                if (!force && newPath === currentWallpaper.source.toString()) {
+                    root.changePending = false;
                     return;
-                if (!newPath || newPath.startsWith("#"))
+                }
+                if (!newPath || newPath.startsWith("#")) {
+                    root.changePending = false;
                     return;
+                }
                 root.screenScale = CompositorService.getScreenScale(modelData);
                 if (root.transitioning || root.effectActive) {
                     root.pendingWallpaper = newPath;
@@ -707,6 +764,9 @@ Variants {
                     }
                     if (status === Image.Ready) {
                         imageMetrics.capture(implicitWidth, implicitHeight);
+                    }
+                    if (status === Image.Ready || status === Image.Error) {
+                        root.changePending = false;
                     }
                 }
 
@@ -910,6 +970,8 @@ Variants {
                     property real imageHeight2: modelData.height
                     property real screenWidth: modelData.width
                     property real screenHeight: modelData.height
+                    property real scrollX: 50
+                    property real scrollY: 50
                     fragmentShader: Qt.resolvedUrl("../Shaders/qsb/wp_fade.frag.qsb")
                 }
             }
@@ -1068,6 +1130,7 @@ Variants {
                     currentWallpaper.layer.enabled = false;
                     nextWallpaper.layer.enabled = false;
                     root.effectActive = false;
+                    root.changePending = false;
 
                     if (!root.pendingWallpaper)
                         return;

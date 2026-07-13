@@ -122,6 +122,7 @@ DankPopout {
                     anchors.fill: parent
                     parentModal: modalAdapter
                     viewModeContext: "appDrawer"
+                    transientSurfaceTracker: appDrawerPopout.transientSurfaceTracker
                 }
 
                 Keys.onEscapePressed: event => {

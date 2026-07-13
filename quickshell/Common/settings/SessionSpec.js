@@ -88,6 +88,8 @@ var SPEC = {
     locale: { def: "", onChange: "updateLocale" },
     timeLocale: { def: "" },
 
+    notepadLastMode: { def: "" },
+
     launcherLastMode: { def: "all" },
     launcherLastFileSearchType: { def: "all" },
     launcherLastQuery: { def: "" },

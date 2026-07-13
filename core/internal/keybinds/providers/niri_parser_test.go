@@ -7,6 +7,28 @@ import (
 	"testing"
 )
 
+func TestNiriParseModKey(t *testing.T) {
+	config := `input {
+    mod-key "Alt"
+}
+binds {
+    Mod+T { spawn "kitty"; }
+}
+`
+	tmpDir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(tmpDir, "config.kdl"), []byte(config), 0o644); err != nil {
+		t.Fatalf("Failed to write test config: %v", err)
+	}
+
+	result, err := ParseNiriKeys(tmpDir)
+	if err != nil {
+		t.Fatalf("ParseNiriKeys failed: %v", err)
+	}
+	if result.ModKey != "Alt" {
+		t.Errorf("ModKey = %q, want %q", result.ModKey, "Alt")
+	}
+}
+
 func TestNiriParse_NoSpaceBeforeBrace(t *testing.T) {
 	config := `recent-windows {
     binds {

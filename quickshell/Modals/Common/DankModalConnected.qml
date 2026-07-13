@@ -33,7 +33,7 @@ Item {
 
     property string preferredConnectedBarSide: SettingsData.frameModalEmergeSide
 
-    readonly property bool frameConnectedMode: SettingsData.frameEnabled && Theme.isConnectedEffect && !!effectiveScreen && SettingsData.isScreenInPreferences(effectiveScreen, SettingsData.frameScreenPreferences)
+    readonly property bool frameConnectedMode: FrameTransitionState.effectiveFrameEnabled && Theme.isConnectedEffect && !!effectiveScreen && SettingsData.isScreenInPreferences(effectiveScreen, SettingsData.frameScreenPreferences)
 
     readonly property string resolvedConnectedBarSide: frameConnectedMode ? preferredConnectedBarSide : ""
 
@@ -69,7 +69,7 @@ Item {
     property real cornerRadius: Theme.cornerRadius
     readonly property bool connectedSurfaceOverride: frameOwnsConnectedChrome
     readonly property color effectiveBackgroundColor: connectedSurfaceOverride ? Theme.connectedSurfaceColor : backgroundColor
-    readonly property color effectiveBorderColor: connectedSurfaceOverride ? "transparent" : borderColor
+    readonly property color effectiveBorderColor: connectedSurfaceOverride ? Theme.withAlpha(borderColor, 0) : borderColor
     readonly property real effectiveBorderWidth: connectedSurfaceOverride ? 0 : borderWidth
     readonly property real effectiveCornerRadius: connectedSurfaceOverride ? Theme.connectedSurfaceRadius : cornerRadius
     readonly property bool effectiveBlurEnabled: Theme.connectedSurfaceBlurEnabled
@@ -162,37 +162,16 @@ Item {
         _publishModalChromeState();
     }
 
-    property bool _animSyncQueued: false
-    property bool _bodySyncQueued: false
-
     function _queueFullSync() {
         _fullSyncPending = true;
         if (!_syncTimer.running)
             _syncTimer.restart();
     }
-    function _queueAnimSync() {
-        _animSyncQueued = true;
-        if (!_syncTimer.running)
-            _syncTimer.restart();
-    }
-    function _queueBodySync() {
-        _bodySyncQueued = true;
-        if (!_syncTimer.running)
-            _syncTimer.restart();
-    }
     function _flushSync() {
-        const fullDirty = _fullSyncPending;
-        const animDirty = _animSyncQueued;
-        const bodyDirty = _bodySyncQueued;
+        if (!_fullSyncPending)
+            return;
         _fullSyncPending = false;
-        _animSyncQueued = false;
-        _bodySyncQueued = false;
-        if (fullDirty)
-            _syncModalChromeState();
-        if (animDirty)
-            _syncModalAnim();
-        if (bodyDirty)
-            _syncModalBody();
+        _syncModalChromeState();
     }
 
     function _syncModalAnim() {
@@ -216,10 +195,11 @@ Item {
     onFrameOwnsConnectedChromeChanged: _syncModalChromeState()
     onResolvedConnectedBarSideChanged: _queueFullSync()
     onShouldBeVisibleChanged: _queueFullSync()
-    onAlignedXChanged: _queueBodySync()
-    onAlignedYChanged: _queueBodySync()
-    onAlignedWidthChanged: _queueBodySync()
-    onAlignedHeightChanged: _queueBodySync()
+    // Low resource scalar writes: publish synchronously to stay in the same frame
+    onAlignedXChanged: _syncModalBody()
+    onAlignedYChanged: _syncModalBody()
+    onAlignedWidthChanged: _syncModalBody()
+    onAlignedHeightChanged: _syncModalBody()
 
     Connections {
         target: contentWindow
@@ -490,8 +470,8 @@ Item {
                     enabled: root.shouldBeVisible
                     hoverEnabled: false
                     acceptedButtons: Qt.AllButtons
-                    onPressed: mouse.accepted = true
-                    onClicked: mouse.accepted = true
+                    onPressed: mouse => mouse.accepted = true
+                    onClicked: mouse => mouse.accepted = true
                     z: -1
                 }
 
@@ -613,9 +593,9 @@ Item {
                 readonly property real scaleValue: computedScaleCollapsed + (1.0 - computedScaleCollapsed) * morph.openProgress
 
                 onAnimXChanged: if (root.frameOwnsConnectedChrome)
-                    root._queueAnimSync()
+                    root._syncModalAnim()
                 onAnimYChanged: if (root.frameOwnsConnectedChrome)
-                    root._queueAnimSync()
+                    root._syncModalAnim()
 
                 Item {
                     id: contentContainer
@@ -659,8 +639,8 @@ Item {
                             level: root.shadowLevel
                             fallbackOffset: root.shadowFallbackOffset
                             targetRadius: root.effectiveCornerRadius
-                            targetColor: root.frameOwnsConnectedChrome ? "transparent" : root.effectiveBackgroundColor
-                            borderColor: root.frameOwnsConnectedChrome ? "transparent" : root.effectiveBorderColor
+                            targetColor: root.frameOwnsConnectedChrome ? Theme.withAlpha(root.effectiveBackgroundColor, 0) : root.effectiveBackgroundColor
+                            borderColor: root.frameOwnsConnectedChrome ? Theme.withAlpha(root.effectiveBorderColor, 0) : root.effectiveBorderColor
                             borderWidth: root.frameOwnsConnectedChrome ? 0 : root.effectiveBorderWidth
                             shadowEnabled: !root.frameOwnsConnectedChrome && root.enableShadow && Theme.elevationEnabled && SettingsData.modalElevationEnabled && Quickshell.env("DMS_DISABLE_LAYER") !== "true" && Quickshell.env("DMS_DISABLE_LAYER") !== "1"
                         }
@@ -669,7 +649,7 @@ Item {
                             anchors.fill: parent
                             radius: root.effectiveCornerRadius
                             color: "transparent"
-                            border.color: (root.connectedSurfaceOverride || root.frameOwnsConnectedChrome) ? "transparent" : BlurService.borderColor
+                            border.color: (root.connectedSurfaceOverride || root.frameOwnsConnectedChrome) ? Theme.withAlpha(BlurService.borderColor, 0) : BlurService.borderColor
                             border.width: (root.connectedSurfaceOverride || root.frameOwnsConnectedChrome) ? 0 : BlurService.borderWidth
                             z: 100
                         }

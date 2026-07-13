@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell.Services.Mpris
+import Quickshell.Widgets
 import qs.Common
 import qs.Services
 import qs.Widgets
@@ -23,6 +24,11 @@ Item {
     property real contentOffsetY: 0
     property string section: ""
     property int barPosition: SettingsData.Position.Top
+
+    readonly property color accent: MediaAccentService.accent
+    readonly property color onAccent: MediaAccentService.onAccent
+    readonly property color accentHover: MediaAccentService.accentHover
+    readonly property color accentPressed: MediaAccentService.accentPressed
 
     signal showVolumeDropdown(point pos, var screen, bool rightEdge, var player, var players)
     signal showAudioDevicesDropdown(point pos, var screen, bool rightEdge)
@@ -70,7 +76,7 @@ Item {
     property bool _switchHold: false
     Timer {
         id: _switchHoldTimer
-        interval: 650
+        interval: 1500
         repeat: false
         onTriggered: _switchHold = false
     }
@@ -78,7 +84,8 @@ Item {
     onActivePlayerChanged: {
         if (!activePlayer) {
             isSwitching = false;
-            _switchHold = false;
+            _switchHold = true;
+            _switchHoldTimer.restart();
             return;
         }
         isSwitching = true;
@@ -117,14 +124,10 @@ Item {
     Connections {
         target: MprisController
         function onAvailablePlayersChanged() {
-            const count = (MprisController.availablePlayers?.length || 0);
-            if (count === 0) {
+            if ((MprisController.availablePlayers?.length || 0) === 0)
                 isSwitching = false;
-                _switchHold = false;
-            } else {
-                _switchHold = true;
-                _switchHoldTimer.restart();
-            }
+            _switchHold = true;
+            _switchHoldTimer.restart();
         }
     }
 
@@ -290,34 +293,95 @@ Item {
     Item {
         id: bgContainer
         anchors.fill: parent
-        visible: TrackArtService.resolvedArtUrl !== ""
 
-        Image {
-            id: bgImage
-            anchors.centerIn: parent
-            width: Math.max(parent.width, parent.height) * 1.1
-            height: width
-            source: TrackArtService.resolvedArtUrl
-            fillMode: Image.PreserveAspectCrop
-            asynchronous: true
-            cache: true
-            visible: false
-            onStatusChanged: {
-                if (status === Image.Ready)
-                    maybeFinishSwitch();
+        // Fall back to the live mpris url so the background is never blank.
+        readonly property string curArt: {
+            const resolved = TrackArtService.resolvedArtUrl;
+            if (resolved !== "")
+                return resolved;
+            const p = root.activePlayer;
+            if (!p)
+                return "";
+            if (p.trackArtUrl)
+                return p.trackArtUrl;
+            const m = p.metadata;
+            return m && m["mpris:artUrl"] ? m["mpris:artUrl"].toString() : "";
+        }
+        // Two layers crossfade: new art loads into the hidden one and fades in once decoded.
+        property bool _showA: true
+        visible: layerA.ready || layerB.ready
+
+        onCurArtChanged: syncArt()
+        Component.onCompleted: syncArt()
+
+        function syncArt() {
+            if (curArt === "")
+                return;
+            const front = _showA ? layerA : layerB;
+            const back = _showA ? layerB : layerA;
+            if (front.art == curArt)
+                return;
+            if (back.art == curArt) {
+                // Already decoded in the hidden layer; flip once ready (else promote() does).
+                if (back.ready)
+                    _showA = !_showA;
+                return;
             }
+            back.art = curArt;
         }
 
-        Item {
-            id: blurredBg
+        // Flip to the hidden layer only when it holds the current art, ignoring stale
+        // Ready re-emits (e.g. popout re-expose) that would otherwise ping-pong _showA.
+        function promote(layer) {
+            const back = _showA ? layerB : layerA;
+            if (layer !== back)
+                return;
+            if (layer.art != curArt)
+                return;
+            _showA = (layer === layerA);
+            root.maybeFinishSwitch();
+        }
+
+        component BgBlurLayer: ClippingRectangle {
+            id: layer
+            property alias art: layerImg.source
+            readonly property bool ready: layerImg.status === Image.Ready && layerImg.source != ""
+            property bool front: false
+            signal loaded
+
             anchors.fill: parent
-            visible: false
+            radius: Theme.cornerRadius
+            color: "transparent"
+            antialiasing: true
+            opacity: front ? 0.7 : 0
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 350
+                    easing.type: Easing.InOutQuad
+                }
+            }
+
+            Image {
+                id: layerImg
+                anchors.centerIn: parent
+                width: Math.max(parent.width, parent.height) * 1.1
+                height: width
+                fillMode: Image.PreserveAspectCrop
+                asynchronous: true
+                cache: true
+                visible: false
+                onStatusChanged: {
+                    if (status === Image.Ready && source != "")
+                        layer.loaded();
+                }
+            }
 
             MultiEffect {
                 anchors.centerIn: parent
-                width: bgImage.width
-                height: bgImage.height
-                source: bgImage
+                width: layerImg.width
+                height: layerImg.height
+                source: layerImg
                 blurEnabled: true
                 blurMax: 64
                 blur: 0.8
@@ -326,22 +390,16 @@ Item {
             }
         }
 
-        Rectangle {
-            id: bgMask
-            anchors.fill: parent
-            radius: Theme.cornerRadius
-            visible: false
-            layer.enabled: true
+        BgBlurLayer {
+            id: layerA
+            front: bgContainer._showA
+            onLoaded: bgContainer.promote(layerA)
         }
 
-        MultiEffect {
-            anchors.fill: parent
-            source: blurredBg
-            maskEnabled: true
-            maskSource: bgMask
-            maskThresholdMin: 0.5
-            maskSpreadAtMin: 1.0
-            opacity: 0.7
+        BgBlurLayer {
+            id: layerB
+            front: !bgContainer._showA
+            onLoaded: bgContainer.promote(layerB)
         }
 
         Rectangle {
@@ -360,14 +418,14 @@ Item {
         DankIcon {
             name: "music_note"
             size: Theme.iconSize * 3
-            color: Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.5)
+            color: Theme.surfaceTextSecondary
             anchors.horizontalCenter: parent.horizontalCenter
         }
 
         StyledText {
             text: I18n.tr("No Active Players")
             font.pixelSize: Theme.fontSizeLarge
-            color: Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.7)
+            color: Theme.surfaceTextMedium
             anchors.horizontalCenter: parent.horizontalCenter
         }
     }
@@ -425,7 +483,7 @@ Item {
                     StyledText {
                         text: activePlayer?.trackArtist || I18n.tr("Unknown Artist")
                         font.pixelSize: Theme.fontSizeMedium
-                        color: Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.8)
+                        color: Theme.surfaceTextMedium
                         width: parent.width
                         horizontalAlignment: Text.AlignHCenter
                         elide: Text.ElideRight
@@ -436,13 +494,14 @@ Item {
                     StyledText {
                         text: activePlayer?.trackAlbum || ""
                         font.pixelSize: Theme.fontSizeSmall
-                        color: Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.6)
+                        color: Theme.surfaceTextSecondary
                         width: parent.width
                         horizontalAlignment: Text.AlignHCenter
                         elide: Text.ElideRight
                         wrapMode: Text.WordWrap
                         maximumLineCount: 1
-                        visible: text.length > 0
+                        // Reserve the line so late album metadata doesn't shift the seekbar.
+                        height: Math.max(implicitHeight, Theme.fontSizeSmall * 1.4)
                     }
                 }
 
@@ -455,7 +514,7 @@ Item {
 
                     Column {
                         width: parent.width
-                        spacing: 2
+                        spacing: Theme.spacingXXS
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.verticalCenterOffset: parent.height * 0.2
@@ -531,13 +590,13 @@ Item {
                                 height: 40
                                 radius: 20
                                 anchors.centerIn: parent
-                                color: shuffleArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                                color: shuffleArea.containsMouse ? root.accentHover : Theme.withAlpha(root.accent, 0)
 
                                 DankIcon {
                                     anchors.centerIn: parent
                                     name: "shuffle"
                                     size: 20
-                                    color: activePlayer && activePlayer.shuffle ? Theme.primary : Theme.surfaceText
+                                    color: activePlayer && activePlayer.shuffle ? root.accent : Theme.surfaceText
                                 }
 
                                 MouseArea {
@@ -564,7 +623,7 @@ Item {
                                 height: 40
                                 radius: 20
                                 anchors.centerIn: parent
-                                color: prevBtnArea.containsMouse ? Theme.withAlpha(Theme.surfaceContainerHigh, Theme.popupTransparency) : "transparent"
+                                color: prevBtnArea.containsMouse ? Theme.withAlpha(Theme.surfaceContainerHigh, Theme.popupTransparency) : Theme.withAlpha(Theme.surfaceContainerHigh, 0)
 
                                 DankIcon {
                                     anchors.centerIn: parent
@@ -593,13 +652,13 @@ Item {
                                 height: 50
                                 radius: 25
                                 anchors.centerIn: parent
-                                color: Theme.primary
+                                color: root.accent
 
                                 DankIcon {
                                     anchors.centerIn: parent
                                     name: activePlayer && activePlayer.playbackState === MprisPlaybackState.Playing ? "pause" : "play_arrow"
                                     size: 28
-                                    color: Theme.background
+                                    color: root.onAccent
                                     weight: 500
                                 }
 
@@ -633,7 +692,7 @@ Item {
                                 height: 40
                                 radius: 20
                                 anchors.centerIn: parent
-                                color: nextBtnArea.containsMouse ? Theme.withAlpha(Theme.surfaceContainerHigh, Theme.popupTransparency) : "transparent"
+                                color: nextBtnArea.containsMouse ? Theme.withAlpha(Theme.surfaceContainerHigh, Theme.popupTransparency) : Theme.withAlpha(Theme.surfaceContainerHigh, 0)
 
                                 DankIcon {
                                     anchors.centerIn: parent
@@ -663,7 +722,7 @@ Item {
                                 height: 40
                                 radius: 20
                                 anchors.centerIn: parent
-                                color: repeatArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                                color: repeatArea.containsMouse ? root.accentHover : Theme.withAlpha(root.accent, 0)
 
                                 DankIcon {
                                     anchors.centerIn: parent
@@ -680,7 +739,7 @@ Item {
                                         }
                                     }
                                     size: 20
-                                    color: activePlayer && activePlayer.loopState !== MprisLoopState.None ? Theme.primary : Theme.surfaceText
+                                    color: activePlayer && activePlayer.loopState !== MprisLoopState.None ? root.accent : Theme.surfaceText
                                 }
 
                                 MouseArea {
@@ -719,7 +778,7 @@ Item {
         radius: 20
         x: isRightEdge ? Theme.spacingM : parent.width - 40 - Theme.spacingM
         y: 185
-        color: playerSelectorArea.containsMouse || playersExpanded ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.2) : "transparent"
+        color: playerSelectorArea.containsMouse || playersExpanded ? root.accentPressed : Theme.withAlpha(root.accentPressed, 0)
         border.color: Theme.outlineStrong
         border.width: 1
         z: 100
@@ -786,7 +845,7 @@ Item {
         radius: 20
         x: isRightEdge ? Theme.spacingM : parent.width - 40 - Theme.spacingM
         y: 130
-        color: volumeButtonArea.containsMouse && volumeAvailable || volumeExpanded ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.2) : "transparent"
+        color: volumeButtonArea.containsMouse && volumeAvailable || volumeExpanded ? root.accentPressed : Theme.withAlpha(root.accentPressed, 0)
         border.color: volumeAvailable ? Theme.outlineStrong : Theme.outlineMedium
         border.width: 1
         z: 101
@@ -798,7 +857,7 @@ Item {
             anchors.centerIn: parent
             name: getVolumeIcon()
             size: 18
-            color: volumeAvailable && currentVolume > 0 ? Theme.primary : Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, volumeAvailable ? 1.0 : 0.5)
+            color: volumeAvailable && currentVolume > 0 ? root.accent : Theme.withAlpha(Theme.surfaceText, volumeAvailable ? 1.0 : 0.5)
         }
 
         MouseArea {
@@ -849,7 +908,7 @@ Item {
         radius: 20
         x: isRightEdge ? Theme.spacingM : parent.width - 40 - Theme.spacingM
         y: 240
-        color: audioDevicesArea.containsMouse || devicesExpanded ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.2) : "transparent"
+        color: audioDevicesArea.containsMouse || devicesExpanded ? root.accentPressed : Theme.withAlpha(root.accentPressed, 0)
         border.color: Theme.outlineStrong
         border.width: 1
         z: 100

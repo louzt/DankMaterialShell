@@ -63,6 +63,15 @@ var clipPasteCmd = &cobra.Command{
 	Run:   runClipPaste,
 }
 
+var clipSendPasteCmd = &cobra.Command{
+	Use:   "send-paste",
+	Short: "Send a paste keystroke to the focused window",
+	Long:  "Emulate ctrl+v (or ctrl+shift+v with --shift) via a virtual keyboard. Works without server.",
+	Run:   runClipSendPaste,
+}
+
+var clipSendPasteShift bool
+
 var clipWatchCmd = &cobra.Command{
 	Use:   "watch [command]",
 	Short: "Watch clipboard for changes",
@@ -216,8 +225,10 @@ func init() {
 
 	clipMigrateCmd.Flags().BoolVar(&clipMigrateDelete, "delete", false, "Delete cliphist db after successful migration")
 
+	clipSendPasteCmd.Flags().BoolVarP(&clipSendPasteShift, "shift", "s", false, "Send ctrl+shift+v (terminal paste)")
+
 	clipConfigCmd.AddCommand(clipConfigGetCmd, clipConfigSetCmd)
-	clipboardCmd.AddCommand(clipCopyCmd, clipPasteCmd, clipWatchCmd, clipHistoryCmd, clipGetCmd, clipDeleteCmd, clipClearCmd, clipSearchCmd, clipConfigCmd, clipExportCmd, clipImportCmd, clipMigrateCmd)
+	clipboardCmd.AddCommand(clipCopyCmd, clipPasteCmd, clipSendPasteCmd, clipWatchCmd, clipHistoryCmd, clipGetCmd, clipDeleteCmd, clipClearCmd, clipSearchCmd, clipConfigCmd, clipExportCmd, clipImportCmd, clipMigrateCmd)
 }
 
 func runClipCopy(cmd *cobra.Command, args []string) {
@@ -312,6 +323,12 @@ func runClipPaste(cmd *cobra.Command, args []string) {
 		log.Fatalf("paste: %v", err)
 	}
 	os.Stdout.Write(data)
+}
+
+func runClipSendPaste(cmd *cobra.Command, args []string) {
+	if err := clipboard.SendPasteKeystroke(clipSendPasteShift); err != nil {
+		log.Fatalf("send-paste: %v", err)
+	}
 }
 
 func runClipWatch(cmd *cobra.Command, args []string) {

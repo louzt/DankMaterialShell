@@ -17,6 +17,7 @@ const (
 	FamilyDebian DistroFamily = "debian"
 	FamilyNix    DistroFamily = "nix"
 	FamilyGentoo DistroFamily = "gentoo"
+	FamilyVoid   DistroFamily = "void"
 )
 
 // PackageManagerType defines the package manager a distro uses
@@ -29,6 +30,7 @@ const (
 	PackageManagerZypper  PackageManagerType = "zypper"
 	PackageManagerNix     PackageManagerType = "nix"
 	PackageManagerPortage PackageManagerType = "portage"
+	PackageManagerXBPS    PackageManagerType = "xbps"
 )
 
 // RepositoryType defines the type of repository for a package
@@ -42,6 +44,7 @@ const (
 	RepoTypeOBS    RepositoryType = "obs"    // OpenBuild Service (Debian/OpenSUSE)
 	RepoTypeFlake  RepositoryType = "flake"  // Nix flake
 	RepoTypeGURU   RepositoryType = "guru"   // Gentoo GURU
+	RepoTypeXBPS   RepositoryType = "xbps"   // Custom XBPS repository
 	RepoTypeManual RepositoryType = "manual" // Manual build from source
 )
 

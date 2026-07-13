@@ -10,6 +10,7 @@ import (
 
 	"github.com/AvengeMedia/DankMaterialShell/core/internal/config"
 	"github.com/AvengeMedia/DankMaterialShell/core/internal/deps"
+	"github.com/AvengeMedia/DankMaterialShell/core/internal/distros"
 	"github.com/AvengeMedia/DankMaterialShell/core/internal/greeter"
 	"github.com/AvengeMedia/DankMaterialShell/core/internal/log"
 	"github.com/AvengeMedia/DankMaterialShell/core/internal/privesc"
@@ -298,6 +299,9 @@ func runSetup() error {
 	if wmSelected {
 		if wm == deps.WindowManagerMango {
 			useSystemd = false
+		} else if isVoidSetup() {
+			useSystemd = false
+			fmt.Println("\nVoid Linux detected; deploying non-systemd session config.")
 		} else {
 			useSystemd = promptSystemd()
 		}
@@ -370,6 +374,15 @@ func runSetup() error {
 	}
 
 	return nil
+}
+
+func isVoidSetup() bool {
+	osInfo, err := distros.GetOSInfo()
+	if err != nil {
+		return false
+	}
+	config, exists := distros.Registry[osInfo.Distribution.ID]
+	return exists && config.Family == distros.FamilyVoid
 }
 
 // Add user to the input group for the evdev manager for inut state tracking.

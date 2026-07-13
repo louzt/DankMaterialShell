@@ -98,6 +98,7 @@ DankPopout {
     property bool anyModalOpen: credentialsPromptOpen || wifiPasswordModalOpen || polkitModalOpen || powerMenuOpen
 
     backgroundInteractive: !anyModalOpen
+    hoverDismissSuspended: editMode || anyModalOpen
 
     onCredentialsPromptOpenChanged: {
         if (credentialsPromptOpen && shouldBeVisible)
@@ -313,6 +314,7 @@ DankPopout {
         id: bluetoothDetailComponent
         BluetoothDetail {
             id: bluetoothDetail
+            bluetoothCodecModalRef: contentLoader.item ? contentLoader.item.bluetoothCodecSelector : null
             onShowCodecSelector: function (device) {
                 if (contentLoader.item && contentLoader.item.bluetoothCodecSelector) {
                     contentLoader.item.bluetoothCodecSelector.show(device);

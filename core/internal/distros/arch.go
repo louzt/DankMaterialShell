@@ -119,8 +119,28 @@ func (a *ArchDistribution) DetectDependenciesWithTerminal(ctx context.Context, w
 
 	dependencies = append(dependencies, a.detectMatugen())
 	dependencies = append(dependencies, a.detectDgop())
+	dependencies = append(dependencies, a.detectDanksearch())
+	dependencies = append(dependencies, a.detectDankCalendar())
 
 	return dependencies, nil
+}
+
+func (a *ArchDistribution) detectDanksearch() deps.Dependency {
+	dep := a.BaseDistribution.detectDanksearch()
+	dep.CanToggle = true
+	if a.packageInstalled("dsearch-git") {
+		dep.Variant = deps.VariantGit
+	}
+	return dep
+}
+
+func (a *ArchDistribution) detectDankCalendar() deps.Dependency {
+	dep := a.BaseDistribution.detectDankCalendar()
+	dep.CanToggle = true
+	if a.packageInstalled("dankcalendar-git") {
+		dep.Variant = deps.VariantGit
+	}
+	return dep
 }
 
 func (a *ArchDistribution) detectXDGPortal() deps.Dependency {
@@ -132,7 +152,13 @@ func (a *ArchDistribution) detectAccountsService() deps.Dependency {
 }
 
 func (a *ArchDistribution) detectDMSGreeter() deps.Dependency {
-	return a.detectOptionalPackage("dms-greeter", "DankMaterialShell greetd greeter", a.packageInstalled("greetd-dms-greeter-git"))
+	installed := a.packageInstalled("greetd-dms-greeter-git") || a.packageInstalled("greetd-dms-greeter-bin")
+	dep := a.detectOptionalPackage("dms-greeter", "DankMaterialShell greetd greeter", installed)
+	dep.CanToggle = true
+	if a.packageInstalled("greetd-dms-greeter-git") {
+		dep.Variant = deps.VariantGit
+	}
+	return dep
 }
 
 func (a *ArchDistribution) packageInstalled(pkg string) bool {
@@ -191,7 +217,7 @@ func (a *ArchDistribution) GetPackageMappingWithVariants(wm deps.WindowManager, 
 		"dms (DankMaterialShell)": a.getDMSMapping(variants["dms (DankMaterialShell)"]),
 		"git":                     {Name: "git", Repository: RepoTypeSystem},
 		"quickshell":              a.getQuickshellMapping(variants["quickshell"]),
-		"dms-greeter":             {Name: "greetd-dms-greeter-git", Repository: RepoTypeAUR},
+		"dms-greeter":             a.getDMSGreeterMapping(variants["dms-greeter"]),
 		"matugen":                 a.getMatugenMapping(variants["matugen"]),
 		"dgop":                    {Name: "dgop", Repository: RepoTypeSystem},
 		"ghostty":                 {Name: "ghostty", Repository: RepoTypeSystem},
@@ -199,6 +225,8 @@ func (a *ArchDistribution) GetPackageMappingWithVariants(wm deps.WindowManager, 
 		"alacritty":               {Name: "alacritty", Repository: RepoTypeSystem},
 		"xdg-desktop-portal-gtk":  {Name: "xdg-desktop-portal-gtk", Repository: RepoTypeSystem},
 		"accountsservice":         {Name: "accountsservice", Repository: RepoTypeSystem},
+		"danksearch":              a.getDanksearchMapping(variants["danksearch"]),
+		"dankcalendar":            a.getDankCalendarMapping(variants["dankcalendar"]),
 	}
 
 	switch wm {
@@ -251,6 +279,27 @@ func (a *ArchDistribution) getMatugenMapping(variant deps.PackageVariant) Packag
 		return PackageMapping{Name: "matugen-git", Repository: RepoTypeAUR}
 	}
 	return PackageMapping{Name: "matugen", Repository: RepoTypeSystem}
+}
+
+func (a *ArchDistribution) getDanksearchMapping(variant deps.PackageVariant) PackageMapping {
+	if variant == deps.VariantGit {
+		return PackageMapping{Name: "dsearch-git", Repository: RepoTypeAUR}
+	}
+	return PackageMapping{Name: "dsearch-bin", Repository: RepoTypeAUR}
+}
+
+func (a *ArchDistribution) getDankCalendarMapping(variant deps.PackageVariant) PackageMapping {
+	if variant == deps.VariantGit {
+		return PackageMapping{Name: "dankcalendar-git", Repository: RepoTypeAUR}
+	}
+	return PackageMapping{Name: "dankcalendar-bin", Repository: RepoTypeAUR}
+}
+
+func (a *ArchDistribution) getDMSGreeterMapping(variant deps.PackageVariant) PackageMapping {
+	if variant == deps.VariantGit {
+		return PackageMapping{Name: "greetd-dms-greeter-git", Repository: RepoTypeAUR}
+	}
+	return PackageMapping{Name: "greetd-dms-greeter-bin", Repository: RepoTypeAUR}
 }
 
 func (a *ArchDistribution) getDMSMapping(variant deps.PackageVariant) PackageMapping {

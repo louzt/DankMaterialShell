@@ -23,11 +23,46 @@ Rectangle {
     color: Theme.nestedSurface
     border.color: Theme.outlineMedium
     border.width: Theme.layerOutlineWidth
+    focus: true
 
     property var bluetoothCodecModalRef: null
     property var devicesBeingPaired: new Set()
 
     signal showCodecSelector(var device)
+
+    Component.onDestruction: closeTransientSurfaces()
+    onVisibleChanged: {
+        if (!visible)
+            closeTransientSurfaces();
+    }
+
+    Connections {
+        target: PopoutService.controlCenterPopout
+        function onShouldBeVisibleChanged() {
+            const popout = PopoutService.controlCenterPopout;
+            if (!popout || !popout.shouldBeVisible)
+                root.closeTransientSurfaces();
+        }
+    }
+
+    Keys.onPressed: event => {
+        if (event.key !== Qt.Key_Escape)
+            return;
+        if (bluetoothContextMenu.visible) {
+            bluetoothContextMenu.close();
+            event.accepted = true;
+            return;
+        }
+        PopoutService.closeControlCenter();
+        event.accepted = true;
+    }
+
+    function closeTransientSurfaces() {
+        if (bluetoothContextMenu.visible)
+            bluetoothContextMenu.close();
+        if (bluetoothCodecModalRef?.modalVisible)
+            bluetoothCodecModalRef.hide();
+    }
 
     function isDeviceBeingPaired(deviceAddress) {
         return devicesBeingPaired.has(deviceAddress);
@@ -114,7 +149,7 @@ Rectangle {
             width: 100
             height: 36
             radius: 18
-            color: scanMouseArea.containsMouse && adapterEnabled ? Theme.withAlpha(Theme.surfaceContainerHigh, Theme.popupTransparency) : "transparent"
+            color: scanMouseArea.containsMouse && adapterEnabled ? Theme.withAlpha(Theme.surfaceContainerHigh, Theme.popupTransparency) : Theme.withAlpha(Theme.surfaceContainerHigh, 0)
             border.color: adapterEnabled ? Theme.primary : Theme.outlineStrong
             border.width: 0
             visible: adapterEnabled
@@ -240,7 +275,7 @@ Rectangle {
 
                     color: {
                         if (isConnecting)
-                            return Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.12);
+                            return Theme.warningHover;
                         if (deviceMouseArea.containsMouse)
                             return Theme.primaryHoverLight;
                         return Theme.surfaceLight;
@@ -339,12 +374,12 @@ Rectangle {
                         width: pinBluetoothRow.width + Theme.spacingS * 2
                         height: 28
                         radius: height / 2
-                        color: pairedDelegate.isPinned ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : Theme.withAlpha(Theme.surfaceText, 0.05)
+                        color: pairedDelegate.isPinned ? Theme.primaryHover : Theme.withAlpha(Theme.surfaceText, 0.05)
 
                         Row {
                             id: pinBluetoothRow
                             anchors.centerIn: parent
-                            spacing: 4
+                            spacing: Theme.spacingXS
 
                             DankIcon {
                                 name: "push_pin"
@@ -447,7 +482,7 @@ Rectangle {
                     anchors.centerIn: parent
                     name: "sync"
                     size: 24
-                    color: Qt.rgba(Theme.surfaceText.r || 0.8, Theme.surfaceText.g || 0.8, Theme.surfaceText.b || 0.8, 0.4)
+                    color: Theme.onSurface_38
                     smoothTransform: BluetoothService.adapter?.discovering ?? false
 
                     RotationAnimator on rotation {
@@ -600,6 +635,8 @@ Rectangle {
         width: 150
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
 
+        onClosed: Qt.callLater(() => root.forceActiveFocus())
+
         property var currentDevice: null
 
         readonly property bool hasDevice: currentDevice !== null
@@ -607,10 +644,10 @@ Rectangle {
         readonly property bool showCodecOption: hasDevice && deviceConnected && BluetoothService.isAudioDevice(currentDevice)
 
         background: Rectangle {
-            color: Theme.withAlpha(Theme.surfaceContainer, Theme.popupTransparency)
+            color: Theme.withAlpha(Theme.surfaceContainer, BlurService.enabled ? 0.96 : Theme.popupTransparency)
             radius: Theme.cornerRadius
-            border.width: 0
-            border.color: Theme.outlineStrong
+            border.width: BlurService.enabled ? BlurService.borderWidth : 0
+            border.color: BlurService.enabled ? BlurService.borderColor : Theme.outlineStrong
         }
 
         MenuItem {
@@ -626,7 +663,7 @@ Rectangle {
             }
 
             background: Rectangle {
-                color: parent.hovered ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08) : "transparent"
+                color: parent.hovered ? Theme.primaryHoverLight : Theme.withAlpha(Theme.primaryHoverLight, 0)
                 radius: Theme.cornerRadius / 2
             }
 
@@ -655,7 +692,7 @@ Rectangle {
             }
 
             background: Rectangle {
-                color: parent.hovered ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08) : "transparent"
+                color: parent.hovered ? Theme.primaryHoverLight : Theme.withAlpha(Theme.primaryHoverLight, 0)
                 radius: Theme.cornerRadius / 2
             }
 
@@ -683,7 +720,7 @@ Rectangle {
             }
 
             background: Rectangle {
-                color: parent.hovered ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08) : "transparent"
+                color: parent.hovered ? Theme.primaryHoverLight : Theme.withAlpha(Theme.primaryHoverLight, 0)
                 radius: Theme.cornerRadius / 2
             }
 
@@ -707,7 +744,7 @@ Rectangle {
             }
 
             background: Rectangle {
-                color: parent.hovered ? Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.08) : "transparent"
+                color: parent.hovered ? Theme.errorHover : Theme.withAlpha(Theme.errorHover, 0)
                 radius: Theme.cornerRadius / 2
             }
 

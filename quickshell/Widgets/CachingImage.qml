@@ -1,5 +1,4 @@
 import QtQuick
-import Quickshell.Io
 import qs.Common
 
 Item {
@@ -9,10 +8,14 @@ Item {
     property int maxCacheSize: 512
     property int status: isAnimated ? animatedImg.status : staticImg.status
     property int fillMode: Image.PreserveAspectCrop
+    // AnimatedImage decodes full-size on the GUI thread and is never cached;
+    // disable for thumbnail grids
+    property bool animate: true
+    property bool _fromCache: false
 
     readonly property bool isRemoteUrl: imagePath.startsWith("http://") || imagePath.startsWith("https://")
     readonly property bool isAnimated: {
-        if (!imagePath)
+        if (!animate || !imagePath)
             return false;
         const lower = imagePath.toLowerCase();
         return lower.endsWith(".gif") || lower.endsWith(".webp");
@@ -39,7 +42,8 @@ Item {
     }
 
     readonly property string imageHash: normalizedPath ? djb2Hash(normalizedPath) : ""
-    readonly property string cachePath: imageHash && !isRemoteUrl && !isAnimated ? `${Paths.stringify(Paths.imagecache)}/${imageHash}@${maxCacheSize}x${maxCacheSize}.png` : ""
+    readonly property string cacheFileName: imageHash && !isRemoteUrl && !isAnimated ? `${imageHash}@${maxCacheSize}x${maxCacheSize}.png` : ""
+    readonly property string cachePath: cacheFileName ? `${Paths.stringify(Paths.imagecache)}/${cacheFileName}` : ""
     readonly property string encodedImagePath: {
         if (!normalizedPath)
             return "";
@@ -69,58 +73,51 @@ Item {
         smooth: true
 
         onStatusChanged: {
-            if (source === root.cachePath && status === Image.Error) {
+            switch (status) {
+            case Image.Error:
+                if (!root._fromCache)
+                    return;
+                root._fromCache = false;
                 source = root.encodedImagePath;
                 return;
-            }
-            if (root.isRemoteUrl || source !== root.encodedImagePath || status !== Image.Ready || !root.cachePath)
+            case Image.Ready:
+                if (root._fromCache || root.isRemoteUrl || !root.cachePath)
+                    return;
+                if (!visible || width <= 0 || height <= 0 || !Window.window?.visible)
+                    return;
+                const grabPath = root.cachePath;
+                grabToImage(res => {
+                    res.saveToFile(grabPath);
+                });
                 return;
-            Paths.mkdir(Paths.imagecache);
-            const grabPath = root.cachePath;
-            if (visible && width > 0 && height > 0 && Window.window?.visible) {
-                grabToImage(res => res.saveToFile(grabPath));
             }
         }
     }
 
-    Process {
-        id: cacheProbe
-
-        property string cachePath: ""
-        property string fallbackSource: ""
-
-        running: false
-        command: ["test", "-f", cachePath]
-
-        onExited: exitCode => {
-            if (cacheProbe.cachePath !== root.cachePath)
-                return;
-            staticImg.source = exitCode === 0 ? cacheProbe.cachePath : cacheProbe.fallbackSource;
-        }
-    }
-
-    onImagePathChanged: {
+    function resolveSource() {
         if (!imagePath) {
+            _fromCache = false;
             staticImg.source = "";
             return;
         }
         if (isAnimated)
             return;
         if (isRemoteUrl) {
+            _fromCache = false;
             staticImg.source = imagePath;
             return;
         }
-        Paths.mkdir(Paths.imagecache);
-        const hash = djb2Hash(normalizedPath);
-        const cPath = hash ? `${Paths.stringify(Paths.imagecache)}/${hash}@${maxCacheSize}x${maxCacheSize}.png` : "";
-        const encoded = "file://" + normalizedPath.split('/').map(s => encodeURIComponent(s)).join('/');
-        if (!cPath) {
-            staticImg.source = encoded;
+        if (!cachePath) {
+            _fromCache = false;
+            staticImg.source = encodedImagePath;
             return;
         }
-        cacheProbe.running = false;
-        cacheProbe.cachePath = cPath;
-        cacheProbe.fallbackSource = encoded;
-        cacheProbe.running = true;
+        // Cache-first; a miss errors and falls back to encodedImagePath
+        _fromCache = true;
+        staticImg.source = cachePath;
     }
+
+    onImagePathChanged: resolveSource()
+    // During creation onImagePathChanged fires before sibling properties (maxCacheSize) initialize
+    onCachePathChanged: resolveSource()
 }

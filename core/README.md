@@ -10,7 +10,7 @@ Go-based backend for DankMaterialShell providing system integration, IPC, and in
 Command-line interface and daemon for shell management and system control.
 
 **dankinstall**
-Distribution-aware installer for deploying DMS and compositor configurations on Arch, Fedora, Debian, Ubuntu, openSUSE, and Gentoo. Supports both an interactive TUI and a headless (unattended) mode via CLI flags.
+Distribution-aware installer for deploying DMS and compositor configurations on Arch, Fedora, Debian, Ubuntu, openSUSE, Gentoo, and Void. Supports both an interactive TUI and a headless (unattended) mode via CLI flags.
 
 ## System Integration
 
@@ -193,7 +193,7 @@ Set the `DANKINSTALL_LOG_DIR` environment variable to override the log directory
 
 ## Supported Distributions
 
-Arch, Fedora, Debian, Ubuntu, openSUSE, Gentoo (and derivatives)
+Arch, Fedora, Debian, Ubuntu, openSUSE, Gentoo, Void (and derivatives)
 
 **Arch Linux**
 Uses `pacman` for system packages, builds AUR packages via `makepkg`, no AUR helper dependency.
@@ -213,5 +213,8 @@ Most packages available in standard repos. Minimal building required.
 
 **Gentoo**
 Uses Portage with GURU overlay. Automatically configures USE flags. Variable success depending on system configuration.
+
+**Void Linux**
+Uses XBPS with the DMS and DankLinux self-hosted repositories.
 
 See installer output for distribution-specific details during installation.

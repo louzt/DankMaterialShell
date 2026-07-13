@@ -15,6 +15,8 @@ Item {
     property var availableCodecs: []
     property string currentCodec: ""
     property bool isLoading: false
+    property string statusMessage: ""
+    property bool statusIsError: false
 
     readonly property bool deviceValid: device !== null && device.connected && BluetoothService.isAudioDevice(device)
 
@@ -29,6 +31,8 @@ Item {
         isLoading = true;
         availableCodecs = [];
         currentCodec = "";
+        statusMessage = "";
+        statusIsError = false;
         visible = true;
         modalVisible = true;
         queryCodecs();
@@ -60,6 +64,16 @@ Item {
             availableCodecs = codecs;
             currentCodec = current;
             isLoading = false;
+            if (BluetoothService.pactlChecked && !BluetoothService.pactlAvailable) {
+                statusMessage = I18n.tr("Codec switching is unavailable because pactl was not found");
+                statusIsError = true;
+            } else if (codecs.length === 0) {
+                statusMessage = I18n.tr("No codecs found");
+                statusIsError = false;
+            } else {
+                statusMessage = "";
+                statusIsError = false;
+            }
         });
     }
 
@@ -123,7 +137,7 @@ Item {
     Rectangle {
         id: modalBackground
         anchors.fill: parent
-        color: Qt.rgba(0, 0, 0, 0.5)
+        color: Qt.rgba(0, 0, 0, BlurService.enabled ? 0.72 : 0.5)
         opacity: modalVisible ? 1 : 0
 
         Behavior on opacity {
@@ -141,7 +155,7 @@ Item {
         focus: root.visible
         enabled: root.visible
 
-        Keys.onEscapePressed: {
+        Keys.onEscapePressed: event => {
             root.hide();
             event.accepted = true;
         }
@@ -153,9 +167,9 @@ Item {
         width: 320
         height: contentColumn.implicitHeight + Theme.spacingL * 2
         radius: Theme.cornerRadius
-        color: Theme.floatingSurface
-        border.color: Theme.outlineMedium
-        border.width: Theme.layerOutlineWidth
+        color: Theme.withAlpha(Theme.surfaceContainer, BlurService.enabled ? 0.96 : Theme.popupTransparency)
+        border.color: BlurService.enabled ? BlurService.borderColor : Theme.outlineMedium
+        border.width: BlurService.enabled ? BlurService.borderWidth : Theme.layerOutlineWidth
         opacity: modalVisible ? 1 : 0
         scale: modalVisible ? 1 : 0.9
 
@@ -197,7 +211,7 @@ Item {
 
                 Column {
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: 2
+                    spacing: Theme.spacingXXS
 
                     StyledText {
                         text: device ? (device.name || device.deviceName) : ""
@@ -217,20 +231,28 @@ Item {
             Rectangle {
                 width: parent.width
                 height: 1
-                color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.05)
+                color: Theme.outlineLight
             }
 
             StyledText {
-                text: isLoading ? I18n.tr("Loading codecs...") : I18n.tr("Current: %1").arg(currentCodec)
+                text: {
+                    if (isLoading)
+                        return I18n.tr("Loading codecs...");
+                    if (statusMessage.length > 0)
+                        return statusMessage;
+                    return I18n.tr("Current: %1").arg(currentCodec);
+                }
                 font.pixelSize: Theme.fontSizeSmall
-                color: isLoading ? Theme.primary : Theme.surfaceTextMedium
+                color: statusIsError ? Theme.error : (isLoading ? Theme.primary : Theme.surfaceTextMedium)
                 font.weight: Font.Medium
+                wrapMode: Text.WordWrap
+                width: parent.width
             }
 
             Column {
                 width: parent.width
                 spacing: Theme.spacingXS
-                visible: !isLoading
+                visible: !isLoading && availableCodecs.length > 0
 
                 Repeater {
                     model: availableCodecs
@@ -266,7 +288,7 @@ Item {
 
                             Column {
                                 anchors.verticalCenter: parent.verticalCenter
-                                spacing: 2
+                                spacing: Theme.spacingXXS
 
                                 StyledText {
                                     text: modelData.name

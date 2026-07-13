@@ -205,13 +205,23 @@ jobs:
 
       - name: Generate Changelog
         id: changelog
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
           PREVIOUS_TAG=$(git describe --tags --abbrev=0 "${TAG}^" 2>/dev/null || echo "")
-          if [ -z "$PREVIOUS_TAG" ]; then
-            CHANGELOG=$(git log --oneline --pretty=format:"%an|%s (%h)" | grep -v "^github-actions\[bot\]|" | sed 's/^[^|]*|/- /' | head -50)
-          else
-            CHANGELOG=$(git log --oneline --pretty=format:"%an|%s (%h)" "${PREVIOUS_TAG}..${TAG}" | grep -v "^github-actions\[bot\]|" | sed 's/^[^|]*|/- /')
+          CHANGELOG=""
+          if [ -n "$PREVIOUS_TAG" ]; then
+            # PR-based notes with author credits; falls back to raw git log below
+            CHANGELOG=$(python3 scripts/release-notes.py "${PREVIOUS_TAG}..${TAG}" --format github --bare 2>/dev/null || true)
+          fi
+          if [ -z "$CHANGELOG" ]; then
+            echo "release-notes.py unavailable or empty, using git log fallback"
+            if [ -z "$PREVIOUS_TAG" ]; then
+              CHANGELOG=$(git log --oneline --pretty=format:"%an|%s (%h)" | grep -v "^github-actions\[bot\]|" | sed 's/^[^|]*|/- /' | head -50)
+            else
+              CHANGELOG=$(git log --oneline --pretty=format:"%an|%s (%h)" "${PREVIOUS_TAG}..${TAG}" | grep -v "^github-actions\[bot\]|" | sed 's/^[^|]*|/- /')
+            fi
           fi
 
           cat > RELEASE_BODY.md << 'EOF'

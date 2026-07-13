@@ -99,8 +99,9 @@ Item {
                 root._clear();
         }
         function onResourcesLost() {
-            lifecycleKickAction.cancel();
             root._clear();
+            // Re-arm so blur self-heals since instances are no longer recreated per open
+            root._scheduleLifecycleKick();
         }
         function onWindowConnected() {
             root._scheduleLifecycleKick();
@@ -110,7 +111,7 @@ Item {
     Component.onCompleted: _scheduleLifecycleKick()
     Component.onDestruction: {
         lifecycleKickAction.cancel();
-        if (targetWindow)
+        if (targetWindow && targetWindow.BackgroundEffect)
             targetWindow.BackgroundEffect.blurRegion = null;
     }
 }

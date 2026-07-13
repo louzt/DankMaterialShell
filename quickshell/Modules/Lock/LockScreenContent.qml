@@ -12,6 +12,7 @@ import qs.Common
 import qs.Modals
 import qs.Services
 import qs.Widgets
+import "../../Common/LayoutCodes.js" as LayoutCodes
 
 Item {
     id: root
@@ -34,8 +35,19 @@ Item {
     property int hyprlandLayoutCount: 0
     property bool lockerReadySent: false
     property bool lockerReadyArmed: false
+    readonly property bool hasCustomWallpaper: SettingsData.lockScreenWallpaperPath !== ""
+    readonly property string lockFontFamily: SettingsData.lockScreenFontFamily
+
+    component ClockDigitText: StyledText {
+        font.pixelSize: 120
+        font.weight: Font.Light
+        color: "white"
+        horizontalAlignment: Text.AlignHCenter
+        font.family: root.lockFontFamily !== "" ? root.lockFontFamily : resolvedFontFamily
+    }
 
     signal unlockRequested
+    signal passwordEdited(string text)
 
     function resetLockState() {
         lockerReadySent = false;
@@ -44,6 +56,12 @@ Item {
         pamState = "";
         if (pam)
             pam.lockMessage = "";
+    }
+
+    function focusPasswordField() {
+        if (demoMode || !passwordField)
+            return;
+        passwordField.forceActiveFocus();
     }
 
     function currentAuthFeedbackText() {
@@ -158,8 +176,7 @@ Item {
                     }
                     hyprlandKeyboard = mainKeyboard.name;
                     if (mainKeyboard.active_keymap) {
-                        const parts = mainKeyboard.active_keymap.split(" ");
-                        hyprlandCurrentLayout = parts[0].substring(0, 2).toUpperCase();
+                        hyprlandCurrentLayout = LayoutCodes.layoutCode(mainKeyboard.active_keymap);
                     } else {
                         hyprlandCurrentLayout = "";
                     }
@@ -190,6 +207,8 @@ Item {
     Loader {
         anchors.fill: parent
         active: {
+            if (root.hasCustomWallpaper)
+                return false;
             var currentWallpaper = SessionData.getMonitorWallpaper(screenName);
             return !currentWallpaper || (currentWallpaper && currentWallpaper.startsWith("#"));
         }
@@ -205,10 +224,16 @@ Item {
         anchors.fill: parent
 
         readonly property string wallpaperSource: {
+            if (root.hasCustomWallpaper)
+                return root.encodeFileUrl(SettingsData.lockScreenWallpaperPath);
             var w = SessionData.getMonitorWallpaper(screenName);
             return (w && !w.startsWith("#")) ? encodeFileUrl(w) : "";
         }
-        readonly property string fillModeName: SessionData.getMonitorWallpaperFillMode(screenName)
+        readonly property string fillModeName: {
+            if (SettingsData.lockScreenWallpaperFillMode !== "")
+                return SettingsData.lockScreenWallpaperFillMode;
+            return root.hasCustomWallpaper ? "Fill" : SessionData.getMonitorWallpaperFillMode(root.screenName);
+        }
 
         active: wallpaperSource !== ""
         asynchronous: false
@@ -332,91 +357,55 @@ Item {
                 }
                 property bool hasSeconds: timeParts.length > 2
 
-                StyledText {
-                    width: 75
+                ClockDigitText {
+                    width: clockText.hours.length > 1 ? 75 : 0
                     text: clockText.hours.length > 1 ? clockText.hours[0] : ""
-                    font.pixelSize: 120
-                    font.weight: Font.Light
-                    color: "white"
-                    horizontalAlignment: Text.AlignHCenter
                 }
 
-                StyledText {
+                ClockDigitText {
                     width: 75
                     text: clockText.hours.length > 1 ? clockText.hours[1] : clockText.hours.length > 0 ? clockText.hours[0] : ""
-                    font.pixelSize: 120
-                    font.weight: Font.Light
-                    color: "white"
-                    horizontalAlignment: Text.AlignHCenter
                 }
 
-                StyledText {
+                ClockDigitText {
                     text: ":"
-                    font.pixelSize: 120
-                    font.weight: Font.Light
-                    color: "white"
                 }
 
-                StyledText {
+                ClockDigitText {
                     width: 75
                     text: clockText.minutes.length > 0 ? clockText.minutes[0] : ""
-                    font.pixelSize: 120
-                    font.weight: Font.Light
-                    color: "white"
-                    horizontalAlignment: Text.AlignHCenter
                 }
 
-                StyledText {
+                ClockDigitText {
                     width: 75
                     text: clockText.minutes.length > 1 ? clockText.minutes[1] : ""
-                    font.pixelSize: 120
-                    font.weight: Font.Light
-                    color: "white"
-                    horizontalAlignment: Text.AlignHCenter
                 }
 
-                StyledText {
+                ClockDigitText {
                     text: clockText.hasSeconds ? ":" : ""
-                    font.pixelSize: 120
-                    font.weight: Font.Light
-                    color: "white"
                     visible: clockText.hasSeconds
                 }
 
-                StyledText {
+                ClockDigitText {
                     width: 75
                     text: clockText.hasSeconds && clockText.seconds.length > 0 ? clockText.seconds[0] : ""
-                    font.pixelSize: 120
-                    font.weight: Font.Light
-                    color: "white"
-                    horizontalAlignment: Text.AlignHCenter
                     visible: clockText.hasSeconds
                 }
 
-                StyledText {
+                ClockDigitText {
                     width: 75
                     text: clockText.hasSeconds && clockText.seconds.length > 1 ? clockText.seconds[1] : ""
-                    font.pixelSize: 120
-                    font.weight: Font.Light
-                    color: "white"
-                    horizontalAlignment: Text.AlignHCenter
                     visible: clockText.hasSeconds
                 }
 
-                StyledText {
+                ClockDigitText {
                     width: 20
                     text: " "
-                    font.pixelSize: 120
-                    font.weight: Font.Light
-                    color: "white"
                     visible: clockText.ampm !== ""
                 }
 
-                StyledText {
+                ClockDigitText {
                     text: clockText.ampm
-                    font.pixelSize: 120
-                    font.weight: Font.Light
-                    color: "white"
                     visible: clockText.ampm !== ""
                 }
             }
@@ -435,6 +424,7 @@ Item {
                 return systemClock.date.toLocaleDateString(I18n.locale(), Locale.LongFormat);
             }
             font.pixelSize: Theme.fontSizeXLarge
+            font.family: root.lockFontFamily !== "" ? root.lockFontFamily : resolvedFontFamily
             color: "white"
             opacity: 0.9
         }
@@ -667,7 +657,7 @@ Item {
                                         anchors.right: parent.right
                                         anchors.top: parent.top
                                         anchors.margins: Theme.spacingS
-                                        spacing: 2
+                                        spacing: Theme.spacingXXS
 
                                         Row {
                                             width: parent.width
@@ -766,7 +756,7 @@ Item {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 60
                     radius: Theme.cornerRadius
-                    color: Qt.rgba(Theme.surfaceContainer.r, Theme.surfaceContainer.g, Theme.surfaceContainer.b, 0.9)
+                    color: Theme.withAlpha(Theme.surfaceContainer, 0.9)
                     border.color: passwordField.activeFocus ? Theme.primary : Qt.rgba(1, 1, 1, 0.3)
                     border.width: passwordField.activeFocus ? 2 : 1
                     visible: SettingsData.lockScreenShowPasswordField || root.passwordBuffer.length > 0
@@ -816,7 +806,7 @@ Item {
                     FocusScope {
                         id: passwordField
 
-                        property string text: root.passwordBuffer
+                        readonly property string text: root.passwordBuffer
                         property int cursorPosition: text.length
 
                         signal accepted
@@ -826,7 +816,7 @@ Item {
                         }
 
                         function clear() {
-                            text = "";
+                            root.passwordEdited("");
                             cursorPosition = 0;
                         }
 
@@ -834,16 +824,55 @@ Item {
                             if (value.length === 0)
                                 return;
                             clampCursorPosition();
-                            text = text.slice(0, cursorPosition) + value + text.slice(cursorPosition);
-                            cursorPosition += value.length;
+                            const pos = cursorPosition;
+                            root.passwordEdited(text.slice(0, pos) + value + text.slice(pos));
+                            cursorPosition = pos + value.length;
                         }
 
                         function backspace() {
                             clampCursorPosition();
                             if (cursorPosition === 0)
                                 return;
-                            text = text.slice(0, cursorPosition - 1) + text.slice(cursorPosition);
-                            cursorPosition -= 1;
+                            const pos = cursorPosition;
+                            root.passwordEdited(text.slice(0, pos - 1) + text.slice(pos));
+                            cursorPosition = pos - 1;
+                        }
+
+                        function deleteForward() {
+                            clampCursorPosition();
+                            if (cursorPosition === text.length)
+                                return;
+                            const pos = cursorPosition;
+                            root.passwordEdited(text.slice(0, pos) + text.slice(pos + 1));
+                            cursorPosition = pos;
+                        }
+
+                        function deleteToLineStart() {
+                            clampCursorPosition();
+                            if (cursorPosition === 0)
+                                return;
+                            root.passwordEdited(text.slice(cursorPosition));
+                            cursorPosition = 0;
+                        }
+
+                        function deleteToLineEnd() {
+                            clampCursorPosition();
+                            if (cursorPosition === text.length)
+                                return;
+                            root.passwordEdited(text.slice(0, cursorPosition));
+                        }
+
+                        function deleteWordBackward() {
+                            clampCursorPosition();
+                            if (cursorPosition === 0)
+                                return;
+                            let pos = cursorPosition;
+                            while (pos > 0 && text.charAt(pos - 1) === " ")
+                                pos--;
+                            while (pos > 0 && text.charAt(pos - 1) !== " ")
+                                pos--;
+                            root.passwordEdited(text.slice(0, pos) + text.slice(cursorPosition));
+                            cursorPosition = pos;
                         }
 
                         function isPrintableText(value) {
@@ -878,11 +907,7 @@ Item {
                         focus: true
                         enabled: !demoMode
                         activeFocusOnTab: !demoMode
-                        onTextChanged: {
-                            if (!demoMode) {
-                                root.passwordBuffer = text;
-                            }
-                        }
+                        onTextChanged: cursorPosition = text.length
                         onAccepted: {
                             if (!demoMode && !root.unlocking && !pam.passwd.active && !pam.u2fPending) {
                                 pam.passwd.start();
@@ -915,14 +940,79 @@ Item {
                                 return;
                             }
 
-                            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                            if ((event.modifiers & Qt.ControlModifier) && !(event.modifiers & (Qt.AltModifier | Qt.MetaModifier))) {
+                                switch (event.key) {
+                                case Qt.Key_A:
+                                    cursorPosition = 0;
+                                    event.accepted = true;
+                                    return;
+                                case Qt.Key_E:
+                                    cursorPosition = text.length;
+                                    event.accepted = true;
+                                    return;
+                                case Qt.Key_B:
+                                    clampCursorPosition();
+                                    cursorPosition = Math.max(0, cursorPosition - 1);
+                                    event.accepted = true;
+                                    return;
+                                case Qt.Key_F:
+                                    clampCursorPosition();
+                                    cursorPosition = Math.min(text.length, cursorPosition + 1);
+                                    event.accepted = true;
+                                    return;
+                                case Qt.Key_U:
+                                    deleteToLineStart();
+                                    event.accepted = true;
+                                    return;
+                                case Qt.Key_K:
+                                    deleteToLineEnd();
+                                    event.accepted = true;
+                                    return;
+                                case Qt.Key_W:
+                                    deleteWordBackward();
+                                    event.accepted = true;
+                                    return;
+                                case Qt.Key_H:
+                                    backspace();
+                                    event.accepted = true;
+                                    return;
+                                case Qt.Key_D:
+                                    deleteForward();
+                                    event.accepted = true;
+                                    return;
+                                }
+                            }
+
+                            switch (event.key) {
+                            case Qt.Key_Return:
+                            case Qt.Key_Enter:
                                 accepted();
                                 event.accepted = true;
                                 return;
-                            }
-
-                            if (event.key === Qt.Key_Backspace) {
+                            case Qt.Key_Backspace:
                                 backspace();
+                                event.accepted = true;
+                                return;
+                            case Qt.Key_Delete:
+                                deleteForward();
+                                event.accepted = true;
+                                return;
+                            case Qt.Key_Left:
+                                clampCursorPosition();
+                                cursorPosition = Math.max(0, cursorPosition - 1);
+                                event.accepted = true;
+                                return;
+                            case Qt.Key_Right:
+                                clampCursorPosition();
+                                cursorPosition = Math.min(text.length, cursorPosition + 1);
+                                event.accepted = true;
+                                return;
+                            case Qt.Key_Home:
+                                cursorPosition = 0;
+                                event.accepted = true;
+                                return;
+                            case Qt.Key_End:
+                                cursorPosition = text.length;
                                 event.accepted = true;
                                 return;
                             }
@@ -946,7 +1036,7 @@ Item {
                         }
 
                         onActiveFocusChanged: {
-                            if (!activeFocus && !demoMode && visible && passwordField && !powerMenu.isVisible) {
+                            if (!activeFocus && !demoMode && passwordField && !powerMenu.isVisible) {
                                 Qt.callLater(() => {
                                     if (passwordField && passwordField.forceActiveFocus) {
                                         passwordField.forceActiveFocus();
@@ -956,23 +1046,12 @@ Item {
                         }
 
                         onEnabledChanged: {
-                            if (enabled && !demoMode && visible && passwordField && !powerMenu.isVisible) {
+                            if (enabled && !demoMode && passwordField && !powerMenu.isVisible) {
                                 Qt.callLater(() => {
                                     if (passwordField && passwordField.forceActiveFocus) {
                                         passwordField.forceActiveFocus();
                                     }
                                 });
-                            }
-                        }
-
-                        Connections {
-                            target: root
-
-                            function onPasswordBufferChanged() {
-                                if (passwordField.text === root.passwordBuffer)
-                                    return;
-                                passwordField.text = root.passwordBuffer;
-                                passwordField.cursorPosition = passwordField.text.length;
                             }
                         }
                     }
@@ -1028,6 +1107,8 @@ Item {
                     }
 
                     StyledText {
+                        id: passwordDisplay
+
                         anchors.left: lockIconContainer.right
                         anchors.leftMargin: Theme.spacingM
                         anchors.right: (revealButton.visible ? revealButton.left : (virtualKeyboardButton.visible ? virtualKeyboardButton.left : (securityKeyButton.visible ? securityKeyButton.left : (enterButton.visible ? enterButton.left : (loadingSpinner.visible ? loadingSpinner.left : parent.right)))))
@@ -1057,6 +1138,33 @@ Item {
                         }
                     }
 
+                    TextMetrics {
+                        id: passwordCursorMetrics
+                        font: passwordDisplay.font
+                        text: passwordDisplay.text.slice(0, passwordField.cursorPosition)
+                    }
+
+                    DankTextCursor {
+                        id: passwordCursor
+
+                        x: passwordDisplay.x + passwordCursorMetrics.advanceWidth + Math.min(0, passwordDisplay.width - passwordDisplay.implicitWidth)
+                        anchors.verticalCenter: parent.verticalCenter
+                        height: passwordDisplay.font.pixelSize + 4
+                        shown: !demoMode && passwordField.activeFocus && !pam.passwd.active && !pam.u2fPending && !root.unlocking
+
+                        Connections {
+                            target: passwordField
+
+                            function onCursorPositionChanged() {
+                                passwordCursor.resetBlink();
+                            }
+
+                            function onTextChanged() {
+                                passwordCursor.resetBlink();
+                            }
+                        }
+                    }
+
                     DankActionButton {
                         id: revealButton
 
@@ -1080,8 +1188,7 @@ Item {
                         visible: root.canStartSecurityKeyUnlock()
                         enabled: visible
                         onClicked: {
-                            passwordField.text = "";
-                            root.passwordBuffer = "";
+                            passwordField.clear();
                             pam.u2f.startForAlternativeAuth();
                         }
                     }
@@ -1154,7 +1261,7 @@ Item {
                                 radius: 10
                                 anchors.centerIn: parent
                                 color: "transparent"
-                                border.color: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.3)
+                                border.color: Theme.primarySelected
                                 border.width: 2
                             }
 
@@ -1172,7 +1279,7 @@ Item {
                                     height: parent.height / 2
                                     anchors.top: parent.top
                                     anchors.horizontalCenter: parent.horizontalCenter
-                                    color: Qt.rgba(Theme.surfaceContainer.r, Theme.surfaceContainer.g, Theme.surfaceContainer.b, 0.9)
+                                    color: Theme.withAlpha(Theme.surfaceContainer, 0.9)
                                 }
 
                                 RotationAnimator on rotation {
@@ -1246,7 +1353,7 @@ Item {
             anchors.top: passwordLayout.bottom
             anchors.topMargin: Theme.spacingS
             anchors.horizontalCenter: passwordLayout.horizontalCenter
-            spacing: 4
+            spacing: Theme.spacingXS
             opacity: DMSService.capsLockState ? 1 : 0
 
             DankIcon {
@@ -1304,7 +1411,7 @@ Item {
 
                 Row {
                     id: keyboardLayoutRow
-                    spacing: 4
+                    spacing: Theme.spacingXS
 
                     Item {
                         width: Theme.iconSize
@@ -1325,14 +1432,7 @@ Item {
                         StyledText {
                             text: {
                                 if (CompositorService.isNiri) {
-                                    const layout = NiriService.getCurrentKeyboardLayoutName();
-                                    if (!layout)
-                                        return "";
-                                    const parts = layout.split(" ");
-                                    if (parts.length > 0) {
-                                        return parts[0].substring(0, 2).toUpperCase();
-                                    }
-                                    return layout.substring(0, 2).toUpperCase();
+                                    return LayoutCodes.layoutCode(NiriService.getCurrentKeyboardLayoutName());
                                 } else if (CompositorService.isHyprland) {
                                     return hyprlandCurrentLayout;
                                 }
@@ -1464,7 +1564,7 @@ Item {
                         height: 20
                         radius: 10
                         anchors.verticalCenter: parent.verticalCenter
-                        color: prevArea.containsMouse ? Qt.rgba(255, 255, 255, 0.2) : "transparent"
+                        color: prevArea.containsMouse ? Qt.rgba(255, 255, 255, 0.2) : Theme.withAlpha(Qt.rgba(255, 255, 255, 0.2), 0)
                         visible: MprisController.activePlayer
                         opacity: (MprisController.activePlayer?.canGoPrevious ?? false) ? 1 : 0.3
 
@@ -1514,7 +1614,7 @@ Item {
                         height: 20
                         radius: 10
                         anchors.verticalCenter: parent.verticalCenter
-                        color: nextArea.containsMouse ? Qt.rgba(255, 255, 255, 0.2) : "transparent"
+                        color: nextArea.containsMouse ? Qt.rgba(255, 255, 255, 0.2) : Theme.withAlpha(Qt.rgba(255, 255, 255, 0.2), 0)
                         visible: MprisController.activePlayer
                         opacity: (MprisController.activePlayer?.canGoNext ?? false) ? 1 : 0.3
 
@@ -1546,7 +1646,7 @@ Item {
             }
 
             Row {
-                spacing: 6
+                spacing: Theme.spacingXS
                 visible: WeatherService.weather.available
                 anchors.verticalCenter: parent.verticalCenter
 
@@ -1664,7 +1764,7 @@ Item {
             }
 
             Row {
-                spacing: 4
+                spacing: Theme.spacingXS
                 visible: BatteryService.batteryAvailable
                 anchors.verticalCenter: parent.verticalCenter
 
@@ -1804,8 +1904,7 @@ Item {
         function onUnlockRequested() {
             root.unlocking = true;
             lockerReadyArmed = false;
-            passwordField.text = "";
-            root.passwordBuffer = "";
+            passwordField.clear();
             root.unlockRequested();
         }
 
@@ -1815,15 +1914,13 @@ Item {
                 return;
             root.unlocking = false;
             placeholderDelay.restart();
-            passwordField.text = "";
-            root.passwordBuffer = "";
+            passwordField.clear();
         }
 
         function onU2fPendingChanged() {
             if (!root.pam.u2fPending)
                 return;
-            passwordField.text = "";
-            root.passwordBuffer = "";
+            passwordField.clear();
             if (keyboardController.isKeyboardActive)
                 keyboardController.hide();
         }

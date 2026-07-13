@@ -118,8 +118,56 @@ type ColorsOutput struct {
 	} `json:"colors"`
 }
 
+type SchemePreview struct {
+	Dark  string `json:"dark"`
+	Light string `json:"light"`
+}
+
+var previewSchemeTypes = []string{
+	"scheme-tonal-spot",
+	"scheme-vibrant",
+	"scheme-content",
+	"scheme-expressive",
+	"scheme-fidelity",
+	"scheme-fruit-salad",
+	"scheme-monochrome",
+	"scheme-neutral",
+	"scheme-rainbow",
+}
+
+func PreviewSchemes(sourceColor string, contrast float64) (map[string]SchemePreview, error) {
+	if sourceColor == "" {
+		return nil, fmt.Errorf("source color is required")
+	}
+
+	previews := make(map[string]SchemePreview, len(previewSchemeTypes))
+	for _, schemeType := range previewSchemeTypes {
+		output, err := runMatugenDryRun(&Options{
+			Kind:        "hex",
+			Value:       sourceColor,
+			MatugenType: schemeType,
+			Contrast:    contrast,
+		})
+		if err != nil {
+			return nil, fmt.Errorf("preview %s: %w", schemeType, err)
+		}
+
+		dark := extractMatugenColor(output, "primary", "dark")
+		light := extractMatugenColor(output, "primary", "light")
+		if dark == "" || light == "" {
+			return nil, fmt.Errorf("preview %s: primary colors missing from matugen output", schemeType)
+		}
+		previews[schemeType] = SchemePreview{Dark: dark, Light: light}
+	}
+	return previews, nil
+}
+
 func (o *Options) ColorsOutput() string {
 	return filepath.Join(o.StateDir, "dms-colors.json")
+}
+
+func (o *Options) colorsStaging() string {
+	return o.ColorsOutput() + ".tmp"
 }
 
 func (o *Options) ShouldSkipTemplate(name string) bool {
@@ -132,6 +180,38 @@ func (o *Options) ShouldSkipTemplate(name string) bool {
 		}
 	}
 	return false
+}
+
+func acquireMatugenLock(stateDir string) (*os.File, error) {
+	f, err := os.OpenFile(filepath.Join(stateDir, "matugen.lock"), os.O_CREATE|os.O_RDWR, 0o644)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open matugen lock: %w", err)
+	}
+
+	deadline := time.Now().Add(45 * time.Second)
+	for {
+		switch err := syscall.Flock(int(f.Fd()), syscall.LOCK_EX|syscall.LOCK_NB); err {
+		case nil:
+			return f, nil
+		case syscall.EWOULDBLOCK:
+			if time.Now().After(deadline) {
+				f.Close()
+				return nil, fmt.Errorf("timed out waiting for matugen lock")
+			}
+			time.Sleep(100 * time.Millisecond)
+		default:
+			f.Close()
+			return nil, fmt.Errorf("failed to lock matugen: %w", err)
+		}
+	}
+}
+
+func releaseMatugenLock(f *os.File) {
+	if f == nil {
+		return
+	}
+	_ = syscall.Flock(int(f.Fd()), syscall.LOCK_UN)
+	f.Close()
 }
 
 func Run(opts Options) error {
@@ -167,6 +247,12 @@ func Run(opts Options) error {
 		return fmt.Errorf("failed to create state dir: %w", err)
 	}
 
+	lock, err := acquireMatugenLock(opts.StateDir)
+	if err != nil {
+		return err
+	}
+	defer releaseMatugenLock(lock)
+
 	log.Infof("Building theme: %s %s (%s)", opts.Kind, opts.Value, opts.Mode)
 
 	changed, buildErr := buildOnce(&opts)
@@ -188,6 +274,8 @@ func Run(opts Options) error {
 }
 
 func buildOnce(opts *Options) (bool, error) {
+	defer os.Remove(opts.colorsStaging())
+
 	cfgFile, err := os.CreateTemp("", "matugen-config-*.toml")
 	if err != nil {
 		return false, fmt.Errorf("failed to create temp config: %w", err)
@@ -275,9 +363,15 @@ func buildOnce(opts *Options) (bool, error) {
 		}
 	}
 
-	newColors, _ := os.ReadFile(opts.ColorsOutput())
+	newColors, err := os.ReadFile(opts.colorsStaging())
+	if err != nil {
+		return false, fmt.Errorf("matugen did not produce colors output: %w", err)
+	}
 	if bytes.Equal(oldColors, newColors) && len(oldColors) > 0 {
 		return false, nil
+	}
+	if err := os.Rename(opts.colorsStaging(), opts.ColorsOutput()); err != nil {
+		return false, fmt.Errorf("failed to commit colors output: %w", err)
 	}
 
 	if opts.ColorsOnly {
@@ -346,7 +440,7 @@ func buildMergedConfig(opts *Options, cfgFile *os.File, tmpDir string) error {
 input_path = '%s/matugen/templates/dank.json'
 output_path = '%s'
 
-`, opts.ShellDir, opts.ColorsOutput())
+`, opts.ShellDir, opts.colorsStaging())
 
 	if opts.ColorsOnly {
 		return nil
@@ -605,6 +699,7 @@ func redetectMatugenVersion(old matugenFlags) (matugenFlags, bool) {
 
 func detectMatugenVersionLocked() (matugenFlags, error) {
 	cmd := exec.Command("matugen", "--version")
+	cmd.Env = utils.EnvWithUserBinPath(nil)
 	output, err := cmd.Output()
 	if err != nil {
 		return matugenFlags{}, fmt.Errorf("failed to get matugen version: %w", err)
@@ -661,6 +756,7 @@ func runMatugen(baseArgs []string) error {
 
 	args := buildMatugenArgs(baseArgs, flags)
 	cmd := exec.Command("matugen", args...)
+	cmd.Env = utils.EnvWithUserBinPath(nil)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	runErr := cmd.Run()
@@ -678,6 +774,7 @@ func runMatugen(baseArgs []string) error {
 	log.Warnf("Matugen version changed (v4: %v -> %v), retrying", flags.isV4, newFlags.isV4)
 	args = buildMatugenArgs(baseArgs, newFlags)
 	retryCmd := exec.Command("matugen", args...)
+	retryCmd.Env = utils.EnvWithUserBinPath(nil)
 	retryCmd.Stdout = os.Stdout
 	retryCmd.Stderr = os.Stderr
 	return retryCmd.Run()
@@ -720,6 +817,7 @@ func execDryRun(opts *Options, flags matugenFlags) (string, error) {
 	}
 
 	cmd := exec.Command("matugen", baseArgs...)
+	cmd.Env = utils.EnvWithUserBinPath(nil)
 	var stderr strings.Builder
 	cmd.Stderr = &stderr
 	output, err := cmd.Output()
@@ -818,7 +916,26 @@ func refreshGTK(mode ColorMode) {
 	}
 }
 
+var colorSchemeEchoHook func(scheme string)
+
+func SetColorSchemeEchoHook(hook func(scheme string)) {
+	colorSchemeEchoHook = hook
+}
+
+func expectColorSchemeEcho(scheme string) {
+	if colorSchemeEchoHook != nil {
+		colorSchemeEchoHook(scheme)
+	}
+}
+
+// The color-scheme round trip is the only mechanism that makes running GTK4
+// apps reload ~/.config/gtk-4.0 CSS (a gtk-theme flip does not). But apps
+// following the portal color-scheme (Chromium) can drop the restore signal
+// mid-repaint and latch the wrong mode, so this is opt-in.
 func refreshGTK4() {
+	if os.Getenv("DMS_ENABLE_GTK4_REFRESH") != "1" {
+		return
+	}
 	output, err := utils.GsettingsGet("org.gnome.desktop.interface", "color-scheme")
 	if err != nil {
 		return
@@ -832,11 +949,13 @@ func refreshGTK4() {
 		toggle = "prefer-dark"
 	}
 
+	expectColorSchemeEcho(toggle)
 	if err := utils.GsettingsSet("org.gnome.desktop.interface", "color-scheme", toggle); err != nil {
 		log.Warnf("Failed to toggle color-scheme for GTK4 refresh: %v", err)
 		return
 	}
-	time.Sleep(50 * time.Millisecond)
+	time.Sleep(400 * time.Millisecond)
+	expectColorSchemeEcho(current)
 	if err := utils.GsettingsSet("org.gnome.desktop.interface", "color-scheme", current); err != nil {
 		log.Warnf("Failed to restore color-scheme for GTK4 refresh: %v", err)
 	}
@@ -937,6 +1056,9 @@ func closestAdwaitaAccent(primaryHex string) string {
 
 func syncAccentColor(primaryHex string) {
 	accent := closestAdwaitaAccent(primaryHex)
+	if cur, err := utils.GsettingsGet("org.gnome.desktop.interface", "accent-color"); err == nil && strings.Trim(cur, "'") == accent {
+		return
+	}
 	log.Infof("Setting GNOME accent color: %s", accent)
 	if err := utils.GsettingsSet("org.gnome.desktop.interface", "accent-color", accent); err != nil {
 		log.Warnf("Failed to set accent-color: %v", err)

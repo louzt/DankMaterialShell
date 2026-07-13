@@ -8,6 +8,7 @@ Item {
     id: clipboardContent
 
     required property var modal
+    property var transientSurfaceTracker: null
 
     property alias searchField: searchField
     property alias clipboardListView: clipboardListView
@@ -66,7 +67,7 @@ Item {
         contextMenu.hide();
     }
 
-    readonly property bool contextMenuActive: contextMenu.openState
+    readonly property bool contextMenuActive: contextMenu.renderActive
 
     anchors.fill: parent
 
@@ -74,6 +75,7 @@ Item {
         id: contextMenu
         modal: clipboardContent.modal
         parentHandler: clipboardContent
+        transientSurfaceTracker: clipboardContent.transientSurfaceTracker
     }
 
     Column {
@@ -147,7 +149,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 iconName: "filter_list"
                 iconColor: modal.activeFilter !== "all" ? Theme.primary : Theme.surfaceText
-                backgroundColor: modal.activeFilter !== "all" ? Theme.primarySelected : "transparent"
+                backgroundColor: modal.activeFilter !== "all" ? Theme.primarySelected : Theme.withAlpha(Theme.primarySelected, 0)
                 tooltipText: I18n.tr("Filter by type", "Clipboard history type filter button tooltip")
                 onClicked: filterMenuLoader.item?.openDropdownMenu()
             }
@@ -394,7 +396,7 @@ Item {
         }
 
         sourceComponent: ClipboardKeyboardHints {
-            wtypeAvailable: modal.wtypeAvailable
+            pasteAvailable: modal.pasteAvailable
             enterToPaste: SettingsData.clipboardEnterToPaste
         }
     }

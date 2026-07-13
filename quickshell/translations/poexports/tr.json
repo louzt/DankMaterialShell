@@ -8,6 +8,9 @@
   "%1 Sessions": {
     "%1 Sessions": ""
   },
+  "%1 Startup Failed": {
+    "%1 Startup Failed": ""
+  },
   "%1 active session": {
     "%1 active session": ""
   },
@@ -46,9 +49,6 @@
   },
   "%1 displays": {
     "%1 displays": ""
-  },
-  "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": {
-    "%1 exists but is not included in config. Custom keybinds will not work until this is fixed.": ""
   },
   "%1 exists but is not included. Window rules won't apply.": {
     "%1 exists but is not included. Window rules won't apply.": ""
@@ -139,9 +139,6 @@
   },
   "1 day before": {
     "1 day before": ""
-  },
-  "1 device connected": {
-    "1 device connected": ""
   },
   "1 hour": {
     "1 hour": ""
@@ -398,9 +395,6 @@
   "Active Color": {
     "Active Color": ""
   },
-  "Active Lock Screen Monitor": {
-    "Active Lock Screen Monitor": "Aktif Kilit Ekranı Monitörü"
-  },
   "Active VPN": {
     "Active VPN": ""
   },
@@ -503,6 +497,9 @@
   "Adjusts contrast of generated colors (-100 = minimum, 0 = standard, 100 = maximum)": {
     "Adjusts contrast of generated colors (-100 = minimum, 0 = standard, 100 = maximum)": ""
   },
+  "Administrator access is required. Use the Sync button in Settings → Greeter to apply.": {
+    "Administrator access is required. Use the Sync button in Settings → Greeter to apply.": ""
+  },
   "Administrator group:": {
     "Administrator group:": ""
   },
@@ -514,9 +511,6 @@
   },
   "All": {
     "All": "Tümü"
-  },
-  "All Monitors": {
-    "All Monitors": "Tüm Monitörler"
   },
   "All checks passed": {
     "All checks passed": ""
@@ -563,6 +557,9 @@
   "Always Show Percentage": {
     "Always Show Percentage": "Yüzdeyi Her Zaman Göster"
   },
+  "Always blur against the wallpaper, even with Xray off": {
+    "Always blur against the wallpaper, even with Xray off": ""
+  },
   "Always hide the dock and reveal it when hovering near the dock area": {
     "Always hide the dock and reveal it when hovering near the dock area": ""
   },
@@ -583,6 +580,9 @@
   },
   "Amount": {
     "Amount": "Miktar"
+  },
+  "An xray rule at %1 may conflict with the Xray settings below": {
+    "An xray rule at %1 may conflict with the Xray settings below": ""
   },
   "Analog": {
     "Analog": "Analog"
@@ -640,6 +640,9 @@
   },
   "App Theming": {
     "App Theming": ""
+  },
+  "App name or identity (e.g., firefox)": {
+    "App name or identity (e.g., firefox)": ""
   },
   "Appearance": {
     "Appearance": ""
@@ -833,6 +836,15 @@
   "Auto Power Saver": {
     "Auto Power Saver": ""
   },
+  "Auto matches bar spacing; Off leaves gaps to your Hyprland config": {
+    "Auto matches bar spacing; Off leaves gaps to your Hyprland config": ""
+  },
+  "Auto matches bar spacing; Off leaves gaps to your MangoWC config": {
+    "Auto matches bar spacing; Off leaves gaps to your MangoWC config": ""
+  },
+  "Auto matches bar spacing; Off leaves gaps to your niri config": {
+    "Auto matches bar spacing; Off leaves gaps to your niri config": ""
+  },
   "Auto mode is on. Manual profile selection is disabled.": {
     "Auto mode is on. Manual profile selection is disabled.": ""
   },
@@ -860,6 +872,9 @@
   "Auto-login": {
     "Auto-login": ""
   },
+  "Auto-login change needs a sync": {
+    "Auto-login change needs a sync": ""
+  },
   "Auto-login disabled": {
     "Auto-login disabled": ""
   },
@@ -871,9 +886,6 @@
   },
   "Auto-save to disk": {
     "Auto-save to disk": ""
-  },
-  "Auto-saving...": {
-    "Auto-saving...": "Otomatik kaydetme..."
   },
   "Autoconnect": {
     "Autoconnect": "Otomatik Bağlan"
@@ -953,6 +965,9 @@
   "Available Screens (%1)": {
     "Available Screens (%1)": "Kullanılabilir Ekranlar (%1)"
   },
+  "Available Updates (%1)": {
+    "Available Updates (%1)": ""
+  },
   "Available in Detailed and Forecast view modes": {
     "Available in Detailed and Forecast view modes": ""
   },
@@ -1028,9 +1043,6 @@
   "Bar Spacing": {
     "Bar Spacing": ""
   },
-  "Bar Transparency": {
-    "Bar Transparency": "Bar Opaklığı"
-  },
   "Bar corners and background": {
     "Bar corners and background": ""
   },
@@ -1052,6 +1064,9 @@
   "Battery %1": {
     "Battery %1": ""
   },
+  "Battery Alerts": {
+    "Battery Alerts": ""
+  },
   "Battery Charge Limit": {
     "Battery Charge Limit": "Batarya Şarj Sınırı"
   },
@@ -1060,6 +1075,9 @@
   },
   "Battery Power": {
     "Battery Power": ""
+  },
+  "Battery Protection": {
+    "Battery Protection": ""
   },
   "Battery Protection & Charging": {
     "Battery Protection & Charging": ""
@@ -1096,9 +1114,6 @@
   },
   "Bind the spotlight-bar IPC action in your compositor config.": {
     "Bind the spotlight-bar IPC action in your compositor config.": ""
-  },
-  "Binds Include Missing": {
-    "Binds Include Missing": "Bağlantı dahili yok"
   },
   "Binds include added": {
     "Binds include added": "Bağlantı dahili eklendi"
@@ -1160,6 +1175,9 @@
   "Blur wallpaper when niri overview is open": {
     "Blur wallpaper when niri overview is open": "Niri genel görünümü açıkken duvar kağıdını bulanıklaştır"
   },
+  "Blurred surfaces show the wallpaper instead of the content beneath": {
+    "Blurred surfaces show the wallpaper instead of the content beneath": ""
+  },
   "Body": {
     "Body": ""
   },
@@ -1195,6 +1213,9 @@
   },
   "Border color around blurred surfaces": {
     "Border color around blurred surfaces": ""
+  },
+  "Border color around popouts, modals, and other shell surfaces": {
+    "Border color around popouts, modals, and other shell surfaces": ""
   },
   "Border w/ Bg": {
     "Border w/ Bg": ""
@@ -1244,11 +1265,17 @@
   "Browse Themes": {
     "Browse Themes": "Temalara Göz At"
   },
+  "Browse and set wallpapers": {
+    "Browse and set wallpapers": ""
+  },
   "Browse or search plugins": {
     "Browse or search plugins": ""
   },
   "Button Color": {
     "Button Color": ""
+  },
+  "By %1": {
+    "By %1": ""
   },
   "CPU": {
     "CPU": "CPU"
@@ -1358,9 +1385,6 @@
   "Change Volume": {
     "Change Volume": ""
   },
-  "Change bar appearance": {
-    "Change bar appearance": "Bar görünümünü değiştir"
-  },
   "Change the locale used by the DMS interface.": {
     "Change the locale used by the DMS interface.": ""
   },
@@ -1442,6 +1466,15 @@
   "Choose how to be notified about battery alerts.": {
     "Choose how to be notified about battery alerts.": ""
   },
+  "Choose how to be notified about critical battery alerts.": {
+    "Choose how to be notified about critical battery alerts.": ""
+  },
+  "Choose how to be notified about low battery alerts.": {
+    "Choose how to be notified about low battery alerts.": ""
+  },
+  "Choose how to be notified when charge limit is reached.": {
+    "Choose how to be notified when charge limit is reached.": ""
+  },
   "Choose icon": {
     "Choose icon": "Simge seçin"
   },
@@ -1460,6 +1493,9 @@
   "Choose the logo displayed on the launcher button in DankBar": {
     "Choose the logo displayed on the launcher button in DankBar": "DankBar'daki başlatıcı düğmesinde görüntülenen logoyu seçin"
   },
+  "Choose wallpaper folder": {
+    "Choose wallpaper folder": ""
+  },
   "Choose where notification popups appear on screen": {
     "Choose where notification popups appear on screen": "Bildirim açılır pencerelerinin ekranda nerede görüneceğini seçin"
   },
@@ -1475,8 +1511,8 @@
   "Choose which displays show this widget": {
     "Choose which displays show this widget": "Bu widget'ı hangi ekranlarda göstereceğinizi seçin"
   },
-  "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
-    "Choose which monitor shows the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": "Hangi monitörün kilit ekranı arayüzünü göstereceğini seçin. Diğer monitörler, OLED yanma koruması için düz bir renk gösterecektir."
+  "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": {
+    "Choose which monitors show the lock screen interface. Other monitors will display a solid color for OLED burn-in protection.": ""
   },
   "Chroma Style": {
     "Chroma Style": ""
@@ -1514,14 +1550,8 @@
   "Clear at Startup": {
     "Clear at Startup": "Başlangıçta Temizle"
   },
-  "Click 'Setup' to create %1 and add include to config.": {
-    "Click 'Setup' to create %1 and add include to config.": ""
-  },
   "Click 'Setup' to create %1 and add include to your compositor config.": {
     "Click 'Setup' to create %1 and add include to your compositor config.": ""
-  },
-  "Click 'Setup' to create cursor config and add include to your compositor config.": {
-    "Click 'Setup' to create cursor config and add include to your compositor config.": ""
   },
   "Click 'Setup' to create the outputs config and add include to your compositor config.": {
     "Click 'Setup' to create the outputs config and add include to your compositor config.": "Çıktı yapılandırmasını oluşturmak ve kompozitör yapılandırmanıza dahil etmek için 'Kur'a tıklayın."
@@ -1580,6 +1610,9 @@
   "Clock Style": {
     "Clock Style": "Saat Stili"
   },
+  "Clock, calendar, system info and profile": {
+    "Clock, calendar, system info and profile": ""
+  },
   "Close": {
     "Close": "Kapat"
   },
@@ -1591,6 +1624,9 @@
   },
   "Close Window": {
     "Close Window": ""
+  },
+  "Codec switching is unavailable because pactl was not found": {
+    "Codec switching is unavailable because pactl was not found": ""
   },
   "Color": {
     "Color": "Renk"
@@ -1621,6 +1657,9 @@
   },
   "Color for primary action buttons": {
     "Color for primary action buttons": ""
+  },
+  "Color shown for areas not covered by wallpaper": {
+    "Color shown for areas not covered by wallpaper": ""
   },
   "Color shown for areas not covered by wallpaper (e.g. Fit or Pad modes)": {
     "Color shown for areas not covered by wallpaper (e.g. Fit or Pad modes)": ""
@@ -1841,9 +1880,6 @@
   "Controls how strongly the selected tint color is applied": {
     "Controls how strongly the selected tint color is applied": ""
   },
-  "Controls opacity of all popouts, modals, and their content layers": {
-    "Controls opacity of all popouts, modals, and their content layers": "Tüm açılır pencerelerin, modal pencerelerin ve bunların içerik katmanlarının opaklığını kontrol eder."
-  },
   "Controls opacity of shell surfaces, popouts, and modals": {
     "Controls opacity of shell surfaces, popouts, and modals": ""
   },
@@ -1865,6 +1901,9 @@
   "Controls outlines around blurred foreground cards, pills, and notification cards": {
     "Controls outlines around blurred foreground cards, pills, and notification cards": ""
   },
+  "Controls outlines around foreground cards, pills, and notification cards": {
+    "Controls outlines around foreground cards, pills, and notification cards": ""
+  },
   "Controls shadow cast direction for elevation layers": {
     "Controls shadow cast direction for elevation layers": ""
   },
@@ -1876,6 +1915,9 @@
   },
   "Controls the outer edge of protocol-blurred windows": {
     "Controls the outer edge of protocol-blurred windows": ""
+  },
+  "Controls the outline of popouts, modals, and other shell surfaces": {
+    "Controls the outline of popouts, modals, and other shell surfaces": ""
   },
   "Controls the transparency of the shadow": {
     "Controls the transparency of the shadow": ""
@@ -1960,6 +2002,9 @@
   },
   "Create Window Rule": {
     "Create Window Rule": ""
+  },
+  "Create a new %1 session (^N)": {
+    "Create a new %1 session (^N)": ""
   },
   "Create a new %1 session (n)": {
     "Create a new %1 session (n)": ""
@@ -2048,12 +2093,6 @@
   "Current: %1": {
     "Current: %1": "Mevcut: %1"
   },
-  "Cursor Config Not Configured": {
-    "Cursor Config Not Configured": ""
-  },
-  "Cursor Include Missing": {
-    "Cursor Include Missing": ""
-  },
   "Cursor Size": {
     "Cursor Size": ""
   },
@@ -2111,9 +2150,6 @@
   "Custom Suspend Command": {
     "Custom Suspend Command": "Özel Askıya Al Komutu"
   },
-  "Custom Transparency": {
-    "Custom Transparency": "Özel Şeffaflık"
-  },
   "Custom command and terminal params are split on whitespace; paths with spaces will break.": {
     "Custom command and terminal params are split on whitespace; paths with spaces will break.": ""
   },
@@ -2137,6 +2173,9 @@
   },
   "Customizable empty space": {
     "Customizable empty space": "Özelleştirilebilir boş alan"
+  },
+  "Customize the font and background of the lock screen, or leave empty to use your theme font and desktop wallpaper. Changes apply instantly.": {
+    "Customize the font and background of the lock screen, or leave empty to use your theme font and desktop wallpaper. Changes apply instantly.": ""
   },
   "Customize which actions appear in the power menu": {
     "Customize which actions appear in the power menu": "Güç menüsünde hangi eylemlerin görüneceğini özelleştirin"
@@ -2194,6 +2233,12 @@
   },
   "Dank Bar": {
     "Dank Bar": "Dank Bar"
+  },
+  "Dank Bar Xray": {
+    "Dank Bar Xray": ""
+  },
+  "Dank Dash": {
+    "Dank Dash": ""
   },
   "DankBar": {
     "DankBar": ""
@@ -2408,6 +2453,9 @@
   "Device unpaired": {
     "Device unpaired": ""
   },
+  "Diff": {
+    "Diff": ""
+  },
   "Digital": {
     "Digital": "Dijital"
   },
@@ -2576,9 +2624,6 @@
   "Dock Opacity": {
     "Dock Opacity": ""
   },
-  "Dock Transparency": {
-    "Dock Transparency": "Dock Şeffaflığı"
-  },
   "Dock Visibility": {
     "Dock Visibility": "Dock Görünürlüğü"
   },
@@ -2612,8 +2657,14 @@
   "Downloads": {
     "Downloads": ""
   },
+  "Drag a widget by its handle here to reorder it or drop it into another group": {
+    "Drag a widget by its handle here to reorder it or drop it into another group": ""
+  },
   "Drag to Reorder": {
     "Drag to Reorder": ""
+  },
+  "Drag to reorder or click to hide tabs. Use ↑/↓ to highlight a tab and Ctrl+↑/↓ to move it.": {
+    "Drag to reorder or click to hide tabs. Use ↑/↓ to highlight a tab and Ctrl+↑/↓ to move it.": ""
   },
   "Drag widgets to reorder within sections. Use the eye icon to hide/show widgets (maintains spacing), or X to remove them completely.": {
     "Drag widgets to reorder within sections. Use the eye icon to hide/show widgets (maintains spacing), or X to remove them completely.": "Widget'ları sürükleyerek bölümler içinde yeniden sıralayın. Göz simgesini kullanarak widget'ları gizleyin/gösterin (aralıkları korur) veya X simgesini kullanarak tamamen kaldırın."
@@ -2629,6 +2680,9 @@
   },
   "Drizzle": {
     "Drizzle": ""
+  },
+  "Drop here": {
+    "Drop here": ""
   },
   "Drop your override for %1 so the DMS default action re-applies?": {
     "Drop your override for %1 so the DMS default action re-applies?": ""
@@ -2660,6 +2714,9 @@
   "Dynamic Theming": {
     "Dynamic Theming": ""
   },
+  "Dynamic Width": {
+    "Dynamic Width": ""
+  },
   "Dynamic colors from wallpaper": {
     "Dynamic colors from wallpaper": "Duvar kağıdından dinamik renkler"
   },
@@ -2671,6 +2728,9 @@
   },
   "Dynamic: Spring bezier with overshoot — entry briefly exceeds its target then settles. Expressive and alive.": {
     "Dynamic: Spring bezier with overshoot — entry briefly exceeds its target then settles. Expressive and alive.": ""
+  },
+  "Edge Hover Reveal": {
+    "Edge Hover Reveal": ""
   },
   "Edge Spacing": {
     "Edge Spacing": "Kenar Aralığı"
@@ -2840,9 +2900,6 @@
   "Enter URI or text to share": {
     "Enter URI or text to share": ""
   },
-  "Enter URL or text to share": {
-    "Enter URL or text to share": ""
-  },
   "Enter a new name for session \"%1": {
     "Enter a new name for session \"%1\"": ""
   },
@@ -2929,6 +2986,9 @@
   },
   "Exact": {
     "Exact": ""
+  },
+  "Excluded Media Players": {
+    "Excluded Media Players": ""
   },
   "Exclusive Zone Offset": {
     "Exclusive Zone Offset": "Özel Bölge Ofseti"
@@ -3215,6 +3275,9 @@
   "Failed to unpin entry": {
     "Failed to unpin entry": ""
   },
+  "Failed to update %1: %2": {
+    "Failed to update %1: %2": ""
+  },
   "Failed to update VPN": {
     "Failed to update VPN": "VPN güncellenemedi"
   },
@@ -3299,6 +3362,9 @@
   "Fill": {
     "Fill": ""
   },
+  "Fill Mode": {
+    "Fill Mode": ""
+  },
   "Filter": {
     "Filter": ""
   },
@@ -3340,12 +3406,6 @@
   },
   "Fit": {
     "Fit": ""
-  },
-  "Fix Now": {
-    "Fix Now": "Şimdi Düzelt"
-  },
-  "Fixing...": {
-    "Fixing...": "Düzeltiliyor..."
   },
   "Flags": {
     "Flags": ""
@@ -3407,6 +3467,9 @@
   "Focused Color": {
     "Focused Color": ""
   },
+  "Focused Display": {
+    "Focused Display": ""
+  },
   "Focused Monitor Only": {
     "Focused Monitor Only": ""
   },
@@ -3449,6 +3512,9 @@
   "Font Weight": {
     "Font Weight": "Yazı Tipi Ağırlığı"
   },
+  "Font used for the clock and date on the lock screen": {
+    "Font used for the clock and date on the lock screen": ""
+  },
   "Font used on the login screen": {
     "Font used on the login screen": ""
   },
@@ -3479,6 +3545,9 @@
   "Force Kill (SIGKILL)": {
     "Force Kill (SIGKILL)": ""
   },
+  "Force Padding": {
+    "Force Padding": ""
+  },
   "Force RGBX": {
     "Force RGBX": ""
   },
@@ -3496,6 +3565,9 @@
   },
   "Forecast Not Available": {
     "Forecast Not Available": "Hava Tahmini Mevcut Değil"
+  },
+  "Forecast and conditions": {
+    "Forecast and conditions": ""
   },
   "Foreground Layers": {
     "Foreground Layers": ""
@@ -3536,6 +3608,9 @@
   "Frame Border Color": {
     "Frame Border Color": ""
   },
+  "Frame Xray": {
+    "Frame Xray": ""
+  },
   "Free VRAM/memory when the launcher is closed. May cause a slight delay when reopening.": {
     "Free VRAM/memory when the launcher is closed. May cause a slight delay when reopening.": ""
   },
@@ -3559,6 +3634,9 @@
   },
   "Full Day & Month": {
     "Full Day & Month": ""
+  },
+  "Full Size": {
+    "Full Size": ""
   },
   "Full command to execute": {
     "Full command to execute": ""
@@ -3610,6 +3688,9 @@
   },
   "Gap between the end widgets and the bar ends (0 = edge-to-edge)": {
     "Gap between the end widgets and the bar ends (0 = edge-to-edge)": ""
+  },
+  "Gaps": {
+    "Gaps": ""
   },
   "Generate Override": {
     "Generate Override": ""
@@ -3700,6 +3781,9 @@
   },
   "Greeter only — format for the date on the login screen": {
     "Greeter only — format for the date on the login screen": ""
+  },
+  "Greeter sync complete": {
+    "Greeter sync complete": ""
   },
   "Grid": {
     "Grid": "Izgara"
@@ -3800,11 +3884,11 @@
   "Hidden Apps": {
     "Hidden Apps": ""
   },
-  "Hidden Network": {
-    "Hidden Network": ""
-  },
   "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": {
     "Hidden apps won't appear in the launcher. Right-click an app and select 'Hide App' to hide it.": ""
+  },
+  "Hidden until weather is enabled": {
+    "Hidden until weather is enabled": ""
   },
   "Hide": {
     "Hide": ""
@@ -3853,6 +3937,12 @@
   },
   "Hide the bar when the pointer leaves even if a popout is still open": {
     "Hide the bar when the pointer leaves even if a popout is still open": ""
+  },
+  "Hide when no updates: OFF": {
+    "Hide when no updates: OFF": ""
+  },
+  "Hide when no updates: ON": {
+    "Hide when no updates: ON": ""
   },
   "High": {
     "High": ""
@@ -3920,6 +4010,9 @@
   "Hourly Forecast Count": {
     "Hourly Forecast Count": ""
   },
+  "Hover Popouts": {
+    "Hover Popouts": ""
+  },
   "How often the server polls for new updates.": {
     "How often the server polls for new updates.": ""
   },
@@ -3928,6 +4021,9 @@
   },
   "How the background image is scaled": {
     "How the background image is scaled": ""
+  },
+  "How the wallpaper is scaled to fit the screen": {
+    "How the wallpaper is scaled to fit the screen": ""
   },
   "Humidity": {
     "Humidity": "Nem"
@@ -3991,6 +4087,9 @@
   },
   "Identical alerts stack as separate notification cards": {
     "Identical alerts stack as separate notification cards": ""
+  },
+  "Identify": {
+    "Identify": ""
   },
   "Idle": {
     "Idle": "Boşta"
@@ -4090,6 +4189,9 @@
   },
   "Initialised": {
     "Initialised": ""
+  },
+  "Inner Gaps": {
+    "Inner Gaps": ""
   },
   "Inner padding applied to each widget": {
     "Inner padding applied to each widget": ""
@@ -4210,6 +4312,12 @@
   },
   "Jobs: ": {
     "Jobs: ": "İşler:"
+  },
+  "Jump to page": {
+    "Jump to page": ""
+  },
+  "Jump to page (1 - %1)": {
+    "Jump to page (1 - %1)": ""
   },
   "Keep Awake": {
     "Keep Awake": "Uyanık Tut"
@@ -4448,6 +4556,9 @@
   "Lock Screen": {
     "Lock Screen": "Kilit Ekranı"
   },
+  "Lock Screen Appearance": {
+    "Lock Screen Appearance": ""
+  },
   "Lock Screen Display": {
     "Lock Screen Display": "Kilit Ekranı Görüntüsü"
   },
@@ -4471,6 +4582,9 @@
   },
   "Lock screen authentication changes apply automatically and may open a terminal when sudo authentication is required.": {
     "Lock screen authentication changes apply automatically and may open a terminal when sudo authentication is required.": ""
+  },
+  "Lock screen font": {
+    "Lock screen font": ""
   },
   "Locked": {
     "Locked": ""
@@ -4612,6 +4726,9 @@
   },
   "Material": {
     "Material": ""
+  },
+  "Material Battery Style": {
+    "Material Battery Style": ""
   },
   "Material Colors": {
     "Material Colors": "Materyal Renkleri"
@@ -5030,6 +5147,9 @@
   "Next Transition": {
     "Next Transition": "Sonraki Geçiş"
   },
+  "Next page": {
+    "Next page": ""
+  },
   "Night": {
     "Night": "Gece"
   },
@@ -5165,14 +5285,14 @@
   "No checks passed": {
     "No checks passed": ""
   },
+  "No codecs found": {
+    "No codecs found": ""
+  },
   "No custom theme file": {
     "No custom theme file": "Özel tema dosyası yok"
   },
   "No devices": {
     "No devices": ""
-  },
-  "No devices connected": {
-    "No devices connected": ""
   },
   "No devices found": {
     "No devices found": "Aygıt bulunamadı"
@@ -5191,6 +5311,9 @@
   },
   "No errors": {
     "No errors": "Sorun yok"
+  },
+  "No excluded players configured": {
+    "No excluded players configured": ""
   },
   "No features enabled": {
     "No features enabled": "Etkinleştirilmiş özellik yok"
@@ -5300,6 +5423,9 @@
   "No saved clipboard entries": {
     "No saved clipboard entries": ""
   },
+  "No screenshot provided": {
+    "No screenshot provided": ""
+  },
   "No session selected": {
     "No session selected": ""
   },
@@ -5323,6 +5449,9 @@
   },
   "No trigger": {
     "No trigger": ""
+  },
+  "No updates available.": {
+    "No updates available.": ""
   },
   "No user specified": {
     "No user specified": ""
@@ -5408,14 +5537,8 @@
   "Not set": {
     "Not set": ""
   },
-  "Note: this only changes the percentage, it does not actually limit charging.": {
-    "Note: this only changes the percentage, it does not actually limit charging.": "Not: Bu sadece yüzdeyi değiştirir, şarjı sınırlamaz."
-  },
   "Notepad": {
     "Notepad": "Not Defteri"
-  },
-  "Notepad Font Settings": {
-    "Notepad Font Settings": "Not Defteri Yazı Tipi Ayarları"
   },
   "Notepad Settings": {
     "Notepad Settings": ""
@@ -5467,6 +5590,9 @@
   },
   "Notify when limit is reached": {
     "Notify when limit is reached": ""
+  },
+  "Now playing and media controls": {
+    "Now playing and media controls": ""
   },
   "Numbers": {
     "Numbers": "Numaralar"
@@ -5555,6 +5681,9 @@
   "Open App": {
     "Open App": ""
   },
+  "Open Delay": {
+    "Open Delay": ""
+  },
   "Open Dir": {
     "Open Dir": ""
   },
@@ -5563,9 +5692,6 @@
   },
   "Open From": {
     "Open From": ""
-  },
-  "Open KDE Connect on your phone": {
-    "Open KDE Connect on your phone": ""
   },
   "Open Notepad File": {
     "Open Notepad File": "Not Defteri Dosyası Aç"
@@ -5597,20 +5723,20 @@
   "Open search bar to find text": {
     "Open search bar to find text": "Metin bulmak için arama çubuğunu aç"
   },
+  "Open the launcher by hovering the emerge edge (when free of bar and dock)": {
+    "Open the launcher by hovering the emerge edge (when free of bar and dock)": ""
+  },
+  "Open widget popouts by hovering over the bar. Moving to another widget switches the popout.": {
+    "Open widget popouts by hovering over the bar. Moving to another widget switches the popout.": ""
+  },
   "Open with...": {
     "Open with...": "... ile aç"
-  },
-  "Opening SMS": {
-    "Opening SMS": ""
   },
   "Opening SMS app": {
     "Opening SMS app": ""
   },
   "Opening file browser": {
     "Opening file browser": ""
-  },
-  "Opening files": {
-    "Opening files": ""
   },
   "Opening terminal to update greetd": {
     "Opening terminal to update greetd": ""
@@ -5648,6 +5774,9 @@
   "Other": {
     "Other": "Diğer"
   },
+  "Outer Gaps": {
+    "Outer Gaps": ""
+  },
   "Outline": {
     "Outline": ""
   },
@@ -5666,14 +5795,14 @@
   "Output Tray Missing": {
     "Output Tray Missing": "Çıktı Tepsisi Yok"
   },
-  "Outputs Include Missing": {
-    "Outputs Include Missing": "Çıkış İçe Aktarımı Eksik"
-  },
   "Overcast": {
     "Overcast": ""
   },
   "Overflow": {
     "Overflow": ""
+  },
+  "Overlay": {
+    "Overlay": ""
   },
   "Overridden by config": {
     "Overridden by config": "Yapılandırma tarafından geçersiz kılınmıştır"
@@ -5686,9 +5815,6 @@
   },
   "Override Corner Radius": {
     "Override Corner Radius": "Köşe Yarıçapını Değiştir"
-  },
-  "Override Gaps": {
-    "Override Gaps": "Boşlukları Değiştir"
   },
   "Override global layout settings for this output": {
     "Override global layout settings for this output": "Bu çıkış için genel düzen ayarlarını geçersiz kıl"
@@ -5810,6 +5936,9 @@
   "Paste": {
     "Paste": ""
   },
+  "Paste failed: %1": {
+    "Paste failed: %1": ""
+  },
   "Path copied to clipboard": {
     "Path copied to clipboard": ""
   },
@@ -5891,9 +6020,6 @@
   "Ping": {
     "Ping": ""
   },
-  "Ping sent": {
-    "Ping sent": ""
-  },
   "Ping sent to": {
     "Ping sent to": ""
   },
@@ -5974,6 +6100,9 @@
   },
   "Plugin Visibility": {
     "Plugin Visibility": ""
+  },
+  "Plugin dependency missing": {
+    "Plugin dependency missing": ""
   },
   "Plugin disabled: %1": {
     "Plugin disabled: %1": ""
@@ -6071,6 +6200,9 @@
   "Power Profile Degradation": {
     "Power Profile Degradation": "Güç Profili Dejenerasyonu"
   },
+  "Power Profiles & Saving": {
+    "Power Profiles & Saving": ""
+  },
   "Power Profiles Auto-Switching": {
     "Power Profiles Auto-Switching": ""
   },
@@ -6116,6 +6248,9 @@
   "Press 'n' or click 'New Session' to create one": {
     "Press 'n' or click 'New Session' to create one": ""
   },
+  "Press Ctrl+N or click 'New Session' to create one": {
+    "Press Ctrl+N or click 'New Session' to create one": ""
+  },
   "Press Enter and the audio system will restart to apply the change": {
     "Press Enter and the audio system will restart to apply the change": ""
   },
@@ -6131,6 +6266,9 @@
   "Prevent screen timeout": {
     "Prevent screen timeout": "Ekran zaman aşımını önle"
   },
+  "Prevent specific applications from displaying in the media controllers (e.g., browser audio streams, background tools). Matches player identity or desktop file name case-insensitively.": {
+    "Prevent specific applications from displaying in the media controllers (e.g., browser audio streams, background tools). Matches player identity or desktop file name case-insensitively.": ""
+  },
   "Preview": {
     "Preview": ""
   },
@@ -6139,6 +6277,9 @@
   },
   "Previous": {
     "Previous": ""
+  },
+  "Previous page": {
+    "Previous page": ""
   },
   "Primary": {
     "Primary": "Birincil"
@@ -6356,6 +6497,9 @@
   "Reject Jobs": {
     "Reject Jobs": "İşleri Reddet"
   },
+  "Related: %1": {
+    "Related: %1": ""
+  },
   "Release": {
     "Release": ""
   },
@@ -6446,6 +6590,9 @@
   "Rename Workspace": {
     "Rename Workspace": ""
   },
+  "Reorder & Group": {
+    "Reorder & Group": ""
+  },
   "Repeat": {
     "Repeat": ""
   },
@@ -6481,6 +6628,9 @@
   },
   "Requires a newer version of Quickshell": {
     "Requires a newer version of Quickshell": ""
+  },
+  "Requires greetd, dms-greeter, and your user in the greeter group (plus fprintd/pam_fprintd for fingerprint, pam_u2f for security keys). Auth changes apply automatically and may open a terminal for sudo.": {
+    "Requires greetd, dms-greeter, and your user in the greeter group (plus fprintd/pam_fprintd for fingerprint, pam_u2f for security keys). Auth changes apply automatically and may open a terminal for sudo.": ""
   },
   "Requires night mode support": {
     "Requires night mode support": "Gece modu desteği gerektirir"
@@ -6734,6 +6884,9 @@
   "Screen sharing": {
     "Screen sharing": "Ekran paylaşımı"
   },
+  "Screenshot unavailable": {
+    "Screenshot unavailable": ""
+  },
   "Scroll": {
     "Scroll": ""
   },
@@ -6893,6 +7046,9 @@
   "Select at least one provider": {
     "Select at least one provider": ""
   },
+  "Select background image": {
+    "Select background image": ""
+  },
   "Select device": {
     "Select device": ""
   },
@@ -6907,6 +7063,9 @@
   },
   "Select greeter background image": {
     "Select greeter background image": ""
+  },
+  "Select lock screen background image": {
+    "Select lock screen background image": ""
   },
   "Select monitor to configure wallpaper": {
     "Select monitor to configure wallpaper": "Duvar kağıdını ayarlamak için monitör seçin"
@@ -6959,8 +7118,14 @@
   "Separate": {
     "Separate": ""
   },
+  "Separate Appearance for Unfocused Display(s)": {
+    "Separate Appearance for Unfocused Display(s)": ""
+  },
   "Separate Light & Dark Themes": {
     "Separate Light & Dark Themes": ""
+  },
+  "Separate appearance for unfocused displays is not supported on this compositor.": {
+    "Separate appearance for unfocused displays is not supported on this compositor.": ""
   },
   "Separator": {
     "Separator": "Ayraç"
@@ -7010,6 +7175,9 @@
   "Setting": {
     "Setting": ""
   },
+  "Setting up...": {
+    "Setting up...": ""
+  },
   "Settings": {
     "Settings": "Ayarlar"
   },
@@ -7058,9 +7226,6 @@
   "Share Text": {
     "Share Text": ""
   },
-  "Share URL": {
-    "Share URL": ""
-  },
   "Shared": {
     "Shared": ""
   },
@@ -7078,6 +7243,9 @@
   },
   "Shortcut (%1)": {
     "Shortcut (%1)": ""
+  },
+  "Shortcut that opens this settings window": {
+    "Shortcut that opens this settings window": ""
   },
   "Shortcuts": {
     "Shortcuts": "Kısayollar"
@@ -7316,6 +7484,9 @@
   "Show foreground surfaces on blurred panels for stronger contrast": {
     "Show foreground surfaces on blurred panels for stronger contrast": ""
   },
+  "Show foreground surfaces on panels for stronger contrast": {
+    "Show foreground surfaces on panels for stronger contrast": ""
+  },
   "Show in GB": {
     "Show in GB": ""
   },
@@ -7472,9 +7643,6 @@
   "Smartcard Authentication": {
     "Smartcard Authentication": ""
   },
-  "Smartcard PIN": {
-    "Smartcard PIN": ""
-  },
   "Snap": {
     "Snap": ""
   },
@@ -7489,6 +7657,9 @@
   },
   "Sort By": {
     "Sort By": "Şuna Göre Sırala"
+  },
+  "Sort wallpapers": {
+    "Sort wallpapers": ""
   },
   "Sorting & Layout": {
     "Sorting & Layout": "Sıralama & Düzen"
@@ -7507,6 +7678,9 @@
   },
   "Space between windows": {
     "Space between windows": "Pencereler arası boşluk"
+  },
+  "Space between windows and screen edges": {
+    "Space between windows and screen edges": ""
   },
   "Spacer": {
     "Spacer": "Boşluklandırıcı"
@@ -7616,6 +7790,12 @@
   "Surface Behavior": {
     "Surface Behavior": ""
   },
+  "Surface Border Color": {
+    "Surface Border Color": ""
+  },
+  "Surface Border Opacity": {
+    "Surface Border Opacity": ""
+  },
   "Surface Container": {
     "Surface Container": ""
   },
@@ -7679,6 +7859,9 @@
   "Sync Position Across Screens": {
     "Sync Position Across Screens": ""
   },
+  "Sync applies your theme and settings to the login screen. Other users should run dms greeter sync --profile instead of a full sync. Authentication changes apply automatically.": {
+    "Sync applies your theme and settings to the login screen. Other users should run dms greeter sync --profile instead of a full sync. Authentication changes apply automatically.": ""
+  },
   "Sync completed successfully.": {
     "Sync completed successfully.": ""
   },
@@ -7690,6 +7873,12 @@
   },
   "Sync needs sudo authentication. Opening terminal so you can use password or fingerprint.": {
     "Sync needs sudo authentication. Opening terminal so you can use password or fingerprint.": ""
+  },
+  "Sync to apply": {
+    "Sync to apply": ""
+  },
+  "Syncing...": {
+    "Syncing...": ""
   },
   "System": {
     "System": "Sistem"
@@ -7829,6 +8018,9 @@
   "Text Rendering": {
     "Text Rendering": ""
   },
+  "The 'boregard' tool is not installed or not on your PATH.\n\nInstall it from https://danklinux.com, then re-enable this plugin.": {
+    "The 'boregard' tool is not installed or not on your PATH.\n\nInstall it from https://danklinux.com, then re-enable this plugin.": ""
+  },
   "The 'dgop' tool is required for system monitoring.\nPlease install dgop to use this feature.": {
     "The 'dgop' tool is required for system monitoring.\nPlease install dgop to use this feature.": ""
   },
@@ -7895,6 +8087,9 @@
   "This install is still using hyprland.conf. Run dms setup to migrate before editing display settings.": {
     "This install is still using hyprland.conf. Run dms setup to migrate before editing display settings.": ""
   },
+  "This install is still using hyprland.conf. Run dms setup to migrate before editing layout settings.": {
+    "This install is still using hyprland.conf. Run dms setup to migrate before editing layout settings.": ""
+  },
   "This install is still using hyprland.conf. Run dms setup to migrate before editing shortcuts in Settings.": {
     "This install is still using hyprland.conf. Run dms setup to migrate before editing shortcuts in Settings.": ""
   },
@@ -7934,8 +8129,14 @@
   "Tile H": {
     "Tile H": ""
   },
+  "Tile Horizontally": {
+    "Tile Horizontally": ""
+  },
   "Tile V": {
     "Tile V": ""
+  },
+  "Tile Vertically": {
+    "Tile Vertically": ""
   },
   "Tiled": {
     "Tiled": ""
@@ -7960,6 +8161,9 @@
   },
   "Time remaining: %1": {
     "Time remaining: %1": "Kalan zaman: %1"
+  },
+  "Time to rest on a widget before its popout opens": {
+    "Time to rest on a widget before its popout opens": ""
   },
   "Time to wait before hiding after the pointer leaves": {
     "Time to wait before hiding after the pointer leaves": ""
@@ -8189,6 +8393,9 @@
   "Unfocused Color": {
     "Unfocused Color": ""
   },
+  "Unfocused Display(s)": {
+    "Unfocused Display(s)": ""
+  },
   "Ungrouped": {
     "Ungrouped": ""
   },
@@ -8234,6 +8441,9 @@
   "Unknown GPU": {
     "Unknown GPU": ""
   },
+  "Unknown Model": {
+    "Unknown Model": ""
+  },
   "Unknown Monitor": {
     "Unknown Monitor": "Bilinmeyen Monitör"
   },
@@ -8276,9 +8486,6 @@
   "Unsaved changes": {
     "Unsaved changes": "Kaydedilmemiş değişiklikler"
   },
-  "Unsaved note...": {
-    "Unsaved note...": "Kaydedilmemiş not..."
-  },
   "Unset": {
     "Unset": ""
   },
@@ -8314,6 +8521,12 @@
   },
   "Update failed: %1": {
     "Update failed: %1": ""
+  },
+  "Updating %1...": {
+    "Updating %1...": ""
+  },
+  "Updating plugins...": {
+    "Updating plugins...": ""
   },
   "Upgrading...": {
     "Upgrading...": ""
@@ -8366,6 +8579,9 @@
   "Use System Theme": {
     "Use System Theme": "Sistem Temasını Kullan"
   },
+  "Use a custom image for the lock screen, or leave empty to use your desktop wallpaper.": {
+    "Use a custom image for the lock screen, or leave empty to use your desktop wallpaper.": ""
+  },
   "Use a custom image for the login screen, or leave empty to use your desktop wallpaper.": {
     "Use a custom image for the login screen, or leave empty to use your desktop wallpaper.": ""
   },
@@ -8390,9 +8606,6 @@
   "Use custom border/focus-ring width": {
     "Use custom border/focus-ring width": ""
   },
-  "Use custom gaps instead of bar spacing": {
-    "Use custom gaps instead of bar spacing": "Bar aralığı yerine özel boşluklar kullanın"
-  },
   "Use custom window radius instead of theme radius": {
     "Use custom window radius instead of theme radius": "Tema yarıçapı yerine özel pencere yarıçapı kullanın"
   },
@@ -8401,6 +8614,9 @@
   },
   "Use different icon themes for light and dark mode": {
     "Use different icon themes for light and dark mode": ""
+  },
+  "Use different workspace colors on displays that are not focused": {
+    "Use different workspace colors on displays that are not focused": ""
   },
   "Use fingerprint authentication for the lock screen.": {
     "Use fingerprint authentication for the lock screen.": ""
@@ -8509,9 +8725,6 @@
   },
   "VPN Connections": {
     "VPN Connections": "VPN Bağlantıları"
-  },
-  "VPN Password": {
-    "VPN Password": "VPN Parolası"
   },
   "VPN configuration updated": {
     "VPN configuration updated": "VPN ayarı güncellendi"
@@ -8681,9 +8894,6 @@
   "White": {
     "White": ""
   },
-  "Wi-Fi Password": {
-    "Wi-Fi Password": "Wi-Fi Parolası"
-  },
   "Wi-Fi and Ethernet connection": {
     "Wi-Fi and Ethernet connection": "Wi-Fi ve Ethernet bağlantısı"
   },
@@ -8726,17 +8936,11 @@
   "Widget Outline": {
     "Widget Outline": "Widget Çerçevesi"
   },
-  "Widget Style": {
-    "Widget Style": "Widget Stili"
-  },
   "Widget Styling": {
     "Widget Styling": "Widget Stili"
   },
   "Widget Text Style": {
     "Widget Text Style": ""
-  },
-  "Widget Transparency": {
-    "Widget Transparency": "Widget Opaklığı"
   },
   "Widget added": {
     "Widget added": "Widget eklendi"
@@ -8852,8 +9056,14 @@
   "XWayland": {
     "XWayland": ""
   },
+  "Xray Blur Effect": {
+    "Xray Blur Effect": ""
+  },
   "Xray blurs only the wallpaper (efficient) and is the default when Blur is on. Set Xray to Off for regular full blur of everything beneath the window (more expensive).": {
     "Xray blurs only the wallpaper (efficient) and is the default when Blur is on. Set Xray to Off for regular full blur of everything beneath the window (more expensive).": ""
+  },
+  "Xray options are in Compositor → Layout": {
+    "Xray options are in Compositor → Layout": ""
   },
   "Y": {
     "Y": ""
@@ -8906,6 +9116,9 @@
   "attached": {
     "attached": ""
   },
+  "boregard is required": {
+    "boregard is required": ""
+  },
   "brandon": {
     "brandon": ""
   },
@@ -8941,12 +9154,6 @@
   },
   "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": {
     "dms is a highly customizable, modern desktop shell with a <a href=\"https://m3.material.io/\" style=\"text-decoration:none; color:%1;\">material 3 inspired</a> design.<br /><br/>It is built with <a href=\"https://quickshell.org\" style=\"text-decoration:none; color:%1;\">Quickshell</a>, a QT6 framework for building desktop shells, and <a href=\"https://go.dev\" style=\"text-decoration:none; color:%1;\">Go</a>, a statically typed, compiled programming language.": ""
-  },
-  "dms/cursor config exists but is not included. Cursor settings won't apply.": {
-    "dms/cursor config exists but is not included. Cursor settings won't apply.": ""
-  },
-  "dms/outputs config exists but is not included in your compositor config. Display changes won't persist.": {
-    "dms/outputs config exists but is not included in your compositor config. Display changes won't persist.": "dms/outputs yapılandırması mevcut ancak kompozitör yapılandırmanıza dahil edilmemiş. Ekran değişiklikleri kalıcı olmayacaktır."
   },
   "e.g. /usr/bin/my-script --flag": {
     "e.g. /usr/bin/my-script --flag": ""
@@ -9086,6 +9293,9 @@
   "remote": {
     "remote": ""
   },
+  "reviewed": {
+    "reviewed": ""
+  },
   "seconds": {
     "seconds": "saniye"
   },
@@ -9094,6 +9304,9 @@
   },
   "source": {
     "source": "kaynak"
+  },
+  "the Qt 6 Multimedia QML module": {
+    "the Qt 6 Multimedia QML module": ""
   },
   "this app": {
     "this app": ""
@@ -9124,9 +9337,6 @@
   },
   "verified": {
     "verified": ""
-  },
-  "wtype not available - install wtype for paste support": {
-    "wtype not available - install wtype for paste support": "wtype mevcut değil - yapıştırma desteği için wtype'ı yükleyin"
   },
   "• Install only from trusted sources": {
     "• Install only from trusted sources": "• Yalnızca güvenilir kaynaklardan yükle"

@@ -4,6 +4,7 @@ import qs.Common
 import qs.Services
 import qs.Widgets
 import Quickshell.Services.Mpris
+import Quickshell.Widgets
 
 DankOSD {
     id: root
@@ -185,10 +186,11 @@ DankOSD {
                     visible: false
                 }
 
-                Item {
-                    id: blurredBg
+                ClippingRectangle {
                     anchors.fill: parent
-                    visible: false
+                    radius: Theme.cornerRadius
+                    color: "transparent"
+                    opacity: 0.7
 
                     MultiEffect {
                         anchors.centerIn: parent
@@ -201,24 +203,6 @@ DankOSD {
                         saturation: -0.2
                         brightness: -0.25
                     }
-                }
-
-                Rectangle {
-                    id: bgMask
-                    anchors.fill: parent
-                    radius: Theme.cornerRadius
-                    visible: false
-                    layer.enabled: true
-                }
-
-                MultiEffect {
-                    anchors.fill: parent
-                    source: blurredBg
-                    maskEnabled: true
-                    maskSource: bgMask
-                    maskThresholdMin: 0.5
-                    maskSpreadAtMin: 1.0
-                    opacity: 0.7
                 }
 
                 Rectangle {
@@ -261,7 +245,7 @@ DankOSD {
                 x: parent.gap * 2 + Theme.iconSize
                 width: parent.width - Theme.iconSize - parent.gap * 3
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 3
+                spacing: Theme.spacingXXS
 
                 StyledText {
                     id: topText

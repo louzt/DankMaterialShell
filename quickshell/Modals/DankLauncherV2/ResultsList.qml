@@ -11,9 +11,12 @@ Item {
 
     property var controller: null
     property int gridColumns: controller?.gridColumns ?? 4
+    property bool leadingSectionHeaderAtBottom: false
     property var _visualRows: []
     property var _flatIndexToRowMap: ({})
     property var _cumulativeHeights: []
+    property var transientSurfaceTracker: null
+    readonly property bool _bottomSectionHeaderActive: leadingSectionHeaderAtBottom && (controller?.sections?.length ?? 0) > 0
 
     signal itemRightClicked(int index, var item, real mouseX, real mouseY)
 
@@ -28,15 +31,17 @@ Item {
             var section = sections[s];
             var sectionId = section.id;
 
-            cumHeights.push(cumY);
-            rows.push({
-                _rowId: "h_" + sectionId,
-                type: "header",
-                section: section,
-                sectionId: sectionId,
-                height: 32
-            });
-            cumY += 32;
+            if (!root._bottomSectionHeaderActive || s > 0) {
+                cumHeights.push(cumY);
+                rows.push({
+                    _rowId: "h_" + sectionId,
+                    type: "header",
+                    section: section,
+                    sectionId: sectionId,
+                    height: 32
+                });
+                cumY += 32;
+            }
 
             if (section.collapsed)
                 continue;
@@ -103,6 +108,7 @@ Item {
 
     onGridColumnsChanged: Qt.callLater(_rebuildVisualModel)
     onWidthChanged: Qt.callLater(_rebuildVisualModel)
+    onLeadingSectionHeaderAtBottomChanged: Qt.callLater(_rebuildVisualModel)
 
     Connections {
         target: root.controller
@@ -117,10 +123,25 @@ Item {
             root._cumulativeHeights = [];
             root._flatIndexToRowMap = {};
         }
+        function onSectionExpanded(sectionId) {
+            Qt.callLater(() => {
+                root._rebuildVisualModel();
+                Qt.callLater(() => root.revealExpandedSection(sectionId));
+            });
+        }
     }
 
     function resetScroll() {
         mainListView.contentY = mainListView.originY;
+    }
+
+    function revealExpandedSection(sectionId) {
+        for (var i = 0; i < _visualRows.length; i++) {
+            if (_visualRows[i].sectionId === sectionId) {
+                mainListView.positionViewAtIndex(i, ListView.Beginning);
+                return;
+            }
+        }
     }
 
     function ensureVisible(index) {
@@ -194,6 +215,7 @@ Item {
         id: listClip
         anchors.fill: parent
         anchors.topMargin: BlurService.enabled && stickyHeader.visible ? 32 : 0
+        anchors.bottomMargin: bottomSectionHeader.visible ? bottomSectionHeader.height : 0
         clip: true
 
         DankListView {
@@ -219,105 +241,123 @@ Item {
                 required property var modelData
                 required property int index
 
+                readonly property string rowType: modelData?.type ?? ""
+
                 width: mainListView.width
                 height: modelData?.height ?? 52
 
-                SectionHeader {
+                Loader {
                     anchors.fill: parent
-                    visible: delegateRoot.modelData?.type === "header"
-                    section: delegateRoot.modelData?.section ?? null
-                    controller: root.controller
-                    viewMode: {
-                        var vt = root.controller?.viewModeVersion ?? 0;
-                        void (vt);
-                        return root.controller?.getSectionViewMode(delegateRoot.modelData?.sectionId ?? "") ?? "list";
+                    active: delegateRoot.rowType === "header"
+                    visible: active
+                    sourceComponent: SectionHeader {
+                        section: delegateRoot.modelData?.section ?? null
+                        controller: root.controller
+                        viewMode: {
+                            var vt = root.controller?.viewModeVersion ?? 0;
+                            void (vt);
+                            return root.controller?.getSectionViewMode(delegateRoot.modelData?.sectionId ?? "") ?? "list";
+                        }
+                        canChangeViewMode: {
+                            var vt = root.controller?.viewModeVersion ?? 0;
+                            void (vt);
+                            return root.controller?.canChangeSectionViewMode(delegateRoot.modelData?.sectionId ?? "") ?? false;
+                        }
+                        canCollapse: root.controller?.canCollapseSection(delegateRoot.modelData?.sectionId ?? "") ?? false
+                        transientSurfaceTracker: root.transientSurfaceTracker
                     }
-                    canChangeViewMode: {
-                        var vt = root.controller?.viewModeVersion ?? 0;
-                        void (vt);
-                        return root.controller?.canChangeSectionViewMode(delegateRoot.modelData?.sectionId ?? "") ?? false;
-                    }
-                    canCollapse: root.controller?.canCollapseSection(delegateRoot.modelData?.sectionId ?? "") ?? false
                 }
 
-                ResultItem {
+                Loader {
                     anchors.fill: parent
                     anchors.topMargin: 2
                     anchors.bottomMargin: 2
-                    visible: delegateRoot.modelData?.type === "list_item"
-                    item: delegateRoot.modelData?.type === "list_item" ? (delegateRoot.modelData?.item ?? null) : null
-                    isSelected: delegateRoot.modelData?.type === "list_item" && (delegateRoot.modelData?.flatIndex ?? -1) === root.controller?.selectedFlatIndex
-                    controller: root.controller
-                    flatIndex: delegateRoot.modelData?.type === "list_item" ? (delegateRoot.modelData?.flatIndex ?? -1) : -1
+                    active: delegateRoot.rowType === "list_item"
+                    visible: active
+                    sourceComponent: ResultItem {
+                        item: delegateRoot.modelData?.item ?? null
+                        isSelected: (delegateRoot.modelData?.flatIndex ?? -1) === root.controller?.selectedFlatIndex
+                        controller: root.controller
+                        flatIndex: delegateRoot.modelData?.flatIndex ?? -1
 
-                    onClicked: {
-                        if (root.controller && delegateRoot.modelData?.item) {
-                            root.controller.executeItem(delegateRoot.modelData.item);
+                        onClicked: {
+                            if (root.controller && delegateRoot.modelData?.item) {
+                                root.controller.executeItem(delegateRoot.modelData.item);
+                            }
                         }
-                    }
 
-                    onRightClicked: (mouseX, mouseY) => {
-                        root.itemRightClicked(delegateRoot.modelData?.flatIndex ?? -1, delegateRoot.modelData?.item ?? null, mouseX, mouseY);
+                        onRightClicked: (mouseX, mouseY) => {
+                            root.itemRightClicked(delegateRoot.modelData?.flatIndex ?? -1, delegateRoot.modelData?.item ?? null, mouseX, mouseY);
+                        }
                     }
                 }
 
-                Row {
-                    id: gridRowContent
+                Loader {
                     anchors.fill: parent
-                    visible: delegateRoot.modelData?.type === "grid_row"
+                    active: delegateRoot.rowType === "grid_row"
+                    visible: active
+                    sourceComponent: Row {
+                        Repeater {
+                            model: delegateRoot.modelData?.items ?? []
 
-                    Repeater {
-                        model: delegateRoot.modelData?.type === "grid_row" ? (delegateRoot.modelData?.items ?? []) : []
+                            Item {
+                                id: gridCellDelegate
+                                required property var modelData
+                                required property int index
 
-                        Item {
-                            id: gridCellDelegate
-                            required property var modelData
-                            required property int index
+                                readonly property bool isTile: delegateRoot.modelData?.viewMode === "tile"
+                                readonly property real cellWidth: isTile ? Math.floor(delegateRoot.width / 3) : Math.floor(delegateRoot.width / (delegateRoot.modelData?.cols ?? root.gridColumns))
 
-                            readonly property real cellWidth: delegateRoot.modelData?.viewMode === "tile" ? Math.floor(delegateRoot.width / 3) : Math.floor(delegateRoot.width / (delegateRoot.modelData?.cols ?? root.gridColumns))
+                                width: cellWidth
+                                height: delegateRoot.height
 
-                            width: cellWidth
-                            height: delegateRoot.height
+                                Loader {
+                                    width: parent.width - 4
+                                    height: parent.height - 4
+                                    anchors.centerIn: parent
+                                    sourceComponent: gridCellDelegate.isTile ? tileCellComponent : gridCellComponent
 
-                            GridItem {
-                                width: parent.width - 4
-                                height: parent.height - 4
-                                anchors.centerIn: parent
-                                visible: delegateRoot.modelData?.viewMode === "grid"
-                                item: gridCellDelegate.modelData?.item ?? null
-                                isSelected: (gridCellDelegate.modelData?.flatIndex ?? -1) === root.controller?.selectedFlatIndex
-                                controller: root.controller
-                                flatIndex: gridCellDelegate.modelData?.flatIndex ?? -1
+                                    Component {
+                                        id: gridCellComponent
 
-                                onClicked: {
-                                    if (root.controller && gridCellDelegate.modelData?.item) {
-                                        root.controller.executeItem(gridCellDelegate.modelData.item);
+                                        GridItem {
+                                            item: gridCellDelegate.modelData?.item ?? null
+                                            isSelected: (gridCellDelegate.modelData?.flatIndex ?? -1) === root.controller?.selectedFlatIndex
+                                            controller: root.controller
+                                            flatIndex: gridCellDelegate.modelData?.flatIndex ?? -1
+
+                                            onClicked: {
+                                                if (root.controller && gridCellDelegate.modelData?.item) {
+                                                    root.controller.executeItem(gridCellDelegate.modelData.item);
+                                                }
+                                            }
+
+                                            onRightClicked: (mouseX, mouseY) => {
+                                                root.itemRightClicked(gridCellDelegate.modelData?.flatIndex ?? -1, gridCellDelegate.modelData?.item ?? null, mouseX, mouseY);
+                                            }
+                                        }
                                     }
-                                }
 
-                                onRightClicked: (mouseX, mouseY) => {
-                                    root.itemRightClicked(gridCellDelegate.modelData?.flatIndex ?? -1, gridCellDelegate.modelData?.item ?? null, mouseX, mouseY);
-                                }
-                            }
+                                    Component {
+                                        id: tileCellComponent
 
-                            TileItem {
-                                width: parent.width - 4
-                                height: parent.height - 4
-                                anchors.centerIn: parent
-                                visible: delegateRoot.modelData?.viewMode === "tile"
-                                item: gridCellDelegate.modelData?.item ?? null
-                                isSelected: (gridCellDelegate.modelData?.flatIndex ?? -1) === root.controller?.selectedFlatIndex
-                                controller: root.controller
-                                flatIndex: gridCellDelegate.modelData?.flatIndex ?? -1
+                                        TileItem {
+                                            item: gridCellDelegate.modelData?.item ?? null
+                                            isSelected: (gridCellDelegate.modelData?.flatIndex ?? -1) === root.controller?.selectedFlatIndex
+                                            controller: root.controller
+                                            flatIndex: gridCellDelegate.modelData?.flatIndex ?? -1
 
-                                onClicked: {
-                                    if (root.controller && gridCellDelegate.modelData?.item) {
-                                        root.controller.executeItem(gridCellDelegate.modelData.item);
+                                            onClicked: {
+                                                if (root.controller && gridCellDelegate.modelData?.item) {
+                                                    root.controller.executeItem(gridCellDelegate.modelData.item);
+                                                }
+                                            }
+
+                                            onRightClicked: (mouseX, mouseY) => {
+                                                root.itemRightClicked(gridCellDelegate.modelData?.flatIndex ?? -1, gridCellDelegate.modelData?.item ?? null, mouseX, mouseY);
+                                            }
+                                        }
                                     }
-                                }
-
-                                onRightClicked: (mouseX, mouseY) => {
-                                    root.itemRightClicked(gridCellDelegate.modelData?.flatIndex ?? -1, gridCellDelegate.modelData?.item ?? null, mouseX, mouseY);
                                 }
                             }
                         }
@@ -332,6 +372,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: bottomSectionHeader.visible ? bottomSectionHeader.height : 0
         height: 24
         z: 100
         visible: {
@@ -377,7 +418,7 @@ Item {
         height: 32
         z: 101
         color: Theme.floatingSurface
-        visible: stickyHeaderSection !== null
+        visible: !root._bottomSectionHeaderActive && stickyHeaderSection !== null
 
         readonly property int versionTrigger: root.controller?.viewModeVersion ?? 0
 
@@ -425,7 +466,33 @@ Item {
                 return root.controller?.canCollapseSection(stickyHeader.stickyHeaderSection?.id) ?? false;
             }
             isSticky: true
+            transientSurfaceTracker: root.transientSurfaceTracker
         }
+    }
+
+    SectionHeader {
+        id: bottomSectionHeader
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        z: 101
+        visible: root._bottomSectionHeaderActive
+        section: visible ? root.controller.sections[0] : null
+        controller: root.controller
+        viewMode: {
+            var vt = root.controller?.viewModeVersion ?? 0;
+            void (vt);
+            return root.controller?.getSectionViewMode(section?.id ?? "") ?? "list";
+        }
+        canChangeViewMode: {
+            var vt = root.controller?.viewModeVersion ?? 0;
+            void (vt);
+            return root.controller?.canChangeSectionViewMode(section?.id ?? "") ?? false;
+        }
+        canCollapse: root.controller?.canCollapseSection(section?.id ?? "") ?? false
+        isSticky: true
+        popupAbove: true
+        transientSurfaceTracker: root.transientSurfaceTracker
     }
 
     Item {

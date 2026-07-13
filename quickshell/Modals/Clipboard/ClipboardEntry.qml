@@ -49,6 +49,15 @@ Rectangle {
         cornerRadius: root.radius
     }
 
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        onClicked: mouse => {
+            const scenePos = mapToItem(null, mouse.x, mouse.y);
+            contextMenuRequested(scenePos.x, scenePos.y);
+        }
+    }
+
     Rectangle {
         id: indexBadge
         anchors.left: parent.left
@@ -110,7 +119,7 @@ Rectangle {
             iconName: "push_pin"
             iconSize: Theme.iconSize - 6
             iconColor: (entry.pinned || hasPinnedDuplicate) ? Theme.primary : Theme.surfaceText
-            backgroundColor: (entry.pinned || hasPinnedDuplicate) ? Theme.primarySelected : "transparent"
+            backgroundColor: (entry.pinned || hasPinnedDuplicate) ? Theme.primarySelected : Theme.withAlpha(Theme.primarySelected, 0)
             visible: root.showPinAction
             onClicked: {
                 if (entry.pinned) {
@@ -228,19 +237,10 @@ Rectangle {
         }
         onClicked: {
             if (SettingsData.clipboardClickToPaste) {
-                pasteRequested()
+                pasteRequested();
             } else {
-                copyRequested()
+                copyRequested();
             }
-        }
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        acceptedButtons: Qt.RightButton
-        onClicked: mouse => {
-            const scenePos = mapToItem(null, mouse.x, mouse.y);
-            contextMenuRequested(scenePos.x, scenePos.y);
         }
     }
 }

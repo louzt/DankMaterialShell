@@ -15,7 +15,7 @@ Singleton {
     id: root
     readonly property var log: Log.scoped("SettingsData")
 
-    readonly property int settingsConfigVersion: 11
+    readonly property int settingsConfigVersion: 12
 
     readonly property bool isGreeterMode: Quickshell.env("DMS_RUN_GREETER") === "1" || Quickshell.env("DMS_RUN_GREETER") === "true"
 
@@ -177,10 +177,12 @@ Singleton {
     property int niriLayoutRadiusOverride: -1
     property int niriLayoutBorderSize: -1
     property int hyprlandLayoutGapsOverride: -1
+    property int hyprlandLayoutGapsOutOverride: -1
     property int hyprlandLayoutRadiusOverride: -1
     property int hyprlandLayoutBorderSize: -1
     property bool hyprlandResizeOnBorder: false
     property int mangoLayoutGapsOverride: -1
+    property int mangoLayoutGapsOutOverride: -1
     property int mangoLayoutRadiusOverride: -1
     property int mangoLayoutBorderSize: -1
     property bool mangoTrackpadNaturalScrolling: true
@@ -262,7 +264,11 @@ Singleton {
     }
 
     property bool frameEnabled: false
-    onFrameEnabledChanged: saveSettings()
+    onFrameEnabledChanged: {
+        saveSettings();
+        if (!_loading)
+            updateFrameCompositorLayout();
+    }
     property real frameThickness: 16
     onFrameThicknessChanged: saveSettings()
     property int barInsetPaddingShared: -1
@@ -291,9 +297,15 @@ Singleton {
     onFrameLauncherEmergeSideChanged: saveSettings()
     property bool frameLauncherArcExtender: false
     onFrameLauncherArcExtenderChanged: saveSettings()
+    property bool frameLauncherEdgeHover: false
+    onFrameLauncherEdgeHoverChanged: saveSettings()
     readonly property string frameModalEmergeSide: frameLauncherEmergeSide === "top" ? "bottom" : "top"
     property string frameMode: "connected"
-    onFrameModeChanged: saveSettings()
+    onFrameModeChanged: {
+        saveSettings();
+        if (!_loading && frameEnabled)
+            updateFrameCompositorLayout();
+    }
     property var connectedFrameBarStyleBackups: ({})
     onConnectedFrameBarStyleBackupsChanged: saveSettings()
     readonly property bool connectedFrameModeActive: frameEnabled && frameMode === "connected"
@@ -425,6 +437,19 @@ Singleton {
     property string workspaceFocusedBorderColor: "primary"
     property string workspaceFocusedBorderCustomColor: "#6750A4"
     property int workspaceFocusedBorderThickness: 2
+    property bool workspaceUnfocusedMonitorSeparateAppearance: false
+    property string workspaceUnfocusedMonitorColorMode: "default"
+    property string workspaceUnfocusedMonitorFocusedCustomColor: "#6750A4"
+    property string workspaceUnfocusedMonitorOccupiedColorMode: "none"
+    property string workspaceUnfocusedMonitorOccupiedCustomColor: "#625B71"
+    property string workspaceUnfocusedMonitorUnfocusedColorMode: "default"
+    property string workspaceUnfocusedMonitorUnfocusedCustomColor: "#49454E"
+    property string workspaceUnfocusedMonitorUrgentColorMode: "default"
+    property string workspaceUnfocusedMonitorUrgentCustomColor: "#B3261E"
+    property bool workspaceUnfocusedMonitorBorderEnabled: false
+    property string workspaceUnfocusedMonitorBorderColor: "primary"
+    property string workspaceUnfocusedMonitorBorderCustomColor: "#6750A4"
+    property int workspaceUnfocusedMonitorBorderThickness: 2
     property var workspaceNameIcons: ({})
     property bool waveProgressEnabled: true
     property bool scrollTitleEnabled: true
@@ -433,9 +458,11 @@ Singleton {
     property string audioScrollMode: "volume"
     property int audioWheelScrollAmount: 5
     property bool audioDeviceScrollVolumeEnabled: false
+    property var mediaExcludePlayers: []
     property bool clockCompactMode: false
     property int focusedWindowSize: 1
     property bool focusedWindowCompactMode: false
+    property bool focusedWindowShowIcon: true
     property bool runningAppsCompactMode: true
     property int barMaxVisibleApps: 0
     property int barMaxVisibleRunningApps: 0
@@ -470,6 +497,8 @@ Singleton {
     property string greeterLockDateFormat: ""
     property string greeterFontFamily: ""
     property string greeterWallpaperFillMode: ""
+    property bool greeterSyncPending: false
+    property var greeterSyncBaseline: ({})
     property int mediaSize: 1
 
     property string appLauncherViewMode: "list"
@@ -590,9 +619,9 @@ Singleton {
         if (!on && id !== "settings" && current.filter(t => t.enabled && t.id !== "settings").length <= 1)
             return;
         dashTabs = current.map(t => t.id === id ? {
-            "id": t.id,
-            "enabled": on
-        } : t);
+                "id": t.id,
+                "enabled": on
+            } : t);
     }
 
     function resetDashTabs() {
@@ -724,12 +753,16 @@ Singleton {
     property bool batteryNotifyCritical: true
     property int batteryLowThreshold: 20
     property bool batteryNotifyLow: false
-    property int batteryNotificationType: 0
+    property int batteryChargeLimitNotificationType: 0
+    property int batteryLowNotificationType: 0
+    property int batteryCriticalNotificationType: 1
     property bool batteryAutoPowerSaver: false
     property bool showBatteryPercent: true
     property bool showBatteryPercentOnlyOnBattery: false
     property bool showBatteryTime: false
     property bool showBatteryTimeOnlyOnBattery: false
+    property bool batteryPillStyle: false
+    property bool batteryPillPercentSign: false
     property bool lockBeforeSuspend: false
     property bool loginctlLockIntegration: true
     property bool fadeToLockEnabled: true
@@ -861,12 +894,14 @@ Singleton {
     readonly property bool greeterU2fReady: Processes.greeterU2fReady
     readonly property string greeterU2fReason: Processes.greeterU2fReason
     readonly property string greeterU2fSource: Processes.greeterU2fSource
-    property string lockScreenActiveMonitor: "all"
     property string lockScreenInactiveColor: "#000000"
     property int lockScreenNotificationMode: 0
     property bool lockScreenVideoEnabled: false
     property string lockScreenVideoPath: ""
     property bool lockScreenVideoCycling: false
+    property string lockScreenWallpaperPath: ""
+    property string lockScreenWallpaperFillMode: ""
+    property string lockScreenFontFamily: ""
     property bool hideBrightnessSlider: false
 
     property int notificationTimeoutLow: 5000
@@ -886,6 +921,43 @@ Singleton {
     property bool notificationHistorySaveCritical: true
     property var notificationRules: []
     property bool notificationFocusedMonitor: false
+
+    // Notification routing (replaces notificationFocusedMonitor)
+    // Mode: "all" | "focused" | "per_app"
+    property string notificationRoutingMode: Spec.SPEC.notificationRoutingMode.def
+    // App routing map: { "discord": "DP-2", "spotify": "DP-1", ... }
+    property var notificationAppRoutes: Spec.SPEC.notificationAppRoutes.def
+    property bool notificationDndEnabled: Spec.SPEC.notificationDndEnabled.def
+    property string notificationDndScheduleStart: Spec.SPEC.notificationDndScheduleStart.def
+    property string notificationDndScheduleEnd: Spec.SPEC.notificationDndScheduleEnd.def
+
+    // Migration shim: convert legacy notificationFocusedMonitor bool to new mode.
+    // Idempotent — safe to call on every startup.
+    function migrateNotificationRouting() {
+        // If the new mode key is absent from settings, we are on first boot post-migration.
+        // If it exists (including empty string), the shim has already run.
+        if (notificationRoutingMode !== undefined && notificationRoutingMode !== "")
+            return;
+        if (notificationFocusedMonitor === true) {
+            notificationRoutingMode = "focused";
+        } else {
+            notificationRoutingMode = "all";
+        }
+        notificationFocusedMonitor = undefined;
+        root._persist();
+    }
+
+    // Set a per-app notification route. Pass screenName = "" to remove.
+    function setAppRoute(appId, screenName) {
+        const routes = Object.assign({}, notificationAppRoutes);
+        if (!screenName || screenName === "") {
+            delete routes[appId];
+        } else {
+            routes[appId] = screenName;
+        }
+        notificationAppRoutes = routes;
+        root._persist();
+    }
 
     property bool osdAlwaysShowValue: false
     property int osdPosition: SettingsData.Position.BottomCenter
@@ -986,7 +1058,9 @@ Singleton {
             "shadowOpacity": 60,
             "shadowColorMode": "default",
             "shadowCustomColor": "#000000",
-            "clickThrough": false
+            "clickThrough": false,
+            "hoverPopouts": false,
+            "hoverPopoutDelay": 150
         }
     ]
 
@@ -1305,6 +1379,35 @@ Singleton {
         return true;
     }
 
+    function moveDesktopWidgetInstanceToGroup(instanceId, groupId, newIndexInGroup) {
+        const instances = JSON.parse(JSON.stringify(desktopWidgetInstances || []));
+        const groups = desktopWidgetGroups || [];
+        const idx = instances.findIndex(inst => inst.id === instanceId);
+        if (idx === -1)
+            return false;
+        const [item] = instances.splice(idx, 1);
+        item.group = groupId || null;
+        const groupMatches = inst => {
+            if (!groupId)
+                return !inst.group || !groups.some(g => g.id === inst.group);
+            return inst.group === groupId;
+        };
+        const groupInstances = instances.filter(groupMatches);
+        const clamped = Math.max(0, Math.min(newIndexInGroup, groupInstances.length));
+        let targetGlobalIdx;
+        if (clamped >= groupInstances.length) {
+            const last = groupInstances[groupInstances.length - 1];
+            targetGlobalIdx = last ? instances.findIndex(inst => inst.id === last.id) + 1 : instances.length;
+        } else {
+            const targetInstance = groupInstances[clamped];
+            targetGlobalIdx = instances.findIndex(inst => inst.id === targetInstance.id);
+        }
+        instances.splice(targetGlobalIdx, 0, item);
+        desktopWidgetInstances = instances;
+        saveSettings();
+        return true;
+    }
+
     function createDesktopWidgetGroup(name) {
         const id = "dwg_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
         const group = {
@@ -1371,6 +1474,7 @@ Singleton {
             initializeListModels();
             refreshAuthAvailability();
             Processes.checkPluginSettings();
+            migrateNotificationRouting();
         }
     }
 
@@ -1403,6 +1507,17 @@ Singleton {
             HyprlandService.generateLayoutConfig();
         if (CompositorService.isMango && typeof MangoService !== "undefined")
             MangoService.generateLayoutConfig();
+    }
+
+    function updateFrameCompositorLayout() {
+        // Generate before begin() so compositor readiness is already pending at transitionRequested
+        if (typeof CompositorService !== "undefined") {
+            if (CompositorService.isNiri && typeof NiriService !== "undefined")
+                NiriService.generateNiriLayoutConfig(true);
+            if (CompositorService.isHyprland && typeof HyprlandService !== "undefined")
+                HyprlandService.generateLayoutConfig(true);
+        }
+        FrameTransitionState.begin();
     }
 
     function resolveIconTheme() {
@@ -1600,6 +1715,32 @@ Singleton {
         });
     }
 
+    function markGreeterSyncPending(who, key, oldValue) {
+        if (isGreeterMode)
+            return;
+        if (!(key in greeterSyncBaseline)) {
+            var baseline = greeterSyncBaseline;
+            baseline[key] = oldValue;
+            greeterSyncBaseline = baseline;
+        }
+        greeterSyncPending = true;
+    }
+
+    function clearGreeterSyncPending() {
+        greeterSyncBaseline = {};
+        greeterSyncPending = false;
+        saveSettings();
+    }
+
+    function revertGreeterSyncPending() {
+        for (var key in greeterSyncBaseline) {
+            root[key] = greeterSyncBaseline[key];
+        }
+        greeterSyncBaseline = {};
+        greeterSyncPending = false;
+        saveSettings();
+    }
+
     readonly property var _hooks: ({
             "applyStoredTheme": applyStoredTheme,
             "regenSystemThemes": regenSystemThemes,
@@ -1608,7 +1749,8 @@ Singleton {
             "updateBarConfigs": updateBarConfigs,
             "updateCompositorCursor": updateCompositorCursor,
             "scheduleAuthApply": scheduleAuthApply,
-            "scheduleGreeterAutoLoginSync": scheduleGreeterAutoLoginSync
+            "scheduleGreeterAutoLoginSync": scheduleGreeterAutoLoginSync,
+            "markGreeterSyncPending": markGreeterSyncPending
         })
 
     function set(key, value) {
@@ -1632,6 +1774,18 @@ Singleton {
                     _pendingMigration = migrated;
                     obj = migrated;
                 }
+            }
+
+            if (obj?.lockScreenActiveMonitor !== undefined) {
+                var oldVal = obj.lockScreenActiveMonitor;
+                if (oldVal && oldVal !== "all") {
+                    if (!obj.screenPreferences)
+                        obj.screenPreferences = {};
+                    if (obj.screenPreferences.lockScreen === undefined) {
+                        obj.screenPreferences.lockScreen = [oldVal];
+                    }
+                }
+                delete obj.lockScreenActiveMonitor;
             }
 
             Store.parse(root, obj);
@@ -2423,6 +2577,46 @@ Singleton {
         return barConfigs.filter(cfg => cfg.enabled);
     }
 
+    function _sideToPosition(side) {
+        switch (side) {
+        case "top":
+            return SettingsData.Position.Top;
+        case "bottom":
+            return SettingsData.Position.Bottom;
+        case "left":
+            return SettingsData.Position.Left;
+        case "right":
+            return SettingsData.Position.Right;
+        }
+        return -1;
+    }
+
+    // Check if a bar occupies the specified screen edge
+    function barOccupiesSide(screen, side) {
+        if (!screen)
+            return false;
+        const sidePos = _sideToPosition(side);
+        if (sidePos < 0)
+            return false;
+        const bars = getEnabledBarConfigs();
+        for (var i = 0; i < bars.length; i++) {
+            const bc = bars[i];
+            if (bc.position !== sidePos)
+                continue;
+            const prefs = bc.screenPreferences || ["all"];
+            if (prefs.includes("all") || isScreenInPreferences(screen, prefs))
+                return true;
+        }
+        return false;
+    }
+
+    // Check if the dock occupies the specified screen edge.
+    function dockOccupiesSide(side) {
+        if (!showDock)
+            return false;
+        return dockPosition === _sideToPosition(side);
+    }
+
     function getScreensSortedByPosition() {
         const screens = [];
         for (var i = 0; i < Quickshell.screens.length; i++) {
@@ -3005,6 +3199,32 @@ Singleton {
         saveSettings();
     }
 
+    function addMediaExcludePlayer(identity) {
+        if (identity === undefined || identity === null)
+            return;
+        var normalizedIdentity = identity.toString().trim().toLowerCase();
+        if (!normalizedIdentity)
+            return;
+        var list = mediaExcludePlayers ? mediaExcludePlayers.slice() : [];
+        var normalizedList = list.map(function (id) {
+            return id ? id.toString().trim().toLowerCase() : "";
+        });
+        if (normalizedList.indexOf(normalizedIdentity) >= 0)
+            return;
+        list.push(normalizedIdentity);
+        mediaExcludePlayers = list;
+        saveSettings();
+    }
+
+    function removeMediaExcludePlayer(index) {
+        var list = mediaExcludePlayers ? mediaExcludePlayers.slice() : [];
+        if (index < 0 || index >= list.length)
+            return;
+        list.splice(index, 1);
+        mediaExcludePlayers = list;
+        saveSettings();
+    }
+
     property bool _pendingExpandNotificationRules: false
     property int _pendingNotificationRuleIndex: -1
 
@@ -3425,6 +3645,9 @@ Singleton {
         onLoaded: {
             if (isGreeterMode)
                 return;
+            const wasLoaded = _hasLoaded;
+            const prevFrameEnabled = frameEnabled;
+            const prevFrameMode = frameMode;
             _loading = true;
             _hasUnsavedChanges = false;
             try {
@@ -3459,6 +3682,9 @@ Singleton {
             } finally {
                 _loading = false;
             }
+            // External edits reload under _loading, which skips the per-property transition triggers
+            if (wasLoaded && !_parseError && (frameEnabled !== prevFrameEnabled || (frameEnabled && frameMode !== prevFrameMode)))
+                updateFrameCompositorLayout();
         }
         onLoadFailed: error => {
             if (!isGreeterMode) {

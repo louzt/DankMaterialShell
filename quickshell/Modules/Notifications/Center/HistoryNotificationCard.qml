@@ -53,9 +53,9 @@ Rectangle {
     }
     border.color: {
         if (isSelected && keyboardNavigationActive)
-            return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.5);
+            return Theme.withAlpha(Theme.primary, 0.5);
         if (historyItem.urgency === 2)
-            return Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.3);
+            return Theme.primarySelected;
         return Theme.outlineMedium;
     }
     border.width: {
@@ -113,6 +113,7 @@ Rectangle {
 
         DankCircularImage {
             id: iconContainer
+            cacheImages: false
             readonly property string rawImage: historyItem.image || ""
             readonly property string iconFromImage: {
                 if (rawImage.startsWith("image://icon/"))
@@ -123,7 +124,8 @@ Rectangle {
                 const icon = iconFromImage;
                 return icon.startsWith("material:") || icon.startsWith("svg:") || icon.startsWith("unicode:") || icon.startsWith("image:");
             }
-            readonly property bool hasNotificationImage: rawImage !== "" && !rawImage.startsWith("image://icon/")
+            readonly property bool hasNotificationImage: rawImage !== "" && (!rawImage.startsWith("image://icon/") || iconFromImage.startsWith("/"))
+            readonly property string resolvedImage: iconFromImage.startsWith("/") ? ("file://" + iconFromImage) : rawImage
 
             width: iconSize
             height: iconSize
@@ -132,7 +134,7 @@ Rectangle {
 
             imageSource: {
                 if (hasNotificationImage)
-                    return historyItem.image;
+                    return resolvedImage;
                 if (imageHasSpecialPrefix)
                     return "";
                 const appIcon = historyItem.appIcon;
@@ -211,14 +213,14 @@ Rectangle {
                     StyledText {
                         id: historySeparator
                         text: (historyTitleText.text.length > 0 && historyTimeText.text.length > 0) ? " • " : ""
-                        color: Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.7)
+                        color: Theme.surfaceTextMedium
                         font.pixelSize: Theme.fontSizeSmall
                         font.weight: Font.Normal
                     }
                     StyledText {
                         id: historyTimeText
                         text: NotificationService.formatHistoryTime(historyItem.timestamp)
-                        color: Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.7)
+                        color: Theme.surfaceTextMedium
                         font.pixelSize: Theme.fontSizeSmall
                         font.weight: Font.Normal
                         visible: text.length > 0

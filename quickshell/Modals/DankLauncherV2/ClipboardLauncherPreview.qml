@@ -13,7 +13,7 @@ Rectangle {
     property string cachedMimeType: ""
     property var _requestedEntryId: null
 
-    readonly property bool canLoadImage: !!entry?.isImage && (entry?.mimeType ?? "").startsWith("image/")
+    readonly property bool canLoadImage: typeof entry?.id === "number" && !!entry?.isImage && String(entry?.mimeType ?? "").startsWith("image/")
     readonly property string sourceUrl: resolvedSourceUrl(cachedImageData, cachedMimeType || (entry?.mimeType ?? ""))
 
     radius: Math.max(6, Theme.cornerRadius - 2)
@@ -41,13 +41,18 @@ Rectangle {
     }
 
     function reloadPreview() {
-        cachedImageData = "";
-        cachedMimeType = "";
-        if (!canLoadImage || !entry?.id) {
+        if (!canLoadImage || typeof entry?.id !== "number") {
             _requestedEntryId = null;
+            cachedImageData = "";
+            cachedMimeType = "";
             return;
         }
+        // Entry objects are rebuilt per search; same id means same content
+        if (entry.id === _requestedEntryId)
+            return;
 
+        cachedImageData = "";
+        cachedMimeType = "";
         const entryId = entry.id;
         _requestedEntryId = entryId;
         DMSService.sendRequest("clipboard.getEntry", {
@@ -55,17 +60,22 @@ Rectangle {
         }, function (response) {
             if (_requestedEntryId !== entryId)
                 return;
-            if (response.error)
+            if (response.error) {
+                _requestedEntryId = null;
                 return;
+            }
             if (!response.result) {
+                _requestedEntryId = null;
                 ClipboardService.refresh();
                 return;
             }
             const result = response.result;
             const mimeType = (result.mimeType ?? entry?.mimeType ?? "").toString();
             const data = (result.data ?? "").toString();
-            if (data.length === 0 || !resolvedSourceUrl(data, mimeType))
+            if (data.length === 0 || !resolvedSourceUrl(data, mimeType)) {
+                _requestedEntryId = null;
                 return;
+            }
             cachedMimeType = mimeType;
             cachedImageData = data;
         });
@@ -78,6 +88,8 @@ Rectangle {
         asynchronous: true
         cache: false
         smooth: true
+        sourceSize.width: 128
+        sourceSize.height: 128
         fillMode: Image.PreserveAspectCrop
         visible: status === Image.Ready
     }

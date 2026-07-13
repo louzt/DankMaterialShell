@@ -44,6 +44,8 @@ Item {
 
     property int __panelHoverCount: 0
 
+    readonly property bool overlayBlurActive: dropdownBlur.active
+
     onDropdownTypeChanged: {
         if (dropdownType === 0) {
             __panelHoverCount = 0;
@@ -75,8 +77,10 @@ Item {
     }
 
     WindowBlur {
+        id: dropdownBlur
         targetWindow: root.targetWindow
         readonly property bool active: root.__activePanel !== null && root.__activePanel.visible && root.__activePanel.opacity > 0
+        blurEnabled: active && Theme.connectedSurfaceBlurEnabled
         readonly property real s: root.__activePanel ? Math.min(1, root.__activePanel.scale) : 1
         blurX: root.__activePanel ? root.__activePanel.x + root.__activePanel.width * (1 - s) * 0.5 : 0
         blurY: root.__activePanel ? root.__activePanel.y + root.__activePanel.height * (1 - s) * 0.5 : 0
@@ -317,8 +321,8 @@ Item {
                             width: parent.width
                             height: 48
                             radius: Theme.cornerRadius
-                            color: deviceMouseArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : Theme.nestedSurface
-                            border.color: modelData === AudioService.sink ? Theme.primary : Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.2)
+                            color: deviceMouseArea.containsMouse ? Theme.primaryHover : Theme.nestedSurface
+                            border.color: modelData === AudioService.sink ? Theme.primary : Theme.outlineHeavy
                             border.width: modelData === AudioService.sink ? 2 : 1
 
                             Row {
@@ -509,8 +513,8 @@ Item {
                             width: parent.width
                             height: 48
                             radius: Theme.cornerRadius
-                            color: playerMouseArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : Theme.nestedSurface
-                            border.color: modelData === activePlayer ? Theme.primary : Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.2)
+                            color: playerMouseArea.containsMouse ? Theme.primaryHover : Theme.nestedSurface
+                            border.color: modelData === activePlayer ? Theme.primary : Theme.outlineHeavy
                             border.width: modelData === activePlayer ? 2 : 1
 
                             Row {

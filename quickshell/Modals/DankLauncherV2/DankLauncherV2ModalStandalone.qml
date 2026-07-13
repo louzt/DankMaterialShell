@@ -27,6 +27,10 @@ Item {
     readonly property bool unloadContentOnClose: SettingsData.dankLauncherV2UnloadOnClose
 
     readonly property bool useHyprlandFocusGrab: CompositorService.useHyprlandFocusGrab
+
+    TransientSurfaceTracker {
+        id: transientSurfaces
+    }
     readonly property var effectiveScreen: launcherWindow.screen
     readonly property real screenWidth: effectiveScreen?.width ?? 1920
     readonly property real screenHeight: effectiveScreen?.height ?? 1080
@@ -78,8 +82,14 @@ Item {
     readonly property real windowWidth: alignedWidth + contentX + shadowPad
     readonly property real windowHeight: alignedHeight + contentY + shadowPad
 
+    onAlignedXChanged: _kickBlurCommit()
+    onAlignedYChanged: _kickBlurCommit()
+    onAlignedWidthChanged: _kickBlurCommit()
+    onAlignedHeightChanged: _kickBlurCommit()
+    onContentVisibleChanged: _kickBlurCommit()
+
     readonly property color backgroundColor: Theme.withAlpha(Theme.surfaceContainer, Theme.popupTransparency)
-    readonly property bool useBackgroundDarken: !SettingsData.frameEnabled && SettingsData.modalDarkenBackground
+    readonly property bool useBackgroundDarken: !FrameTransitionState.effectiveFrameEnabled && SettingsData.modalDarkenBackground
     readonly property bool useSingleWindow: CompositorService.isHyprland || useBackgroundDarken
     readonly property bool usesOverlayLayer: useBackgroundDarken || SettingsData.launcherUseOverlayLayer || triggerUsesOverlayLayer
     readonly property var effectiveLauncherLayer: LayerShell.fromEnv("DMS_MODAL_LAYER", root.usesOverlayLayer ? WlrLayer.Overlay : WlrLayer.Top, {
@@ -108,6 +118,11 @@ Item {
     readonly property int borderWidth: SettingsData.dankLauncherV2BorderEnabled ? SettingsData.dankLauncherV2BorderThickness : 0
 
     signal dialogClosed
+
+    function _kickBlurCommit() {
+        if (typeof launcherWindow.update === "function")
+            launcherWindow.update();
+    }
 
     function _ensureContentLoadedAndInitialize(query, mode) {
         _pendingQuery = query || "";
@@ -139,6 +154,7 @@ Item {
 
         if (spotlightContent.searchField) {
             spotlightContent.searchField.text = targetQuery;
+            spotlightContent.searchField.selectAll();
         }
         if (spotlightContent.controller) {
             var targetMode = mode || SessionData.getLauncherRestoreMode();
@@ -259,7 +275,7 @@ Item {
 
     HyprlandFocusGrab {
         id: focusGrab
-        windows: [launcherWindow]
+        windows: [launcherWindow].concat(transientSurfaces.focusWindows)
         active: root.useHyprlandFocusGrab && root.keyboardActive
 
         onCleared: {
@@ -361,11 +377,13 @@ Item {
         WindowBlur {
             targetWindow: launcherWindow
             readonly property real s: Math.min(1, modalContainer.publishedScale)
-            readonly property real op: Math.max(0, Math.min(1, (modalContainer.publishedOpacity - 0.06) * 2))
-            blurX: modalContainer.x + modalContainer.width * (1 - s * op) * 0.5
-            blurY: modalContainer.y + modalContainer.height * (1 - s * op) * 0.5
-            blurWidth: contentVisible ? modalContainer.width * s * op : 0
-            blurHeight: contentVisible ? modalContainer.height * s * op : 0
+            readonly property real op: Math.max(0, Math.min(1, (modalContainer.opacity - 0.06) * 2))
+            readonly property real visibleScale: s * op
+            // Blur tracks the surface's scaled rect
+            blurX: modalContainer.x + modalContainer.width * (1 - visibleScale) * 0.5
+            blurY: modalContainer.y + modalContainer.height * (1 - visibleScale) * 0.5
+            blurWidth: contentVisible ? modalContainer.width * visibleScale : 0
+            blurHeight: contentVisible ? modalContainer.height * visibleScale : 0
             blurRadius: root.cornerRadius
         }
 
@@ -443,8 +461,8 @@ Item {
                 enabled: spotlightOpen
                 hoverEnabled: false
                 acceptedButtons: Qt.AllButtons
-                onPressed: mouse.accepted = true
-                onClicked: mouse.accepted = true
+                onPressed: mouse => mouse.accepted = true
+                onClicked: mouse => mouse.accepted = true
                 z: -1
             }
 
@@ -455,6 +473,8 @@ Item {
             opacity: contentVisible ? 1 : 0
             scale: contentVisible ? 1 : 0.96
             transformOrigin: Item.Center
+            onOpacityChanged: root._kickBlurCommit()
+            onPublishedScaleChanged: root._kickBlurCommit()
 
             Behavior on opacity {
                 NumberAnimation {
@@ -527,6 +547,7 @@ Item {
                     sourceComponent: LauncherContent {
                         focus: true
                         parentModal: root
+                        transientSurfaceTracker: transientSurfaces
                     }
 
                     onLoaded: {

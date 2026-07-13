@@ -23,6 +23,8 @@ Item {
     property real anchorY: 0
     property bool openState: false
     property bool renderActive: false
+    property var transientSurfaceTracker: null
+    readonly property alias contextWindow: menuWindow
     readonly property bool blurActive: renderActive && openState && BlurService.enabled && Theme.connectedSurfaceBlurEnabled
 
     readonly property bool hasPinnedDuplicate: !!entry && !entry.pinned && ClipboardService.getPinnedEntryByHash(entry.hash) !== null
@@ -90,6 +92,18 @@ Item {
     readonly property real effectiveMenuHeight: Math.min(maxMenuHeight, naturalMenuHeight)
     readonly property bool menuScrolls: naturalMenuHeight > effectiveMenuHeight + 0.5
 
+    onRenderActiveChanged: transientSurfaceTracker?.setActive(root, renderActive, contextWindow)
+    Component.onDestruction: transientSurfaceTracker?.unregister(root)
+
+    Connections {
+        target: root.transientSurfaceTracker
+        ignoreUnknownSignals: true
+
+        function onCloseRequested() {
+            root.hide();
+        }
+    }
+
     TextMetrics {
         id: menuTextMetrics
         text: root.longestMenuText
@@ -121,12 +135,12 @@ Item {
         const hostX = host?.alignedX;
         const hostY = host?.renderedAlignedY ?? host?.alignedY;
         const globalPos = (!isNaN(hostX) && !isNaN(hostY)) ? ({
-            x: screenX + hostX + x,
-            y: screenY + hostY + y
-        }) : (parentHandler ? parentHandler.mapToGlobal(x, y) : ({
-            x: screenX + x,
-            y: screenY + y
-        }));
+                x: screenX + hostX + x,
+                y: screenY + hostY + y
+            }) : (parentHandler ? parentHandler.mapToGlobal(x, y) : ({
+                    x: screenX + x,
+                    y: screenY + y
+                }));
 
         targetScreen = screenRef;
         anchorX = globalPos.x - screenX + 4;
@@ -258,8 +272,8 @@ Item {
                 height: root.effectiveMenuHeight
                 color: Theme.withAlpha(Theme.surfaceContainer, Theme.popupTransparency)
                 radius: Theme.cornerRadius
-                border.color: BlurService.enabled ? BlurService.borderColor : Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.08)
-                border.width: BlurService.enabled ? BlurService.borderWidth : 1
+                border.color: BlurService.borderColor
+                border.width: BlurService.borderWidth
                 opacity: root.openState ? 1 : 0
 
                 Behavior on opacity {
@@ -321,7 +335,7 @@ Item {
                                         anchors.centerIn: parent
                                         width: parent.width
                                         height: 1
-                                        color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.2)
+                                        color: Theme.outlineHeavy
                                     }
                                 }
 
@@ -330,7 +344,7 @@ Item {
                                     width: parent.width
                                     height: parent.height
                                     radius: Theme.cornerRadius
-                                    color: itemMouseArea.containsMouse ? BlurService.hoverColor(Theme.widgetBaseHoverColor) : "transparent"
+                                    color: itemMouseArea.containsMouse ? BlurService.hoverColor(Theme.widgetBaseHoverColor) : Theme.withAlpha(BlurService.hoverColor(Theme.widgetBaseHoverColor), 0)
 
                                     Row {
                                         anchors.left: parent.left

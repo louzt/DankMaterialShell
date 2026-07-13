@@ -141,3 +141,45 @@ func TestManager_SettingsState_Modification(t *testing.T) {
 	original := manager.GetState()
 	assert.Equal(t, uint32(0), original.Settings.ColorScheme)
 }
+
+func TestManager_SelfEcho_ConsumesRegisteredWrites(t *testing.T) {
+	manager := &Manager{state: &FreedeskState{}}
+
+	manager.ExpectColorSchemeEcho("prefer-dark")
+	manager.ExpectColorSchemeEcho("default")
+
+	assert.True(t, manager.consumeSelfEcho(1))
+	assert.True(t, manager.consumeSelfEcho(0))
+	assert.False(t, manager.consumeSelfEcho(1))
+	assert.False(t, manager.consumeSelfEcho(0))
+}
+
+func TestManager_SelfEcho_ExternalChangePassesThrough(t *testing.T) {
+	manager := &Manager{state: &FreedeskState{}}
+
+	manager.ExpectColorSchemeEcho("prefer-dark")
+
+	assert.False(t, manager.consumeSelfEcho(2))
+	assert.True(t, manager.consumeSelfEcho(1))
+}
+
+func TestManager_SelfEcho_ConsumesOnePerRegistration(t *testing.T) {
+	manager := &Manager{state: &FreedeskState{}}
+
+	manager.ExpectColorSchemeEcho("prefer-dark")
+	manager.ExpectColorSchemeEcho("prefer-dark")
+
+	assert.True(t, manager.consumeSelfEcho(1))
+	assert.True(t, manager.consumeSelfEcho(1))
+	assert.False(t, manager.consumeSelfEcho(1))
+}
+
+func TestManager_SelfEcho_SchemeMapping(t *testing.T) {
+	manager := &Manager{state: &FreedeskState{}}
+
+	manager.ExpectColorSchemeEcho("prefer-light")
+	assert.True(t, manager.consumeSelfEcho(2))
+
+	manager.ExpectColorSchemeEcho("default")
+	assert.True(t, manager.consumeSelfEcho(0))
+}

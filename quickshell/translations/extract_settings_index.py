@@ -101,7 +101,7 @@ TAB_INDEX_MAP = {
     "WindowRulesTab.qml": 38,
     "DockTab.qml": 5,
     "DankBarAppearanceTab.qml": 6,
-    "WorkspaceAppearanceCard.qml": 6,
+    "WorkspaceAppearanceCard.qml": 4,
     "NetworkStatusTab.qml": 7,
     "NetworkEthernetTab.qml": 39,
     "NetworkWifiTab.qml": 40,

@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Quickshell
 import qs.Common
 import qs.Services
 import qs.Widgets
@@ -13,6 +12,7 @@ FocusScope {
     property alias searchField: searchInput
     property alias controller: searchController
     readonly property alias activeContextMenu: contextMenu
+    property var transientSurfaceTracker: null
 
     readonly property bool _hasQuery: searchInput.text.length > 0
     readonly property real _searchBarH: 56
@@ -49,7 +49,7 @@ FocusScope {
     }
 
     function closeTransientUi() {
-        contextMenu.hide();
+        transientSurfaceTracker?.closeAll?.();
         root.enabled = true;
     }
 
@@ -221,6 +221,7 @@ FocusScope {
         searchField: searchInput
         parentHandler: root
         allowEditActions: false
+        transientSurfaceTracker: root.transientSurfaceTracker
     }
 
     Connections {
@@ -319,13 +320,13 @@ FocusScope {
                             Rectangle {
                                 anchors.fill: parent
                                 radius: height / 2
-                                color: categoryChip.isSelected ? Theme.primary : chipArea.containsMouse ? Theme.surfaceHover : Theme.surfaceVariantAlpha
+                                color: chipColor.value
 
-                                Behavior on color {
-                                    ColorAnimation {
-                                        duration: root._fastDuration
-                                        easing.type: Theme.standardEasing
-                                    }
+                                DankColorAnimation {
+                                    id: chipColor
+                                    to: categoryChip.isSelected ? Theme.primary : chipArea.containsMouse ? Theme.surfaceHover : Theme.surfaceVariantAlpha
+                                    duration: root._fastDuration
+                                    easingType: Theme.standardEasing
                                 }
 
                                 StyledText {

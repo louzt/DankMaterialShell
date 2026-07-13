@@ -545,12 +545,18 @@ func (a *SecretAgent) GetSecrets(
 		out[settingName] = sec
 	}
 	if settingName == "vpn" && a.backend != nil && !isPKCS11 && (vpnUsername != "" || reply.Save) {
-		pw := reply.Secrets["password"]
+		secrets := make(map[string]string)
+		for k, v := range reply.Secrets {
+			if k != "username" {
+				secrets[k] = v
+			}
+		}
 		a.backend.pendingVPNSaveMu.Lock()
 		a.backend.pendingVPNSave = &pendingVPNCredentials{
 			ConnectionPath: string(path),
 			Username:       vpnUsername,
-			Password:       pw,
+			Password:       reply.Secrets["password"],
+			Secrets:        secrets,
 			SavePassword:   reply.Save,
 		}
 		a.backend.pendingVPNSaveMu.Unlock()
@@ -790,7 +796,23 @@ func inferVPNFields(conn map[string]nmVariantMap, vpnService string) []string {
 			fields = []string{"username", "password"}
 		}
 	case strings.Contains(vpnService, "openvpn"):
-		if connType == "password" || connType == "password-tls" {
+		switch connType {
+		case "tls":
+			// Cert auth wants the private-key passphrase, not a password.
+			if secretFlagsNotRequired(dataMap["cert-pass-flags"]) {
+				return nil
+			}
+			return []string{"cert-pass"}
+		case "password-tls":
+			fields = []string{}
+			if dataMap["username"] == "" {
+				fields = append(fields, "username")
+			}
+			fields = append(fields, "password")
+			if !secretFlagsNotRequired(dataMap["cert-pass-flags"]) {
+				fields = append(fields, "cert-pass")
+			}
+		case "password":
 			if dataMap["username"] == "" {
 				fields = []string{"username", "password"}
 			}
@@ -803,6 +825,19 @@ func inferVPNFields(conn map[string]nmVariantMap, vpnService string) []string {
 	}
 
 	return fields
+}
+
+// NetworkManager secret flags: bit 1 (value 2) marks a secret as not-saved,
+// bit 2 (value 4) as not-required. A not-required secret must not be prompted.
+func secretFlagsNotRequired(flags string) bool {
+	if flags == "" {
+		return false
+	}
+	n, err := strconv.Atoi(flags)
+	if err != nil {
+		return false
+	}
+	return n&0x4 != 0
 }
 
 func needsExternalBrowserAuth(protocol, authType, username string, data map[string]string) bool {

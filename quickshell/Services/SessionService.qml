@@ -14,6 +14,8 @@ Singleton {
 
     property bool hasUwsm: false
     property bool isElogind: false
+    property bool loginctlCommandAvailable: false
+    property bool systemctlCommandAvailable: false
     property bool hibernateSupported: false
     property bool inhibitorAvailable: true
     property bool idleInhibited: false
@@ -21,7 +23,6 @@ Singleton {
     property string nvidiaCommand: ""
 
     property bool loginctlAvailable: false
-    property bool wtypeAvailable: false
     property string sessionId: ""
     property string sessionPath: ""
     property bool locked: false
@@ -53,9 +54,10 @@ Singleton {
         repeat: false
         onTriggered: {
             detectElogindProcess.running = true;
+            detectLoginctlProcess.running = true;
+            detectSystemctlProcess.running = true;
             detectHibernateProcess.running = true;
             detectPrimeRunProcess.running = true;
-            detectWtypeProcess.running = true;
             if (!SettingsData.loginctlLockIntegration) {
                 log.debug("loginctl lock integration disabled by user");
                 return;
@@ -90,6 +92,26 @@ Singleton {
     }
 
     Process {
+        id: detectLoginctlProcess
+        running: false
+        command: ["sh", "-c", "command -v loginctl"]
+
+        onExited: function (exitCode) {
+            loginctlCommandAvailable = (exitCode === 0);
+        }
+    }
+
+    Process {
+        id: detectSystemctlProcess
+        running: false
+        command: ["sh", "-c", "command -v systemctl"]
+
+        onExited: function (exitCode) {
+            systemctlCommandAvailable = (exitCode === 0);
+        }
+    }
+
+    Process {
         id: detectHibernateProcess
         running: false
         command: ["grep", "-q", "disk", "/sys/power/state"]
@@ -117,15 +139,6 @@ Singleton {
             }
             ToastService.showError(I18n.tr("Hibernate failed"), errorOutput);
             errorOutput = "";
-        }
-    }
-
-    Process {
-        id: detectWtypeProcess
-        running: false
-        command: ["sh", "-c", "command -v wtype"]
-        onExited: exitCode => {
-            wtypeAvailable = (exitCode === 0);
         }
     }
 
@@ -336,9 +349,14 @@ Singleton {
         }
     }
 
+    function powerManagerCommand(action) {
+        const useLoginctl = isElogind || (loginctlCommandAvailable && !systemctlCommandAvailable);
+        return [useLoginctl ? "loginctl" : "systemctl", action];
+    }
+
     function suspend() {
         if (SettingsData.customPowerActionSuspend.length === 0) {
-            Quickshell.execDetached([isElogind ? "loginctl" : "systemctl", "suspend"]);
+            Quickshell.execDetached(powerManagerCommand("suspend"));
         } else {
             Quickshell.execDetached(["sh", "-c", SettingsData.customPowerActionSuspend]);
         }
@@ -349,13 +367,13 @@ Singleton {
         if (SettingsData.customPowerActionHibernate.length > 0) {
             hibernateProcess.command = ["sh", "-c", SettingsData.customPowerActionHibernate];
         } else {
-            hibernateProcess.command = [isElogind ? "loginctl" : "systemctl", "hibernate"];
+            hibernateProcess.command = powerManagerCommand("hibernate");
         }
         hibernateProcess.running = true;
     }
 
     function suspendThenHibernate() {
-        Quickshell.execDetached([isElogind ? "loginctl" : "systemctl", "suspend-then-hibernate"]);
+        Quickshell.execDetached(powerManagerCommand("suspend-then-hibernate"));
     }
 
     function suspendWithBehavior(behavior) {
@@ -370,7 +388,7 @@ Singleton {
 
     function reboot() {
         if (SettingsData.customPowerActionReboot.length === 0) {
-            Quickshell.execDetached([isElogind ? "loginctl" : "systemctl", "reboot"]);
+            Quickshell.execDetached(powerManagerCommand("reboot"));
         } else {
             Quickshell.execDetached(["sh", "-c", SettingsData.customPowerActionReboot]);
         }
@@ -378,7 +396,7 @@ Singleton {
 
     function poweroff() {
         if (SettingsData.customPowerActionPowerOff.length === 0) {
-            Quickshell.execDetached([isElogind ? "loginctl" : "systemctl", "poweroff"]);
+            Quickshell.execDetached(powerManagerCommand("poweroff"));
         } else {
             Quickshell.execDetached(["sh", "-c", SettingsData.customPowerActionPowerOff]);
         }

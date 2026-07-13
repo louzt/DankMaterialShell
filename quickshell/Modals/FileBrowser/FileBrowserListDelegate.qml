@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Effects
+import Quickshell.Widgets
 import qs.Common
 import qs.Widgets
 
@@ -95,23 +95,25 @@ StyledRect {
     }
 
     property string _videoThumb: ""
+    property bool _thumbGenAttempted: false
 
+    // Probe the thumbnail optimistically; Image.Error triggers generation
     onVideoThumbnailPathChanged: {
-        _videoThumb = "";
-        if (!videoThumbnailPath)
+        _thumbGenAttempted = false;
+        _videoThumb = videoThumbnailPath;
+    }
+
+    function generateVideoThumbnail() {
+        if (_thumbGenAttempted)
             return;
+        _thumbGenAttempted = true;
+        _videoThumb = "";
         const thumbPath = videoThumbnailPath;
-        const fp = listDelegateRoot.filePath;
-        Paths.mkdir(_xdgCacheHome + "/thumbnails/normal");
-        Proc.runCommand(null, ["test", "-f", thumbPath], function (output, exitCode) {
-            if (exitCode === 0) {
+        const thumbDir = _xdgCacheHome + "/thumbnails/normal";
+        const script = "mkdir -p \"$1\" && ffmpegthumbnailer -i \"$2\" -o \"$3\" -s 128 -f";
+        Proc.runCommand(null, ["sh", "-c", script, "thumb", thumbDir, listDelegateRoot.filePath, thumbPath], function (output, exitCode) {
+            if (exitCode === 0)
                 _videoThumb = thumbPath;
-            } else {
-                Proc.runCommand(null, ["ffmpegthumbnailer", "-i", fp, "-o", thumbPath, "-s", "128", "-f"], function (output, exitCode) {
-                    if (exitCode === 0)
-                        _videoThumb = thumbPath;
-                });
-            }
         });
     }
 
@@ -139,9 +141,9 @@ StyledRect {
     color: {
         if (keyboardNavigationActive && listDelegateRoot.index === selectedIndex)
             return Theme.surfacePressed;
-        return listMouseArea.containsMouse ? Theme.withAlpha(Theme.surfaceContainerHigh, Theme.popupTransparency) : "transparent";
+        return listMouseArea.containsMouse ? Theme.withAlpha(Theme.surfaceContainerHigh, Theme.popupTransparency) : Theme.withAlpha(Theme.surfaceContainerHigh, 0);
     }
-    border.color: keyboardNavigationActive && listDelegateRoot.index === selectedIndex ? Theme.primary : "transparent"
+    border.color: keyboardNavigationActive && listDelegateRoot.index === selectedIndex ? Theme.primary : Theme.withAlpha(Theme.primary, 0)
     border.width: (keyboardNavigationActive && listDelegateRoot.index === selectedIndex) ? 2 : 0
 
     Component.onCompleted: {
@@ -165,46 +167,33 @@ StyledRect {
             height: 28
             anchors.verticalCenter: parent.verticalCenter
 
-            Image {
-                id: listPreviewImage
+            ClippingRectangle {
                 anchors.fill: parent
-                property string imagePath: {
-                    if (!listDelegateRoot.fileIsDir && isImage)
-                        return listDelegateRoot.filePath;
-                    if (_videoThumb)
-                        return _videoThumb;
-                    return "";
-                }
-                source: imagePath ? "file://" + imagePath.split('/').map(s => encodeURIComponent(s)).join('/') : ""
-                fillMode: Image.PreserveAspectCrop
-                sourceSize.width: 32
-                sourceSize.height: 32
-                asynchronous: true
-                visible: false
-            }
+                radius: Theme.cornerRadius
+                color: "transparent"
 
-            MultiEffect {
-                anchors.fill: parent
-                source: listPreviewImage
-                maskEnabled: true
-                maskSource: listImageMask
-                visible: listPreviewImage.status === Image.Ready && !listDelegateRoot.fileIsDir && (isImage || isVideo)
-                maskThresholdMin: 0.5
-                maskSpreadAtMin: 1
-            }
-
-            Item {
-                id: listImageMask
-                anchors.fill: parent
-                layer.enabled: true
-                layer.smooth: true
-                visible: false
-
-                Rectangle {
+                Image {
+                    id: listPreviewImage
                     anchors.fill: parent
-                    radius: Theme.cornerRadius
-                    color: "black"
-                    antialiasing: true
+                    property string imagePath: _videoThumb
+                    source: imagePath ? "file://" + imagePath.split('/').map(s => encodeURIComponent(s)).join('/') : ""
+                    fillMode: Image.PreserveAspectCrop
+                    sourceSize.width: 32
+                    sourceSize.height: 32
+                    asynchronous: true
+                    visible: status === Image.Ready && !listDelegateRoot.fileIsDir && isVideo
+                    onStatusChanged: {
+                        if (status === Image.Error && _videoThumb)
+                            generateVideoThumbnail();
+                    }
+                }
+
+                CachingImage {
+                    anchors.fill: parent
+                    imagePath: !listDelegateRoot.fileIsDir && isImage ? listDelegateRoot.filePath : ""
+                    maxCacheSize: 256
+                    animate: false
+                    visible: !listDelegateRoot.fileIsDir && isImage
                 }
             }
 

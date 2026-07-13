@@ -6,6 +6,16 @@ import qs.Widgets
 Row {
     id: root
 
+    function checkParentDisablesTransparency() {
+        let p = parent;
+        while (p) {
+            if (p.disablePopupTransparency === true)
+                return true;
+            p = p.parent;
+        }
+        return false;
+    }
+
     property var model: []
     property int currentIndex: -1
     property string selectionMode: "single"
@@ -20,6 +30,14 @@ Row {
     property int checkIconSize: size === "small" ? Theme.iconSizeSmall - 2 : Theme.iconSizeSmall
     property int textSize: size === "small" ? Theme.fontSizeSmall : Theme.fontSizeMedium
     property bool userInteracted: false
+    property bool usePopupTransparency: !checkParentDisablesTransparency()
+    property real maximumWidth: -1
+    readonly property real _segmentCap: {
+        const count = model?.length ?? 0;
+        if (maximumWidth <= 0 || count === 0)
+            return -1;
+        return (maximumWidth - spacing * (count - 1)) / count - 4;
+    }
 
     signal selectionChanged(int index, bool selected)
     signal animationCompleted
@@ -87,10 +105,16 @@ Row {
             property bool prevSelected: index > 0 ? root.isSelected(index - 1) : false
             property bool nextSelected: index < repeater.count - 1 ? root.isSelected(index + 1) : false
 
-            width: Math.max(contentItem.implicitWidth + root.buttonPadding * 2, root.minButtonWidth) + (selected ? 4 : 0)
+            readonly property real contentNaturalWidth: (checkIcon.visible ? checkIcon.width + contentRow.spacing : 0) + buttonText.implicitWidth
+
+            width: {
+                const natural = Math.max(contentNaturalWidth + root.buttonPadding * 2, root.minButtonWidth);
+                const capped = root._segmentCap > 0 ? Math.min(natural, Math.max(root._segmentCap, root.minButtonWidth)) : natural;
+                return capped + (selected ? 4 : 0);
+            }
             height: root.buttonHeight
 
-            color: selected ? Theme.buttonBg : Theme.withAlpha(Theme.surfaceVariant, Theme.popupTransparency)
+            color: selected ? Theme.buttonBg : (root.usePopupTransparency ? Theme.withAlpha(Theme.surfaceVariant, Theme.popupTransparency) : Theme.surfaceVariant)
             border.color: "transparent"
             border.width: 0
 
@@ -215,11 +239,21 @@ Row {
 
                     StyledText {
                         id: buttonText
+
+                        readonly property real capAvailable: {
+                            if (root._segmentCap <= 0)
+                                return -1;
+                            const cap = Math.max(root._segmentCap, root.minButtonWidth);
+                            return Math.max(0, cap - root.buttonPadding * 2 - (checkIcon.visible ? checkIcon.width + contentRow.spacing : 0));
+                        }
+
                         text: typeof modelData === "string" ? modelData : modelData.text || ""
                         font.pixelSize: root.textSize
                         font.weight: segment.selected ? Font.Medium : Font.Normal
                         color: segment.selected ? Theme.buttonText : Theme.surfaceVariantText
                         anchors.verticalCenter: parent.verticalCenter
+                        width: capAvailable < 0 ? implicitWidth : Math.min(implicitWidth, capAvailable)
+                        maximumLineCount: 1
                     }
                 }
             }

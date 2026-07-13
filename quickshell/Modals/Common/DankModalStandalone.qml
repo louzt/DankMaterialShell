@@ -53,7 +53,7 @@ Item {
     readonly property alias contentWindow: contentWindow
     readonly property alias clickCatcher: clickCatcher
     readonly property bool useHyprlandFocusGrab: CompositorService.useHyprlandFocusGrab
-    readonly property bool useBackground: showBackground && !SettingsData.frameEnabled && SettingsData.modalDarkenBackground
+    readonly property bool useBackground: showBackground && !FrameTransitionState.effectiveFrameEnabled && SettingsData.modalDarkenBackground
     readonly property bool useSingleWindow: CompositorService.isHyprland || useBackground
 
     signal opened
@@ -61,6 +61,11 @@ Item {
     signal backgroundClicked
 
     property bool animationsEnabled: true
+
+    function _kickBlurCommit() {
+        if (typeof contentWindow.update === "function")
+            contentWindow.update();
+    }
 
     function open() {
         closeTimer.stop();
@@ -201,6 +206,12 @@ Item {
             }
         })(), dpr)
 
+    onAlignedXChanged: _kickBlurCommit()
+    onAlignedYChanged: _kickBlurCommit()
+    onAlignedWidthChanged: _kickBlurCommit()
+    onAlignedHeightChanged: _kickBlurCommit()
+    onShouldBeVisibleChanged: _kickBlurCommit()
+
     PanelWindow {
         id: clickCatcher
         visible: false
@@ -245,10 +256,12 @@ Item {
             targetWindow: contentWindow
             readonly property real s: Math.min(1, modalContainer.scaleValue)
             readonly property real op: Math.max(0, Math.min(1, (morph.openProgress - 0.06) * 2))
-            blurX: modalContainer.x + modalContainer.width * (1 - s * op) * 0.5 + Theme.snap(modalContainer.animX, root.dpr)
-            blurY: modalContainer.y + modalContainer.height * (1 - s * op) * 0.5 + Theme.snap(modalContainer.animY, root.dpr)
-            blurWidth: root.shouldBeVisible ? modalContainer.width * s * op : 0
-            blurHeight: root.shouldBeVisible ? modalContainer.height * s * op : 0
+            readonly property real visibleScale: s * op
+            // Blur tracks the surface's scaled rect, matching the connected backend.
+            blurX: modalContainer.x + modalContainer.width * (1 - visibleScale) * 0.5 + Theme.snap(modalContainer.animX, root.dpr)
+            blurY: modalContainer.y + modalContainer.height * (1 - visibleScale) * 0.5 + Theme.snap(modalContainer.animY, root.dpr)
+            blurWidth: root.shouldBeVisible ? modalContainer.width * visibleScale : 0
+            blurHeight: root.shouldBeVisible ? modalContainer.height * visibleScale : 0
             blurRadius: root.cornerRadius
         }
 
@@ -325,8 +338,8 @@ Item {
                 enabled: root.useSingleWindow && root.shouldBeVisible
                 hoverEnabled: false
                 acceptedButtons: Qt.AllButtons
-                onPressed: mouse.accepted = true
-                onClicked: mouse.accepted = true
+                onPressed: mouse => mouse.accepted = true
+                onClicked: mouse => mouse.accepted = true
                 z: -1
             }
 
@@ -338,6 +351,7 @@ Item {
             QtObject {
                 id: morph
                 property real openProgress: root.shouldBeVisible ? 1 : 0
+                onOpenProgressChanged: root._kickBlurCommit()
                 Behavior on openProgress {
                     enabled: root.animationsEnabled
                     DankAnim {

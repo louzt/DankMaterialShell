@@ -259,7 +259,7 @@ Item {
                     Rectangle {
                         width: parent.width
                         height: 1
-                        color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.12)
+                        color: Theme.outlineStrong
                         visible: NetworkService.wifiEnabled
                     }
 
@@ -430,7 +430,7 @@ Item {
 
                         Column {
                             width: parent.width
-                            spacing: 4
+                            spacing: Theme.spacingXS
                             visible: (NetworkService.wifiNetworks?.length ?? 0) > 0
 
                             Repeater {
@@ -526,7 +526,7 @@ Item {
 
                                                 Column {
                                                     anchors.verticalCenter: parent.verticalCenter
-                                                    spacing: 2
+                                                    spacing: Theme.spacingXXS
                                                     width: parent.width - 20 - Theme.spacingS
 
                                                     Row {
@@ -622,7 +622,7 @@ Item {
                                                     width: 28
                                                     height: 28
                                                     radius: 14
-                                                    color: wifiExpandBtn.containsMouse ? Theme.surfacePressed : "transparent"
+                                                    color: wifiExpandBtn.containsMouse ? Theme.surfacePressed : Theme.withAlpha(Theme.surfacePressed, 0)
                                                     visible: isConnected || modelData.saved
 
                                                     DankIcon {
@@ -859,7 +859,7 @@ Item {
 
                 Column {
                     width: parent.width
-                    spacing: 4
+                    spacing: Theme.spacingXS
 
                     Repeater {
                         model: savedWifiCard.expanded ? savedWifiCard.savedNetworks : []
@@ -935,7 +935,7 @@ Item {
 
                                         Column {
                                             anchors.verticalCenter: parent.verticalCenter
-                                            spacing: 2
+                                            spacing: Theme.spacingXXS
                                             width: parent.width - 20 - Theme.spacingS
 
                                             Row {
@@ -991,7 +991,7 @@ Item {
                                             width: 28
                                             height: 28
                                             radius: 14
-                                            color: savedWifiExpandBtn.containsMouse ? Theme.surfacePressed : "transparent"
+                                            color: savedWifiExpandBtn.containsMouse ? Theme.surfacePressed : Theme.withAlpha(Theme.surfacePressed, 0)
                                             visible: !isOutOfRange
 
                                             DankIcon {
@@ -1202,7 +1202,7 @@ Item {
                                     }
 
                                     background: Rectangle {
-                                        color: parent.hovered ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08) : "transparent"
+                                        color: parent.hovered ? Theme.primaryHoverLight : Theme.withAlpha(Theme.primaryHoverLight, 0)
                                         radius: Theme.cornerRadius / 2
                                     }
 
@@ -1228,7 +1228,7 @@ Item {
                                     }
 
                                     background: Rectangle {
-                                        color: parent.hovered ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08) : "transparent"
+                                        color: parent.hovered ? Theme.primaryHoverLight : Theme.withAlpha(Theme.primaryHoverLight, 0)
                                         radius: Theme.cornerRadius / 2
                                     }
 
@@ -1250,7 +1250,7 @@ Item {
                                     }
 
                                     background: Rectangle {
-                                        color: parent.hovered ? Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.08) : "transparent"
+                                        color: parent.hovered ? Theme.errorHover : Theme.withAlpha(Theme.errorHover, 0)
                                         radius: Theme.cornerRadius / 2
                                     }
 

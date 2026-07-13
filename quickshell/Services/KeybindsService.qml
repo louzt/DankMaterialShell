@@ -42,6 +42,7 @@ Singleton {
     property bool saving: false
     property bool fixing: false
     property string lastError: ""
+    property string modKey: "Super"
     property bool dmsBindsIncluded: true
 
     property var dmsStatus: ({
@@ -348,6 +349,7 @@ Singleton {
 
     function _processData() {
         keybinds = _rawData || {};
+        modKey = currentProvider === "niri" ? (_rawData?.modKey || "Super") : "Super";
         dmsBindsIncluded = _rawData?.dmsBindsIncluded ?? true;
         const status = _rawData?.dmsStatus;
         if (status) {

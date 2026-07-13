@@ -56,7 +56,7 @@ Item {
     readonly property bool hasConfigConflict: configConflict !== null
     readonly property string _originalKey: editingKeyIndex >= 0 && editingKeyIndex < keys.length ? keys[editingKeyIndex].key : ""
     readonly property string _selectedDesc: editingKeyIndex >= 0 && editingKeyIndex < keys.length ? (keys[editingKeyIndex].desc || bindData.desc || "") : (bindData.desc || "")
-    readonly property var _conflicts: editKey ? KeyUtils.getConflictingBinds(editKey, bindData.action, KeybindsService.getFlatBinds()) : []
+    readonly property var _conflicts: editKey ? KeyUtils.getConflictingBinds(editKey, bindData.action, KeybindsService.getFlatBinds(), KeybindsService.currentProvider === "niri" ? KeybindsService.modKey : "Super") : []
     readonly property bool hasConflict: _conflicts.length > 0
 
     readonly property real _inputHeight: Math.round(Theme.fontSizeMedium * 3)
@@ -304,7 +304,7 @@ Item {
             topLeftRadius: Theme.cornerRadius
             topRightRadius: Theme.cornerRadius
             color: root.hasOverride ? Theme.surfaceContainer : Theme.surfaceContainerHighest
-            border.color: root.hasOverride ? Theme.outlineVariant : "transparent"
+            border.color: root.hasOverride ? Theme.outlineVariant : Theme.withAlpha(Theme.outlineVariant, 0)
             border.width: root.hasOverride ? 1 : 0
 
             RowLayout {
@@ -337,7 +337,7 @@ Item {
                             Rectangle {
                                 anchors.fill: parent
                                 radius: parent.radius
-                                color: chipArea.pressed ? Theme.surfaceTextHover : (chipArea.containsMouse ? Theme.surfaceTextHover : "transparent")
+                                color: chipArea.pressed ? Theme.surfaceTextHover : (chipArea.containsMouse ? Theme.surfaceTextHover : Theme.withAlpha(Theme.surfaceTextHover, 0))
                             }
 
                             StyledText {
@@ -370,7 +370,7 @@ Item {
                 ColumnLayout {
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignVCenter
-                    spacing: 2
+                    spacing: Theme.spacingXXS
 
                     StyledText {
                         text: root.isExpanded ? (root._selectedDesc || root.bindData.action || I18n.tr("No action")) : (root.bindData.desc || root.bindData.action || I18n.tr("No action"))
@@ -461,7 +461,7 @@ Item {
             width: parent ? parent.width : 0
             height: expandedContent.implicitHeight + Theme.spacingL * 2
             color: Theme.surfaceContainerHigh
-            border.color: root.hasOverride ? Theme.outlineVariant : "transparent"
+            border.color: root.hasOverride ? Theme.outlineVariant : Theme.withAlpha(Theme.outlineVariant, 0)
             border.width: root.hasOverride ? 1 : 0
             bottomLeftRadius: Theme.cornerRadius
             bottomRightRadius: Theme.cornerRadius
@@ -564,7 +564,7 @@ Item {
                                 Rectangle {
                                     anchors.fill: parent
                                     radius: parent.radius
-                                    color: editKeyChipArea.pressed ? Theme.surfaceTextHover : (editKeyChipArea.containsMouse && !parent.isSelected ? Theme.surfaceTextHover : "transparent")
+                                    color: editKeyChipArea.pressed ? Theme.surfaceTextHover : (editKeyChipArea.containsMouse && !parent.isSelected ? Theme.surfaceTextHover : Theme.withAlpha(Theme.surfaceTextHover, 0))
                                 }
 
                                 StyledText {
@@ -597,7 +597,7 @@ Item {
                             Rectangle {
                                 anchors.fill: parent
                                 radius: parent.radius
-                                color: addKeyArea.pressed ? Theme.surfaceTextHover : (addKeyArea.containsMouse && !root.addingNewKey ? Theme.surfaceTextHover : "transparent")
+                                color: addKeyArea.pressed ? Theme.surfaceTextHover : (addKeyArea.containsMouse && !root.addingNewKey ? Theme.surfaceTextHover : Theme.withAlpha(Theme.surfaceTextHover, 0))
                             }
 
                             DankIcon {
@@ -653,7 +653,7 @@ Item {
                             anchors.fill: parent
                             radius: Theme.cornerRadius
                             color: root.recording ? Theme.primaryContainer : Theme.surfaceContainer
-                            border.color: root.recording ? Theme.primary : Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.3)
+                            border.color: root.recording ? Theme.primary : Theme.outlineHeavy
                             border.width: root.recording ? 2 : 1
 
                             Row {
@@ -725,8 +725,11 @@ Item {
                                 if (!mods.includes("Shift"))
                                     mods.push("Shift");
                             }
+                            const hasShift = mods.includes("Shift");
+                            if (KeybindsService.currentProvider === "niri")
+                                mods = KeyUtils.withSymbolicMod(mods, KeybindsService.modKey);
 
-                            const key = KeyUtils.xkbKeyFromQtKey(qtKey, !!(event.modifiers & Qt.KeypadModifier));
+                            const key = KeyUtils.xkbKeyFromQtKey(qtKey, !!(event.modifiers & Qt.KeypadModifier), hasShift);
                             if (!key) {
                                 log.warn("Unknown key:", event.key, "mods:", event.modifiers);
                                 return;
@@ -756,7 +759,7 @@ Item {
                                 }
                                 wheel.accepted = true;
 
-                                const mods = [];
+                                let mods = [];
                                 if (wheel.modifiers & Qt.ControlModifier)
                                     mods.push("Ctrl");
                                 if (wheel.modifiers & Qt.ShiftModifier)
@@ -765,6 +768,8 @@ Item {
                                     mods.push("Alt");
                                 if (wheel.modifiers & Qt.MetaModifier)
                                     mods.push("Super");
+                                if (KeybindsService.currentProvider === "niri")
+                                    mods = KeyUtils.withSymbolicMod(mods, KeybindsService.modKey);
 
                                 let wheelKey = "";
                                 if (wheel.angleDelta.y > 0)
@@ -796,7 +801,7 @@ Item {
                         Rectangle {
                             anchors.fill: parent
                             radius: parent.radius
-                            color: singleAddKeyArea.pressed ? Theme.surfaceTextHover : (singleAddKeyArea.containsMouse && !root.addingNewKey ? Theme.surfaceTextHover : "transparent")
+                            color: singleAddKeyArea.pressed ? Theme.surfaceTextHover : (singleAddKeyArea.containsMouse && !root.addingNewKey ? Theme.surfaceTextHover : Theme.withAlpha(Theme.surfaceTextHover, 0))
                         }
 
                         DankIcon {
@@ -873,7 +878,7 @@ Item {
                                 Layout.preferredHeight: root._buttonHeight
                                 radius: Theme.cornerRadius
                                 color: root._actionType === modelData.id ? Theme.surfaceContainerHighest : Theme.surfaceContainer
-                                border.color: root._actionType === modelData.id ? Theme.outline : (typeArea.containsMouse ? Theme.outlineVariant : "transparent")
+                                border.color: root._actionType === modelData.id ? Theme.outline : (typeArea.containsMouse ? Theme.outlineVariant : Theme.withAlpha(Theme.outlineVariant, 0))
                                 border.width: 1
                                 clip: true
 
@@ -1216,7 +1221,7 @@ Item {
                         Rectangle {
                             anchors.fill: parent
                             radius: parent.radius
-                            color: customToggleArea.pressed ? Theme.surfaceTextHover : (customToggleArea.containsMouse ? Theme.surfaceTextHover : "transparent")
+                            color: customToggleArea.pressed ? Theme.surfaceTextHover : (customToggleArea.containsMouse ? Theme.surfaceTextHover : Theme.withAlpha(Theme.surfaceTextHover, 0))
                         }
 
                         DankIcon {
@@ -1464,7 +1469,7 @@ Item {
                         Rectangle {
                             anchors.fill: parent
                             radius: parent.radius
-                            color: presetToggleArea.pressed ? Theme.surfaceTextHover : (presetToggleArea.containsMouse ? Theme.surfaceTextHover : "transparent")
+                            color: presetToggleArea.pressed ? Theme.surfaceTextHover : (presetToggleArea.containsMouse ? Theme.surfaceTextHover : Theme.withAlpha(Theme.surfaceTextHover, 0))
                         }
 
                         DankIcon {
@@ -1816,7 +1821,7 @@ Item {
                 Rectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 1
-                    color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.1)
+                    color: Theme.outlineStrong
                 }
 
                 RowLayout {

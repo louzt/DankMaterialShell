@@ -21,6 +21,9 @@ Item {
     property var calendars: []
     property var events: []
     property var eventsByDate: ({})
+    property var tasks: []
+    property var tasksByDate: ({})
+    property var _pendingTaskState: ({})
     property string lastError: ""
     property date focusDate: new Date()
     property var _loadedFrom: null
@@ -130,6 +133,7 @@ Item {
                 root.log.info("connected to dankcal:", root.socketPath);
                 root.refreshCalendars();
                 root.reloadEvents();
+                root.reloadTasks();
                 return;
             }
             if (!root.connected && !root.socketFound)
@@ -193,12 +197,19 @@ Item {
         }
     }
 
+    Timer {
+        id: tasksDebounce
+        interval: 400
+        repeat: false
+        onTriggered: root.reloadTasks()
+    }
+
     function _sendSubscribe() {
         subscribeSocket.send({
             "id": _nextId(),
             "method": "subscribe",
             "params": {
-                "topics": ["accounts", "calendars", "events", "sync"]
+                "topics": ["accounts", "calendars", "events", "tasks", "sync"]
             }
         });
     }
@@ -243,8 +254,14 @@ Item {
             refreshDebounce.restart();
             break;
         case "events":
+            refreshDebounce.restart();
+            break;
+        case "tasks":
+            tasksDebounce.restart();
+            break;
         case "sync":
             refreshDebounce.restart();
+            tasksDebounce.restart();
             break;
         }
     }
@@ -282,6 +299,7 @@ Item {
             }
             calendars = list;
             _rebuildEventsByDate();
+            _rebuildTasksByDate();
         });
     }
 
@@ -353,7 +371,7 @@ Item {
     function _normalizeEvent(e) {
         const allDay = !!e.allDay;
         const id = e.id || "";
-        if (id.startsWith("task_"))
+        if (id.startsWith("task_") || id.startsWith("vtodo_"))
             log.warn("daemon event id collides with task prefix:", id);
         return {
             "id": id,
@@ -362,6 +380,7 @@ Item {
             "description": e.description || "",
             "location": e.location || "",
             "url": e.url || "",
+            "meetingUrl": e.meetingUrl || "",
             "start": allDay ? _dayBoundary(e.start) : new Date(e.start),
             "end": allDay ? _dayBoundary(e.end) : new Date(e.end),
             "allDay": allDay,
@@ -474,6 +493,177 @@ Item {
                 lastError = response.error;
             else
                 reloadEvents();
+            if (callback)
+                callback(response);
+        });
+    }
+
+    function reloadTasks() {
+        if (!connected)
+            return;
+        sendRequest("tasks.list", {
+            "includeCompleted": true,
+            "limit": 5000
+        }, response => {
+            if (response.error) {
+                lastError = response.error;
+                return;
+            }
+            const raw = (response.result || {}).tasks || [];
+            tasks = raw.map(t => _applyPendingState(_normalizeTask(t)));
+            _rebuildTasksByDate();
+        });
+    }
+
+    // A completion toggle is applied optimistically; slow providers can serve a
+    // reload that predates the write, so the desired state wins over a
+    // disagreeing reload until the daemon confirms it or the hold expires.
+    function _applyPendingState(t) {
+        const pending = _pendingTaskState[t.id];
+        if (!pending)
+            return t;
+        if (t.completed === pending.completed || Date.now() > pending.expires) {
+            delete _pendingTaskState[t.id];
+            return t;
+        }
+        return Object.assign({}, t, {
+            "completed": pending.completed,
+            "status": pending.completed ? "completed" : "needs_action"
+        });
+    }
+
+    function _normalizeTask(t) {
+        const allDay = !!t.allDay;
+        return {
+            "id": t.id || "",
+            "calendarId": t.calendarId || "",
+            "title": t.summary || "(untitled)",
+            "description": t.description || "",
+            "location": t.location || "",
+            "status": t.status || "needs_action",
+            "completed": t.status === "completed",
+            "priority": t.priority || 0,
+            "due": t.due ? (allDay ? _dayBoundary(t.due) : new Date(t.due)) : null,
+            "allDay": allDay
+        };
+    }
+
+    function taskById(id) {
+        for (let i = 0; i < tasks.length; i++) {
+            if (tasks[i].id === id)
+                return tasks[i];
+        }
+        return null;
+    }
+
+    function taskCalendars() {
+        return calendars.filter(c => c.holdsTasks && !c.readOnly);
+    }
+
+    function defaultTaskCalendar() {
+        const writable = taskCalendars().filter(c => !c.hidden);
+        return writable.length > 0 ? writable[0] : null;
+    }
+
+    function _taskAsEvent(t) {
+        const cal = calendarById(t.calendarId);
+        return {
+            "id": "vtodo_" + t.id,
+            "title": t.title,
+            "description": t.description,
+            "location": t.location,
+            "url": "",
+            "calendar": cal ? cal.name : "",
+            "color": cal ? cal.color : fallbackPalette[0],
+            "readOnly": cal ? !!cal.readOnly : false,
+            "start": t.due,
+            "end": t.due,
+            "allDay": t.allDay,
+            "completed": t.completed,
+            "status": t.status,
+            "isMultiDay": false
+        };
+    }
+
+    function _rebuildTasksByDate() {
+        const hidden = _hiddenCalendarIds();
+        const map = {};
+        for (const t of tasks) {
+            if (!t.due || t.status === "cancelled" || hidden[t.calendarId])
+                continue;
+            const key = Qt.formatDate(t.due, "yyyy-MM-dd");
+            if (!map[key])
+                map[key] = [];
+            map[key].push(_taskAsEvent(t));
+        }
+        tasksByDate = map;
+    }
+
+    function _patchTask(id, changes) {
+        const next = tasks.slice();
+        for (let i = 0; i < next.length; i++) {
+            if (next[i].id !== id)
+                continue;
+            next[i] = Object.assign({}, next[i], changes);
+            break;
+        }
+        tasks = next;
+        _rebuildTasksByDate();
+    }
+
+    function createTask(fields, callback) {
+        sendRequest("tasks.create", fields, response => {
+            if (response.error)
+                lastError = response.error;
+            reloadTasks();
+            if (callback)
+                callback(response);
+        });
+    }
+
+    function updateTask(id, fields, callback) {
+        const params = Object.assign({
+            "id": id
+        }, fields);
+        sendRequest("tasks.update", params, response => {
+            if (response.error)
+                lastError = response.error;
+            reloadTasks();
+            if (callback)
+                callback(response);
+        });
+    }
+
+    function completeTask(id, completed, callback) {
+        _pendingTaskState[id] = {
+            "completed": completed,
+            "expires": Date.now() + 15000
+        };
+        _patchTask(id, {
+            "completed": completed,
+            "status": completed ? "completed" : "needs_action"
+        });
+        sendRequest("tasks.complete", {
+            "id": id,
+            "completed": completed
+        }, response => {
+            if (response.error) {
+                lastError = response.error;
+                delete _pendingTaskState[id];
+                reloadTasks();
+            }
+            if (callback)
+                callback(response);
+        });
+    }
+
+    function deleteTask(id, callback) {
+        sendRequest("tasks.delete", {
+            "id": id
+        }, response => {
+            if (response.error)
+                lastError = response.error;
+            reloadTasks();
             if (callback)
                 callback(response);
         });

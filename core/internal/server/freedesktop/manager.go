@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"sync"
+	"time"
 
 	"github.com/AvengeMedia/DankMaterialShell/core/internal/log"
 	"github.com/AvengeMedia/DankMaterialShell/core/pkg/dbusutil"
@@ -100,6 +101,41 @@ func (m *Manager) initializeSettings() error {
 	return nil
 }
 
+// ExpectColorSchemeEcho registers a self-write so the watcher swallows its SettingChanged echo instead of forwarding it as an external change.
+func (m *Manager) ExpectColorSchemeEcho(scheme string) {
+	var value uint32
+	switch scheme {
+	case "prefer-dark":
+		value = 1
+	case "prefer-light":
+		value = 2
+	}
+	m.selfEchoMu.Lock()
+	m.selfEchoes = append(m.selfEchoes, colorSchemeEcho{value: value, expires: time.Now().Add(10 * time.Second)})
+	m.selfEchoMu.Unlock()
+}
+
+func (m *Manager) consumeSelfEcho(value uint32) bool {
+	m.selfEchoMu.Lock()
+	defer m.selfEchoMu.Unlock()
+
+	now := time.Now()
+	kept := m.selfEchoes[:0]
+	consumed := false
+	for _, echo := range m.selfEchoes {
+		if now.After(echo.expires) {
+			continue
+		}
+		if !consumed && echo.value == value {
+			consumed = true
+			continue
+		}
+		kept = append(kept, echo)
+	}
+	m.selfEchoes = kept
+	return consumed
+}
+
 func (m *Manager) watchSettingsChanges() {
 	conn, err := dbus.ConnectSessionBus()
 	if err != nil {
@@ -142,13 +178,15 @@ func (m *Manager) watchSettingsChanges() {
 			continue
 		}
 
+		selfInflicted := m.consumeSelfEcho(colorScheme)
+
 		m.stateMutex.Lock()
 		changed := m.state.Settings.ColorScheme != colorScheme || !m.state.Settings.Available
 		m.state.Settings.ColorScheme = colorScheme
 		m.state.Settings.Available = true
 		m.stateMutex.Unlock()
 
-		if changed {
+		if changed && !selfInflicted {
 			m.NotifySubscribers()
 		}
 	}

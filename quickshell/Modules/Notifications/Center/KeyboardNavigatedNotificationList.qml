@@ -17,6 +17,7 @@ DankListView {
     property int swipingCardIndex: -1
     property real swipingCardOffset: 0
     property bool _stableHeightUpdatePending: false
+    property var transientSurfaceTracker: null
     readonly property real shadowBlurPx: Theme.elevationEnabled ? ((Theme.elevationLevel1 && Theme.elevationLevel1.blurPx !== undefined) ? Theme.elevationLevel1.blurPx : 4) : 0
     readonly property real shadowHorizontalGutter: Theme.snap(Math.max(Theme.spacingS, Math.min(32, shadowBlurPx * 1.5 + 6)), 1)
     readonly property real shadowVerticalGutter: Theme.snap(Math.max(Theme.spacingXS, 6), 1)
@@ -173,6 +174,7 @@ DankListView {
             notificationGroup: modelData
             keyboardNavigationActive: listView.keyboardActive
             animateExpansion: listView.cardAnimateExpansion && listView.listInitialized
+            transientSurfaceTracker: listView.transientSurfaceTracker
             opacity: {
                 const swipeAmount = Math.abs(delegateRoot.swipeOffset);
                 if (swipeAmount <= delegateRoot.swipeFadeStartOffset)

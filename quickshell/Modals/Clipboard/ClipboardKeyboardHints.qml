@@ -5,17 +5,17 @@ import qs.Widgets
 Rectangle {
     id: keyboardHints
 
-    property bool wtypeAvailable: false
+    property bool pasteAvailable: false
     property bool enterToPaste: false
     readonly property string hintsText: {
-        if (!wtypeAvailable)
+        if (!pasteAvailable)
             return I18n.tr("Ctrl+Tab: Switch Tab • Ctrl+S: Pin/Unpin • Shift+Del: Clear All • Esc: Close");
         return enterToPaste ? I18n.tr("Ctrl+Tab: Switch Tabs • Ctrl+S: Pin/Unpin • Shift+Enter: Copy • Shift+Del: Clear All • F10: Help • Esc: Close", "Keyboard hints when enter-to-paste is enabled") : I18n.tr("Ctrl+Tab: Switch Tabs • Ctrl+S: Pin/Unpin • Shift+Enter: Paste • Shift+Del: Clear All • F10: Help • Esc: Close");
     }
 
     height: ClipboardConstants.keyboardHintsHeight
     radius: Theme.cornerRadius
-    color: Qt.rgba(Theme.surfaceContainer.r, Theme.surfaceContainer.g, Theme.surfaceContainer.b, 0.95)
+    color: Theme.withAlpha(Theme.surfaceContainer, 0.95)
     border.color: Theme.primary
     border.width: 2
     opacity: visible ? 1 : 0
@@ -24,7 +24,7 @@ Rectangle {
     Column {
         width: parent.width - Theme.spacingL * 2
         anchors.centerIn: parent
-        spacing: 2
+        spacing: Theme.spacingXXS
 
         StyledText {
             text: keyboardHints.enterToPaste ? I18n.tr("↑/↓: Navigate • Enter: Paste • Ctrl+C: Copy • Del: Delete • Ctrl+E: Edit • Ctrl+S: Pin/Unpin • F10: Help", "Keyboard hints when enter-to-paste is enabled") : I18n.tr("↑/↓: Navigate • Enter/Ctrl+C: Copy • Del: Delete • Ctrl+E: Edit • Ctrl+S: Pin/Unpin • F10: Help")

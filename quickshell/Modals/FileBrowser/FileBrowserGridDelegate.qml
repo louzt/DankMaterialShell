@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Effects
+import Quickshell.Widgets
 import qs.Common
 import qs.Widgets
 
@@ -98,25 +98,25 @@ StyledRect {
     }
 
     property string _videoThumb: ""
+    property bool _thumbGenAttempted: false
 
+    // Probe the thumbnail optimistically; Image.Error triggers generation
     onVideoThumbnailPathChanged: {
-        _videoThumb = "";
-        if (!videoThumbnailPath)
+        _thumbGenAttempted = false;
+        _videoThumb = videoThumbnailPath;
+    }
+
+    function generateVideoThumbnail() {
+        if (_thumbGenAttempted)
             return;
+        _thumbGenAttempted = true;
+        _videoThumb = "";
         const thumbPath = videoThumbnailPath;
         const thumbDir = _xdgCacheHome + "/thumbnails/" + _thumbnailSize;
-        const size = _thumbnailPx;
-        const fp = delegateRoot.filePath;
-        Paths.mkdir(thumbDir);
-        Proc.runCommand(null, ["test", "-f", thumbPath], function (output, exitCode) {
-            if (exitCode === 0) {
+        const script = "mkdir -p \"$1\" && ffmpegthumbnailer -i \"$2\" -o \"$3\" -s " + _thumbnailPx + " -f";
+        Proc.runCommand(null, ["sh", "-c", script, "thumb", thumbDir, delegateRoot.filePath, thumbPath], function (output, exitCode) {
+            if (exitCode === 0)
                 _videoThumb = thumbPath;
-            } else {
-                Proc.runCommand(null, ["ffmpegthumbnailer", "-i", fp, "-o", thumbPath, "-s", String(size), "-f"], function (output, exitCode) {
-                    if (exitCode === 0)
-                        _videoThumb = thumbPath;
-                });
-            }
         });
     }
 
@@ -136,9 +136,9 @@ StyledRect {
         if (keyboardNavigationActive && delegateRoot.index === selectedIndex)
             return Theme.surfacePressed;
 
-        return mouseArea.containsMouse ? Theme.withAlpha(Theme.surfaceContainerHigh, Theme.popupTransparency) : "transparent";
+        return mouseArea.containsMouse ? Theme.withAlpha(Theme.surfaceContainerHigh, Theme.popupTransparency) : Theme.withAlpha(Theme.surfaceContainerHigh, 0);
     }
-    border.color: keyboardNavigationActive && delegateRoot.index === selectedIndex ? Theme.primary : "transparent"
+    border.color: keyboardNavigationActive && delegateRoot.index === selectedIndex ? Theme.primary : Theme.withAlpha(Theme.primary, 0)
     border.width: (keyboardNavigationActive && delegateRoot.index === selectedIndex) ? 2 : 0
 
     Component.onCompleted: {
@@ -160,62 +160,52 @@ StyledRect {
             height: weMode ? 165 : (iconSizes[iconSizeIndex] - 8)
             anchors.horizontalCenter: parent.horizontalCenter
 
-            Image {
-                id: gridPreviewImage
+            ClippingRectangle {
                 anchors.fill: parent
                 anchors.margins: 2
-                property var weExtensions: [".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".tga", ".jxl", ".avif", ".heif", ".exr"]
-                property int weExtIndex: 0
-                property string imagePath: {
-                    if (weMode && delegateRoot.fileIsDir)
-                        return delegateRoot.filePath + "/preview" + weExtensions[weExtIndex];
-                    if (!delegateRoot.fileIsDir && isImage)
-                        return delegateRoot.filePath;
-                    if (_videoThumb)
-                        return _videoThumb;
-                    return "";
-                }
-                source: imagePath ? "file://" + imagePath.split('/').map(s => encodeURIComponent(s)).join('/') : ""
-                onStatusChanged: {
-                    if (weMode && delegateRoot.fileIsDir && status === Image.Error) {
-                        if (weExtIndex < weExtensions.length - 1) {
-                            weExtIndex++;
-                        } else {
-                            imagePath = "";
-                        }
-                    }
-                }
-                fillMode: Image.PreserveAspectCrop
-                sourceSize.width: weMode ? 225 : iconSizes[iconSizeIndex]
-                sourceSize.height: weMode ? 225 : iconSizes[iconSizeIndex]
-                asynchronous: true
-                visible: false
-            }
+                radius: Theme.cornerRadius
+                color: "transparent"
 
-            MultiEffect {
-                anchors.fill: parent
-                anchors.margins: 2
-                source: gridPreviewImage
-                maskEnabled: true
-                maskSource: gridImageMask
-                visible: gridPreviewImage.status === Image.Ready && ((!delegateRoot.fileIsDir && (isImage || isVideo)) || (weMode && delegateRoot.fileIsDir))
-                maskThresholdMin: 0.5
-                maskSpreadAtMin: 1
-            }
-
-            Item {
-                id: gridImageMask
-                anchors.fill: parent
-                anchors.margins: 2
-                layer.enabled: true
-                layer.smooth: true
-                visible: false
-
-                Rectangle {
+                Image {
+                    id: gridPreviewImage
                     anchors.fill: parent
-                    radius: Theme.cornerRadius
-                    color: "black"
-                    antialiasing: true
+                    property var weExtensions: [".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".tga", ".jxl", ".avif", ".heif", ".exr"]
+                    property int weExtIndex: 0
+                    property string imagePath: {
+                        if (weMode && delegateRoot.fileIsDir)
+                            return delegateRoot.filePath + "/preview" + weExtensions[weExtIndex];
+                        if (_videoThumb)
+                            return _videoThumb;
+                        return "";
+                    }
+                    source: imagePath ? "file://" + imagePath.split('/').map(s => encodeURIComponent(s)).join('/') : ""
+                    onStatusChanged: {
+                        if (status !== Image.Error)
+                            return;
+                        if (weMode && delegateRoot.fileIsDir) {
+                            if (weExtIndex < weExtensions.length - 1) {
+                                weExtIndex++;
+                            } else {
+                                imagePath = "";
+                            }
+                            return;
+                        }
+                        if (_videoThumb)
+                            generateVideoThumbnail();
+                    }
+                    fillMode: Image.PreserveAspectCrop
+                    sourceSize.width: weMode ? 225 : iconSizes[iconSizeIndex]
+                    sourceSize.height: weMode ? 225 : iconSizes[iconSizeIndex]
+                    asynchronous: true
+                    visible: status === Image.Ready && ((!delegateRoot.fileIsDir && isVideo) || (weMode && delegateRoot.fileIsDir))
+                }
+
+                CachingImage {
+                    anchors.fill: parent
+                    imagePath: !delegateRoot.fileIsDir && isImage ? delegateRoot.filePath : ""
+                    maxCacheSize: 256
+                    animate: false
+                    visible: !delegateRoot.fileIsDir && isImage
                 }
             }
 

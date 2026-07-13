@@ -54,10 +54,13 @@ Item {
     property bool addHorizontalPadding: false
     property string emptyText: ""
     property bool usePopupTransparency: !checkParentDisablesTransparency()
+    property var transientSurfaceTracker: null
 
     signal valueChanged(string value)
 
     property bool menuOpen: false
+
+    onMenuOpenChanged: transientSurfaceTracker?.setActive(root, menuOpen, null)
 
     function closeDropdownMenu() {
         if (!root.menuOpen && !dropdownMenu.opened && !dropdownMenu.visible)
@@ -113,8 +116,18 @@ Item {
     implicitHeight: !showTrigger ? 0 : (compactMode ? 40 : Math.max(60, labelColumn.implicitHeight + Theme.spacingM))
 
     Component.onDestruction: {
+        transientSurfaceTracker?.unregister(root);
         if (root.menuOpen || dropdownMenu.opened || dropdownMenu.visible)
             dropdownMenu.close();
+    }
+
+    Connections {
+        target: root.transientSurfaceTracker
+        ignoreUnknownSignals: true
+
+        function onCloseRequested() {
+            root.closeDropdownMenu();
+        }
     }
 
     Column {
@@ -159,7 +172,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         radius: Theme.cornerRadius
         color: dropdownArea.containsMouse || dropdownMenu.visible ? Theme.surfaceContainerHigh : (root.usePopupTransparency ? Theme.withAlpha(Theme.surfaceContainer, Theme.popupTransparency) : Theme.surfaceContainer)
-        border.color: dropdownMenu.visible ? Theme.primary : Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.2)
+        border.color: dropdownMenu.visible ? Theme.primary : Theme.outlineHeavy
         border.width: dropdownMenu.visible ? 2 : 1
 
         MouseArea {
@@ -350,7 +363,7 @@ Item {
 
             LayoutMirroring.enabled: I18n.isRtl
             LayoutMirroring.childrenInherit: true
-            color: Qt.rgba(Theme.surfaceContainer.r, Theme.surfaceContainer.g, Theme.surfaceContainer.b, 1)
+            color: Theme.withAlpha(Theme.surfaceContainer, 1)
             border.color: Theme.primary
             border.width: 2
             radius: Theme.cornerRadius
@@ -458,7 +471,7 @@ Item {
                     model: ScriptModel {
                         values: dropdownMenu.filteredOptions
                     }
-                    spacing: 2
+                    spacing: Theme.spacingXXS
 
                     interactive: true
                     flickDeceleration: 1500
@@ -481,7 +494,7 @@ Item {
                         width: ListView.view.width
                         height: 32
                         radius: Theme.cornerRadius
-                        color: isSelected ? Theme.primaryHover : optionArea.containsMouse ? Theme.primaryHoverLight : "transparent"
+                        color: isSelected ? Theme.primaryHover : optionArea.containsMouse ? Theme.primaryHoverLight : Theme.withAlpha(Theme.primaryHoverLight, 0)
 
                         Row {
                             anchors.left: parent.left
@@ -498,7 +511,7 @@ Item {
                                 height: 16
                                 anchors.verticalCenter: parent.verticalCenter
                                 visible: delegateRoot.swatchColor !== undefined
-                                swatchColor: visible ? delegateRoot.swatchColor : "transparent"
+                                swatchColor: visible ? delegateRoot.swatchColor : Theme.withAlpha(delegateRoot.swatchColor, 0)
                                 ringColor: delegateRoot.isCurrentValue ? Theme.primary : Theme.outline
                             }
 

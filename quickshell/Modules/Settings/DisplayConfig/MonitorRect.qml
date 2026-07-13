@@ -69,7 +69,7 @@ Rectangle {
 
     Column {
         anchors.centerIn: parent
-        spacing: 2
+        spacing: Theme.spacingXXS
 
         DankIcon {
             name: root.isConnected ? "desktop_windows" : "desktop_access_disabled"
@@ -85,6 +85,8 @@ Rectangle {
             color: root.isConnected ? Theme.surfaceText : Theme.surfaceVariantText
             horizontalAlignment: Text.AlignHCenter
             anchors.horizontalCenter: parent.horizontalCenter
+            wrapMode: Text.NoWrap
+            maximumLineCount: 1
             elide: Text.ElideMiddle
             width: Math.min(implicitWidth, root.width - 8)
         }

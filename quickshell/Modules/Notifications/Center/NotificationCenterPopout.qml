@@ -283,11 +283,13 @@ DankPopout {
                     NotificationHeader {
                         id: notificationHeader
                         objectName: "notificationHeader"
+                        transientSurfaceTracker: root.transientSurfaceTracker
                         onHeightChanged: notificationContent.cachedHeaderHeight = height
                     }
 
                     NotificationSettings {
                         id: notificationSettings
+                        transientSurfaceTracker: root.transientSurfaceTracker
                         expanded: notificationHeader.showSettings
                         maxAllowedHeight: notificationContent.settingsMaxHeight
                     }
@@ -306,6 +308,7 @@ DankPopout {
                             anchors.topMargin: -(shadowVerticalGutter + delegateShadowGutter / 2)
                             anchors.bottomMargin: -(shadowVerticalGutter + delegateShadowGutter / 2)
                             cardAnimateExpansion: true
+                            transientSurfaceTracker: root.transientSurfaceTracker
                         }
                     }
 

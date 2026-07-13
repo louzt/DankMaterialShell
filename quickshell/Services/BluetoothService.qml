@@ -14,6 +14,9 @@ Singleton {
     readonly property bool available: adapter !== null
     readonly property bool enabled: (adapter && adapter.enabled) ?? false
     readonly property bool discovering: (adapter && adapter.discovering) ?? false
+    property bool pactlAvailable: false
+    property bool pactlChecked: false
+    property var pendingPactlActions: []
     readonly property var devices: adapter ? adapter.devices : null
     readonly property bool enhancedPairingAvailable: DMSService.dmsAvailable && DMSService.apiVersion >= 9 && DMSService.capabilities.includes("bluetooth")
     readonly property bool connected: {
@@ -59,6 +62,23 @@ Singleton {
         return adapter.devices.values.filter(dev => {
             return dev && dev.batteryAvailable && dev.battery > 0;
         });
+    }
+
+    Component.onCompleted: {
+        detectPactlProcess.running = true;
+    }
+
+    function whenPactlChecked(action) {
+        if (pactlChecked) {
+            action();
+            return;
+        }
+
+        const actions = pendingPactlActions.slice();
+        actions.push(action);
+        pendingPactlActions = actions;
+        if (!detectPactlProcess.running)
+            detectPactlProcess.running = true;
     }
 
     function sortDevices(devices) {
@@ -225,6 +245,14 @@ Singleton {
         return `bluez_card.${device.address.replace(/:/g, "_")}`;
     }
 
+    function deviceForNodeName(nodeName) {
+        const match = (nodeName || "").match(/^bluez_(?:output|input|card)\.([0-9A-Fa-f_]+)/);
+        if (!match)
+            return null;
+        const address = match[1].replace(/_/g, ":").toUpperCase();
+        return Bluetooth.devices?.values?.find(d => (d.address || "").toUpperCase() === address) ?? null;
+    }
+
     function getDevicePath(device) {
         if (!device || !device.address) {
             return "";
@@ -305,6 +333,13 @@ Singleton {
         if (!device || !device.connected || !isAudioDevice(device)) {
             return;
         }
+        if (!pactlChecked) {
+            whenPactlChecked(() => root.refreshDeviceCodec(device));
+            return;
+        }
+        if (!pactlAvailable) {
+            return;
+        }
 
         const cardName = getCardName(device);
         codecQueryProcess.cardName = cardName;
@@ -317,6 +352,14 @@ Singleton {
 
     function getCurrentCodec(device, callback) {
         if (!device || !device.connected || !isAudioDevice(device)) {
+            callback("");
+            return;
+        }
+        if (!pactlChecked) {
+            whenPactlChecked(() => root.getCurrentCodec(device, callback));
+            return;
+        }
+        if (!pactlAvailable) {
             callback("");
             return;
         }
@@ -335,6 +378,14 @@ Singleton {
             callback([], "");
             return;
         }
+        if (!pactlChecked) {
+            whenPactlChecked(() => root.getAvailableCodecs(device, callback));
+            return;
+        }
+        if (!pactlAvailable) {
+            callback([], "");
+            return;
+        }
 
         const cardName = getCardName(device);
         codecFullQueryProcess.cardName = cardName;
@@ -350,12 +401,34 @@ Singleton {
             callback(false, "Invalid device");
             return;
         }
+        if (!pactlChecked) {
+            whenPactlChecked(() => root.switchCodec(device, profileName, callback));
+            return;
+        }
+        if (!pactlAvailable) {
+            callback(false, I18n.tr("Codec switching is unavailable because pactl was not found"));
+            return;
+        }
 
         const cardName = getCardName(device);
         codecSwitchProcess.cardName = cardName;
         codecSwitchProcess.profile = profileName;
         codecSwitchProcess.callback = callback;
         codecSwitchProcess.running = true;
+    }
+
+    Process {
+        id: detectPactlProcess
+        running: false
+        command: ["sh", "-c", "command -v pactl"]
+
+        onExited: function (exitCode) {
+            root.pactlAvailable = (exitCode === 0);
+            root.pactlChecked = true;
+            const actions = root.pendingPactlActions.slice();
+            root.pendingPactlActions = [];
+            actions.forEach(action => action());
+        }
     }
 
     Process {

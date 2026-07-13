@@ -19,7 +19,7 @@ Column {
     }
 
     signal itemEnabledChanged(string sectionId, string itemId, bool enabled)
-    signal itemOrderChanged(var newOrder)
+    signal itemOrderChanged(string sectionId, var orderedIds)
     signal addWidget(string sectionId)
     signal removeWidget(string sectionId, int widgetIndex)
     signal spacerSizeChanged(string sectionId, int widgetIndex, int newSize)
@@ -38,18 +38,144 @@ Column {
     signal overflowSettingChanged(string sectionId, int widgetIndex, string settingName, var value)
     signal hideWhenIdleChanged(string sectionId, int widgetIndex, bool enabled)
 
-    function cloneWidgetData(widget) {
-        var result = {
-            "id": widget.id,
-            "enabled": widget.enabled
-        };
-        var keys = ["size", "selectedGpuIndex", "pciId", "mountPath", "diskUsageMode", "minimumWidth", "showSwap", "showInGb", "mediaSize", "clockCompactMode", "focusedWindowSize", "focusedWindowCompactMode", "runningAppsCompactMode", "keyboardLayoutNameCompactMode", "keyboardLayoutNameShowIcon", "runningAppsGroupByApp", "runningAppsCurrentWorkspace", "runningAppsCurrentMonitor", "showNetworkIcon", "showBluetoothIcon", "showAudioIcon", "showAudioPercent", "showVpnIcon", "showBrightnessIcon", "showBrightnessPercent", "showMicIcon", "showMicPercent", "showBatteryIcon", "showBatteryPercent", "showBatteryPercentOnlyOnBattery", "showBatteryTime", "showBatteryTimeOnlyOnBattery", "showPrinterIcon", "showScreenSharingIcon", "showIdleInhibitorIcon", "showDoNotDisturbIcon", "controlCenterGroupOrder", "barMaxVisibleApps", "barMaxVisibleRunningApps", "barShowOverflowBadge", "trayUseInlineExpansion", "trayPopupSingleLine", "trayAutoOverflow", "trayMaxVisibleItems"];
-        for (var i = 0; i < keys.length; i++) {
-            if (widget[keys[i]] !== undefined)
-                result[keys[i]] = widget[keys[i]];
-        }
-        return result;
+    // Cross-section drag coordination with WidgetsTab (positions are section-local)
+    signal dragStarted(string sectionId, string id, int index, var widgetData, var localPos)
+    signal dragMoved(string sectionId, var localPos)
+    signal dragEnded(string sectionId)
+
+    property string highlightedId: ""
+    property string highlightedSection: ""
+
+    // Absolute-Y spring drag state (mirrors DankDashTab); gapIndex is the phantom drop slot
+    property var workingOrder: []
+    property int draggingIndex: -1
+    property string draggingId: ""
+    property var dragStartOrder: []
+    property int gapIndex: -1
+    property bool crossSectionActive: false
+
+    readonly property real rowHeight: 72
+    readonly property real rowSpacing: Theme.spacingS
+
+    property var rowHeights: []
+
+    function rowHeightAt(i) {
+        if (i < 0 || i >= rowHeights.length || rowHeights[i] === undefined)
+            return rowHeight;
+        return Math.max(rowHeight, rowHeights[i]);
     }
+
+    function cumulativeHeightUpTo(pos) {
+        var y = 0;
+        var n = Math.min(pos, items.length);
+        for (var i = 0; i < n; i++)
+            y += rowHeightAt(i) + rowSpacing;
+        return y;
+    }
+
+    readonly property real totalHeight: {
+        const n = items.length;
+        let base = cumulativeHeightUpTo(n);
+        if (n > 0)
+            base -= rowSpacing;
+        if (gapIndex >= 0)
+            base += (rowHeight + rowSpacing);
+        return Math.max(0, base);
+    }
+
+    function resetWorkingOrder() {
+        const arr = [];
+        for (var i = 0; i < items.length; i++)
+            arr.push(i);
+        workingOrder = arr;
+    }
+
+    function slotYForIndex(i) {
+        var pos = workingOrder.indexOf(i);
+        if (pos < 0)
+            pos = i;
+        var y = cumulativeHeightUpTo(pos);
+        if (gapIndex >= 0 && pos >= gapIndex)
+            y += (rowHeight + rowSpacing);
+        return y;
+    }
+
+    function slotIndexForY(localY) {
+        var y = 0;
+        for (var i = 0; i < items.length; i++) {
+            var h = rowHeightAt(i) + rowSpacing;
+            if (y + h / 2 > localY)
+                return i;
+            y += h;
+        }
+        return items.length;
+    }
+
+    function slotIndexForGlobalY(rootItem, gy) {
+        var p = reorderArea.mapFromItem(rootItem, 0, gy);
+        return slotIndexForY(p.y);
+    }
+
+    function beginDrag(i) {
+        draggingIndex = i;
+        draggingId = (items[i] && items[i].id) ? items[i].id : "";
+        dragStartOrder = workingOrder.slice();
+        crossSectionActive = false;
+    }
+
+    function updateDragTarget(centerY) {
+        if (draggingIndex < 0)
+            return;
+        var pos = slotIndexForY(centerY);
+        pos = Math.max(0, Math.min(pos, items.length - 1));
+        var arr = workingOrder.slice();
+        var d = arr.indexOf(draggingIndex);
+        if (d < 0 || d === pos)
+            return;
+        arr.splice(d, 1);
+        arr.splice(pos, 0, draggingIndex);
+        workingOrder = arr;
+    }
+
+    function setCrossMode(active) {
+        if (crossSectionActive === active)
+            return;
+        crossSectionActive = active;
+        if (active)
+            workingOrder = dragStartOrder.slice();
+    }
+
+    function openGapAt(idx) {
+        gapIndex = Math.max(0, Math.min(idx, items.length));
+    }
+
+    function clearGap() {
+        gapIndex = -1;
+    }
+
+    function commitDrag() {
+        if (draggingIndex < 0)
+            return;
+        const changed = JSON.stringify(workingOrder) !== JSON.stringify(dragStartOrder);
+        const orderedIds = workingOrder.map(i => items[i].id);
+        draggingIndex = -1;
+        draggingId = "";
+        crossSectionActive = false;
+        gapIndex = -1;
+        if (changed)
+            itemOrderChanged(sectionId, orderedIds);
+    }
+
+    function cancelDrag() {
+        draggingIndex = -1;
+        draggingId = "";
+        crossSectionActive = false;
+        gapIndex = -1;
+        resetWorkingOrder();
+    }
+
+    onItemsChanged: resetWorkingOrder()
+    Component.onCompleted: resetWorkingOrder()
 
     width: parent.width
     height: implicitHeight
@@ -74,11 +200,19 @@ Column {
         }
     }
 
-    Column {
-        id: itemsList
+    Item {
+        id: reorderArea
 
         width: parent.width
-        spacing: Theme.spacingS
+        height: root.totalHeight
+
+        Behavior on height {
+            NumberAnimation {
+                duration: Theme.expressiveDurations.normal
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Theme.expressiveCurves.expressiveDefaultSpatial
+            }
+        }
 
         Repeater {
             model: root.items
@@ -86,50 +220,151 @@ Column {
             delegate: Item {
                 id: delegateItem
 
-                property bool held: dragArea.pressed
-                property real originalY: y
+                readonly property int rowIndex: index
+                readonly property bool dragging: root.draggingIndex === rowIndex
+                readonly property bool highlighted: root.highlightedId !== "" && root.highlightedId === modelData.id && root.highlightedSection === root.sectionId
 
-                width: itemsList.width
-                height: Math.max(70, textColumn.implicitHeight + 32)
-                z: held ? 2 : 1
+                width: reorderArea.width
+                height: Math.max(root.rowHeight, textColumn.implicitHeight + 28)
+                z: dragging ? 100 : (highlighted ? 3 : 1)
+                opacity: (dragging && root.crossSectionActive) ? 0 : 1
+
+                onHeightChanged: {
+                    var arr = root.rowHeights.slice();
+                    while (arr.length <= rowIndex)
+                        arr.push(root.rowHeight);
+                    if (arr[rowIndex] !== height) {
+                        arr[rowIndex] = height;
+                        root.rowHeights = arr;
+                    }
+                }
+                Component.onCompleted: {
+                    var arr = root.rowHeights.slice();
+                    while (arr.length <= rowIndex)
+                        arr.push(root.rowHeight);
+                    arr[rowIndex] = height;
+                    root.rowHeights = arr;
+                }
+
+                Binding {
+                    target: delegateItem
+                    property: "y"
+                    value: root.slotYForIndex(delegateItem.rowIndex)
+                    when: !delegateItem.dragging
+                    restoreMode: Binding.RestoreNone
+                }
+
+                onYChanged: {
+                    if (!dragging)
+                        return;
+                    root.dragMoved(root.sectionId, delegateItem.mapToItem(root, delegateItem.width / 2, delegateItem.height / 2));
+                    if (!root.crossSectionActive)
+                        root.updateDragTarget(y + height / 2);
+                }
+
+                Behavior on y {
+                    enabled: !delegateItem.dragging
+
+                    NumberAnimation {
+                        duration: Theme.expressiveDurations.expressiveDefaultSpatial
+                        easing.type: Easing.BezierSpline
+                        easing.bezierCurve: Theme.expressiveCurves.expressiveFastSpatial
+                    }
+                }
 
                 Rectangle {
                     id: itemBackground
 
                     anchors.fill: parent
-                    anchors.margins: 2
-                    radius: Theme.cornerRadius
-                    color: Qt.rgba(Theme.surfaceContainer.r, Theme.surfaceContainer.g, Theme.surfaceContainer.b, 0.8)
-                    border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.2)
-                    border.width: 0
+                    scale: delegateItem.dragging ? 1.02 : 1.0
+                    transformOrigin: Item.Center
+                    radius: delegateItem.dragging ? Theme.cornerRadius + 6 : Theme.cornerRadius
+                    color: itemColor.value
+                    border.color: delegateItem.dragging ? Theme.primary : Theme.outlineHeavy
+                    border.width: delegateItem.dragging ? 2 : 1
 
-                    DankIcon {
-                        name: "drag_indicator"
-                        size: Theme.iconSize - 4
-                        color: Theme.outline
-                        anchors.left: parent.left
-                        anchors.leftMargin: Theme.spacingM + 8
-                        anchors.verticalCenter: parent.verticalCenter
-                        opacity: 0.8
+                    Behavior on scale {
+                        NumberAnimation {
+                            duration: Theme.shortDuration
+                            easing.type: Easing.OutCubic
+                        }
+                    }
+                    Behavior on radius {
+                        NumberAnimation {
+                            duration: Theme.shortDuration
+                            easing.type: Easing.OutCubic
+                        }
+                    }
+                    DankColorAnimation {
+                        id: itemColor
+                        to: delegateItem.dragging ? Theme.secondaryContainer : Theme.withAlpha(Theme.surfaceContainer, modelData.enabled ? 0.7 : 0.4)
+                        duration: Theme.shortDuration
+                    }
+                    Behavior on border.color {
+                        ColorAnimation {
+                            duration: Theme.shortDuration
+                        }
+                    }
+
+                    Rectangle {
+                        anchors.fill: parent
+                        radius: parent.radius
+                        color: Theme.primary
+                        opacity: (dragArea.containsMouse && !delegateItem.dragging) ? 0.06 : 0
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: Theme.shortDuration
+                            }
+                        }
                     }
 
                     DankIcon {
+                        id: dragHandle
+                        name: "drag_indicator"
+                        size: Theme.iconSize - 4
+                        color: delegateItem.dragging ? Theme.primary : Theme.outline
+                        anchors.left: parent.left
+                        anchors.leftMargin: Theme.spacingM
+                        anchors.verticalCenter: parent.verticalCenter
+                        opacity: modelData.enabled ? ((dragArea.containsMouse || delegateItem.dragging || delegateItem.highlighted) ? 1.0 : 0.45) : 0
+                        visible: opacity > 0.01
+
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: Theme.shortDuration
+                            }
+                        }
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: Theme.shortDuration
+                            }
+                        }
+                    }
+
+                    DankIcon {
+                        id: tabIcon
                         name: modelData.icon
                         size: Theme.iconSize
                         color: modelData.enabled ? Theme.primary : Theme.outline
                         anchors.left: parent.left
-                        anchors.leftMargin: Theme.spacingM * 2 + 40
+                        anchors.leftMargin: Theme.spacingM * 2 + Theme.iconSize - 4
                         anchors.verticalCenter: parent.verticalCenter
+
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: Theme.shortDuration
+                            }
+                        }
                     }
 
                     Column {
                         id: textColumn
-                        anchors.left: parent.left
-                        anchors.leftMargin: Theme.spacingM * 3 + 40 + Theme.iconSize
+                        anchors.left: tabIcon.right
+                        anchors.leftMargin: Theme.spacingM
                         anchors.right: actionButtons.left
                         anchors.rightMargin: Theme.spacingM
                         anchors.verticalCenter: parent.verticalCenter
-                        spacing: 2
+                        spacing: Theme.spacingXXS
 
                         StyledText {
                             text: modelData.text
@@ -154,7 +389,7 @@ Column {
                                 return modelData.description;
                             }
                             font.pixelSize: Theme.fontSizeSmall
-                            color: modelData.enabled ? Theme.outline : Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.6)
+                            color: modelData.enabled ? Theme.outline : Theme.outlineVariant
                             elide: Text.ElideRight
                             width: parent.width
                             wrapMode: Text.WordWrap
@@ -176,6 +411,12 @@ Column {
                             iconName: "more_vert"
                             iconSize: 18
                             iconColor: Theme.outline
+                            onEntered: {
+                                sharedTooltip.show(I18n.tr("Options"), gpuMenuButton, 0, 0, "bottom");
+                            }
+                            onExited: {
+                                sharedTooltip.hide();
+                            }
                             onClicked: {
                                 gpuContextMenu.widgetData = modelData;
                                 gpuContextMenu.sectionId = root.sectionId;
@@ -242,6 +483,12 @@ Column {
                             iconName: "more_vert"
                             iconSize: 18
                             iconColor: Theme.outline
+                            onEntered: {
+                                sharedTooltip.show(I18n.tr("Options"), diskMenuButton, 0, 0, "bottom");
+                            }
+                            onExited: {
+                                sharedTooltip.hide();
+                            }
                             onClicked: {
                                 diskUsageContextMenu.widgetData = modelData;
                                 diskUsageContextMenu.sectionId = root.sectionId;
@@ -333,7 +580,7 @@ Column {
                             }
                             onEntered: {
                                 var currentEnabled = modelData.minimumWidth !== undefined ? modelData.minimumWidth : true;
-                                const tooltipText = currentEnabled ? "Force Padding" : "Dynamic Width";
+                                const tooltipText = currentEnabled ? I18n.tr("Force Padding") : I18n.tr("Dynamic Width");
                                 sharedTooltip.show(tooltipText, minimumWidthButton, 0, 0, "bottom");
                             }
                             onExited: {
@@ -352,7 +599,7 @@ Column {
                                 root.hideWhenIdleChanged(root.sectionId, index, modelData.hideWhenIdle !== true);
                             }
                             onEntered: {
-                                const tooltipText = modelData.hideWhenIdle === true ? "Hide when no updates: ON" : "Hide when no updates: OFF";
+                                const tooltipText = modelData.hideWhenIdle === true ? I18n.tr("Hide when no updates: ON") : I18n.tr("Hide when no updates: OFF");
                                 sharedTooltip.show(tooltipText, hideWhenIdleButton, 0, 0, "bottom");
                             }
                             onExited: {
@@ -367,6 +614,12 @@ Column {
                             iconName: "more_vert"
                             iconSize: 18
                             iconColor: Theme.outline
+                            onEntered: {
+                                sharedTooltip.show(I18n.tr("Options"), memMenuButton, 0, 0, "bottom");
+                            }
+                            onExited: {
+                                sharedTooltip.hide();
+                            }
                             onClicked: {
                                 memUsageContextMenu.widgetData = modelData;
                                 memUsageContextMenu.sectionId = root.sectionId;
@@ -401,6 +654,12 @@ Column {
                             iconName: "more_vert"
                             iconSize: 18
                             iconColor: Theme.outline
+                            onEntered: {
+                                sharedTooltip.show(I18n.tr("Options"), focusedWindowMenuButton, 0, 0, "bottom");
+                            }
+                            onExited: {
+                                sharedTooltip.hide();
+                            }
                             onClicked: {
                                 focusedWindowContextMenu.widgetData = modelData;
                                 focusedWindowContextMenu.sectionId = root.sectionId;
@@ -434,6 +693,12 @@ Column {
                             iconName: "more_vert"
                             iconSize: 18
                             iconColor: Theme.outline
+                            onEntered: {
+                                sharedTooltip.show(I18n.tr("Options"), musicMenuButton, 0, 0, "bottom");
+                            }
+                            onExited: {
+                                sharedTooltip.hide();
+                            }
                             onClicked: {
                                 musicContextMenu.widgetData = modelData;
                                 musicContextMenu.sectionId = root.sectionId;
@@ -467,6 +732,12 @@ Column {
                             iconName: "more_vert"
                             iconSize: 18
                             iconColor: Theme.outline
+                            onEntered: {
+                                sharedTooltip.show(I18n.tr("Options"), runningAppsMenuButton, 0, 0, "bottom");
+                            }
+                            onExited: {
+                                sharedTooltip.hide();
+                            }
                             onClicked: {
                                 runningAppsContextMenu.widgetData = modelData;
                                 runningAppsContextMenu.sectionId = root.sectionId;
@@ -500,6 +771,12 @@ Column {
                             iconName: "more_vert"
                             iconSize: 18
                             iconColor: Theme.outline
+                            onEntered: {
+                                sharedTooltip.show(I18n.tr("Options"), batteryMenuButton, 0, 0, "bottom");
+                            }
+                            onExited: {
+                                sharedTooltip.hide();
+                            }
                             onClicked: {
                                 batteryContextMenu.widgetData = modelData;
                                 batteryContextMenu.sectionId = root.sectionId;
@@ -585,7 +862,7 @@ Column {
                                                 return false;
                                             }
                                         })();
-                                    const tooltipText = isCompact ? "Full Size" : "Compact";
+                                    const tooltipText = isCompact ? I18n.tr("Full Size") : I18n.tr("Compact");
                                     sharedTooltip.show(tooltipText, compactModeButton, 0, 0, "bottom");
                                 }
                                 onExited: {
@@ -601,6 +878,12 @@ Column {
                                 iconSize: 18
                                 iconColor: Theme.outline
 
+                                onEntered: {
+                                    sharedTooltip.show(I18n.tr("Options"), kbdLayoutCtxMenuButton, 0, 0, "bottom");
+                                }
+                                onExited: {
+                                    sharedTooltip.hide();
+                                }
                                 onClicked: {
                                     kbdLayoutCtxMenu.widgetData = modelData;
                                     kbdLayoutCtxMenu.sectionId = root.sectionId;
@@ -634,6 +917,12 @@ Column {
                                 iconName: "more_vert"
                                 iconSize: 18
                                 iconColor: Theme.outline
+                                onEntered: {
+                                    sharedTooltip.show(I18n.tr("Options"), appsDockMenuButton, 0, 0, "bottom");
+                                }
+                                onExited: {
+                                    sharedTooltip.hide();
+                                }
                                 onClicked: {
                                     appsDockContextMenu.widgetData = modelData;
                                     appsDockContextMenu.sectionId = root.sectionId;
@@ -667,6 +956,12 @@ Column {
                                 iconName: "more_vert"
                                 iconSize: 18
                                 iconColor: Theme.outline
+                                onEntered: {
+                                    sharedTooltip.show(I18n.tr("Options"), trayMenuButton, 0, 0, "bottom");
+                                }
+                                onExited: {
+                                    sharedTooltip.hide();
+                                }
                                 onClicked: {
                                     trayContextMenu.widgetData = modelData;
                                     trayContextMenu.sectionId = root.sectionId;
@@ -731,6 +1026,12 @@ Column {
                             iconName: "more_vert"
                             iconSize: 18
                             iconColor: Theme.outline
+                            onEntered: {
+                                sharedTooltip.show(I18n.tr("Options"), ccMenuButton, 0, 0, "bottom");
+                            }
+                            onExited: {
+                                sharedTooltip.hide();
+                            }
                             onClicked: {
                                 controlCenterContextMenu.widgetData = modelData;
                                 controlCenterContextMenu.sectionId = root.sectionId;
@@ -766,6 +1067,12 @@ Column {
                             iconName: "more_vert"
                             iconSize: 18
                             iconColor: Theme.outline
+                            onEntered: {
+                                sharedTooltip.show(I18n.tr("Options"), privacyMenuButton, 0, 0, "bottom");
+                            }
+                            onExited: {
+                                sharedTooltip.hide();
+                            }
                             onClicked: {
                                 privacyContextMenu.widgetData = modelData;
                                 privacyContextMenu.sectionId = root.sectionId;
@@ -804,7 +1111,7 @@ Column {
                                 root.itemEnabledChanged(root.sectionId, modelData.id, !modelData.enabled);
                             }
                             onEntered: {
-                                const tooltipText = modelData.enabled ? "Hide" : "Show";
+                                const tooltipText = modelData.enabled ? I18n.tr("Hide") : I18n.tr("Show");
                                 sharedTooltip.show(tooltipText, visibilityButton, 0, 0, "bottom");
                             }
                             onExited: {
@@ -850,12 +1157,19 @@ Column {
                         }
 
                         DankActionButton {
+                            id: removeWidgetButton
                             buttonSize: 32
                             iconName: "close"
                             iconSize: 18
                             iconColor: Theme.error
                             onClicked: {
                                 root.removeWidget(root.sectionId, index);
+                            }
+                            onEntered: {
+                                sharedTooltip.show(I18n.tr("Remove"), removeWidgetButton, 0, 0, "bottom");
+                            }
+                            onExited: {
+                                sharedTooltip.hide();
                             }
                         }
                     }
@@ -866,41 +1180,36 @@ Column {
                         anchors.left: parent.left
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-                        width: 60
+                        anchors.right: actionButtons.left
                         hoverEnabled: true
-                        cursorShape: Qt.SizeVerCursor
-                        drag.target: held ? delegateItem : undefined
+                        cursorShape: delegateItem.dragging ? Qt.ClosedHandCursor : Qt.OpenHandCursor
+                        drag.target: delegateItem
                         drag.axis: Drag.YAxis
-                        drag.minimumY: -delegateItem.height
-                        drag.maximumY: itemsList.height
+                        drag.minimumY: -2000
+                        drag.maximumY: 4000
+                        drag.smoothed: false
                         preventStealing: true
                         onPressed: {
-                            delegateItem.z = 2;
-                            delegateItem.originalY = delegateItem.y;
+                            root.beginDrag(delegateItem.rowIndex);
+                            root.dragStarted(root.sectionId, modelData.id, delegateItem.rowIndex, modelData, delegateItem.mapToItem(root, delegateItem.width / 2, delegateItem.height / 2));
                         }
-                        onReleased: {
-                            delegateItem.z = 1;
-                            if (drag.active) {
-                                var newIndex = Math.round(delegateItem.y / (delegateItem.height + itemsList.spacing));
-                                newIndex = Math.max(0, Math.min(newIndex, root.items.length - 1));
-                                if (newIndex !== index) {
-                                    var newItems = root.items.slice();
-                                    var draggedItem = newItems.splice(index, 1)[0];
-                                    newItems.splice(newIndex, 0, draggedItem);
-                                    root.itemOrderChanged(newItems.map(item => root.cloneWidgetData(item)));
-                                }
-                            }
-                            delegateItem.x = 0;
-                            delegateItem.y = delegateItem.originalY;
-                        }
+                        onReleased: root.dragEnded(root.sectionId)
                     }
+                }
 
-                    Behavior on y {
-                        enabled: !dragArea.held && !dragArea.drag.active
+                Rectangle {
+                    anchors.fill: parent
+                    anchors.margins: -2
+                    radius: Theme.cornerRadius + 2
+                    color: "transparent"
+                    border.width: 2
+                    border.color: Theme.primary
+                    opacity: delegateItem.highlighted && !delegateItem.dragging ? 0.6 : 0
+                    visible: opacity > 0.01
 
+                    Behavior on opacity {
                         NumberAnimation {
                             duration: Theme.shortDuration
-                            easing.type: Theme.standardEasing
                         }
                     }
                 }
@@ -912,8 +1221,8 @@ Column {
         width: 200
         height: 40
         radius: Theme.cornerRadius
-        color: addButtonArea.containsMouse ? Theme.primaryContainer : Qt.rgba(Theme.surfaceVariant.r, Theme.surfaceVariant.g, Theme.surfaceVariant.b, 0.3)
-        border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.2)
+        color: addButtonArea.containsMouse ? Theme.primaryContainer : Theme.withAlpha(Theme.surfaceVariant, 0.3)
+        border.color: Theme.outlineHeavy
         border.width: 0
         anchors.horizontalCenter: parent.horizontalCenter
 
@@ -962,27 +1271,32 @@ Column {
         background: Rectangle {
             color: Theme.surfaceContainer
             radius: Theme.cornerRadius
-            border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.08)
+            border.color: Theme.outlineMedium
             border.width: 0
         }
 
         contentItem: Item {
+            LayoutMirroring.enabled: I18n.isRtl
+            LayoutMirroring.childrenInherit: true
             Column {
                 anchors.fill: parent
                 anchors.margins: Theme.spacingS
-                spacing: 2
+                spacing: Theme.spacingXXS
 
                 Rectangle {
                     width: parent.width
                     height: 32
                     radius: Theme.cornerRadius
-                    color: swapToggleArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: swapToggleArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: swapToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "swap_horiz"
@@ -997,6 +1311,9 @@ Column {
                             color: Theme.surfaceText
                             font.weight: Font.Normal
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 16 - Theme.spacingS
                         }
                     }
 
@@ -1029,13 +1346,16 @@ Column {
                     width: parent.width
                     height: 32
                     radius: Theme.cornerRadius
-                    color: gbToggleArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: gbToggleArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: gbToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "straighten"
@@ -1050,6 +1370,9 @@ Column {
                             color: Theme.surfaceText
                             font.weight: Font.Normal
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 16 - Theme.spacingS
                         }
                     }
 
@@ -1099,28 +1422,33 @@ Column {
         background: Rectangle {
             color: Theme.surfaceContainer
             radius: Theme.cornerRadius
-            border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.08)
+            border.color: Theme.outlineMedium
             border.width: 0
         }
 
         contentItem: Item {
+            LayoutMirroring.enabled: I18n.isRtl
+            LayoutMirroring.childrenInherit: true
             Column {
                 id: contentColumn
                 anchors.fill: parent
                 anchors.margins: Theme.spacingS
-                spacing: 2
+                spacing: Theme.spacingXXS
 
                 Rectangle {
                     width: parent.width
                     height: 32
                     radius: Theme.cornerRadius
-                    color: trayOverflowArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: trayOverflowArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: trayOverflowToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "arrow_selector_tool"
@@ -1135,6 +1463,9 @@ Column {
                             color: Theme.surfaceText
                             font.weight: Font.Normal
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 16 - Theme.spacingS
                         }
                     }
 
@@ -1164,14 +1495,17 @@ Column {
                     width: parent.width
                     height: 32
                     radius: Theme.cornerRadius
-                    color: trayPopupLineArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: trayPopupLineArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
                     opacity: (trayContextMenu.currentWidgetData?.trayUseInlineExpansion ?? false) ? 0.55 : 1
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: trayPopupLineToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "view_week"
@@ -1186,6 +1520,9 @@ Column {
                             color: Theme.surfaceText
                             font.weight: Font.Normal
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 16 - Theme.spacingS
                         }
                     }
 
@@ -1218,13 +1555,16 @@ Column {
                     width: parent.width
                     height: 32
                     radius: Theme.cornerRadius
-                    color: trayAutoOverflowArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: trayAutoOverflowArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: trayAutoOverflowToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "responsive_layout"
@@ -1239,6 +1579,9 @@ Column {
                             color: Theme.surfaceText
                             font.weight: Font.Normal
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 16 - Theme.spacingS
                         }
                     }
 
@@ -1268,14 +1611,17 @@ Column {
                     width: parent.width
                     height: 36
                     radius: Theme.cornerRadius
-                    color: trayMaxVisibleArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: trayMaxVisibleArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
                     opacity: (trayContextMenu.currentWidgetData?.trayAutoOverflow ?? SettingsData.trayAutoOverflow) ? 1 : 0.55
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: trayMaxVisibleButtons.left
+                        anchors.rightMargin: Theme.spacingXS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "low_priority"
@@ -1290,6 +1636,7 @@ Column {
                             color: Theme.surfaceText
                             font.weight: Font.Normal
                             anchors.verticalCenter: parent.verticalCenter
+                            maximumLineCount: 1
                         }
 
                         StyledText {
@@ -1304,10 +1651,11 @@ Column {
                     }
 
                     Row {
+                        id: trayMaxVisibleButtons
                         anchors.right: parent.right
                         anchors.rightMargin: Theme.spacingXS
                         anchors.verticalCenter: parent.verticalCenter
-                        spacing: 2
+                        spacing: Theme.spacingXXS
 
                         DankActionButton {
                             buttonSize: 28
@@ -1363,28 +1711,33 @@ Column {
         background: Rectangle {
             color: Theme.surfaceContainer
             radius: Theme.cornerRadius
-            border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.08)
+            border.color: Theme.outlineMedium
             border.width: 0
         }
 
         contentItem: Item {
+            LayoutMirroring.enabled: I18n.isRtl
+            LayoutMirroring.childrenInherit: true
             Column {
                 id: kbdLayoutCtxMenuColumn
                 anchors.fill: parent
                 anchors.margins: Theme.spacingS
-                spacing: 2
+                spacing: Theme.spacingXXS
 
                 Rectangle {
                     width: parent.width
                     height: 32
                     radius: Theme.cornerRadius
-                    color: kbdLayoutCtxMenuIconArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: kbdLayoutCtxMenuIconArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: kbdLayoutCtxMenuIconToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "visibility"
@@ -1399,6 +1752,9 @@ Column {
                             color: Theme.surfaceText
                             font.weight: Font.Normal
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 16 - Theme.spacingS
                         }
                     }
 
@@ -1448,28 +1804,33 @@ Column {
         background: Rectangle {
             color: Theme.surfaceContainer
             radius: Theme.cornerRadius
-            border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.08)
+            border.color: Theme.outlineMedium
             border.width: 0
         }
 
         contentItem: Item {
+            LayoutMirroring.enabled: I18n.isRtl
+            LayoutMirroring.childrenInherit: true
             Column {
                 id: focusedWindowMenuColumn
                 anchors.fill: parent
                 anchors.margins: Theme.spacingS
-                spacing: 2
+                spacing: Theme.spacingXXS
 
                 Rectangle {
                     width: parent.width
                     height: 32
                     radius: Theme.cornerRadius
-                    color: fwCompactArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: fwCompactArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: fwCompactToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "zoom_in"
@@ -1484,6 +1845,9 @@ Column {
                             color: Theme.surfaceText
                             font.weight: Font.Normal
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 16 - Theme.spacingS
                         }
                     }
 
@@ -1496,7 +1860,7 @@ Column {
                         height: 20
                         checked: focusedWindowContextMenu.currentWidgetData?.focusedWindowCompactMode ?? SettingsData.focusedWindowCompactMode
                         onToggled: {
-                            root.overflowSettingChanged(focusedWindowContextMenu.sectionId, focusedWindowContextMenu.widgetIndex, "focuswedWindowCompactMode", toggled);
+                            root.overflowSettingChanged(focusedWindowContextMenu.sectionId, focusedWindowContextMenu.widgetIndex, "focusedWindowCompactMode", toggled);
                         }
                     }
 
@@ -1508,6 +1872,65 @@ Column {
                         onPressed: {
                             fwCompactToggle.checked = !fwCompactToggle.checked;
                             root.overflowSettingChanged(focusedWindowContextMenu.sectionId, focusedWindowContextMenu.widgetIndex, "focusedWindowCompactMode", fwCompactToggle.checked);
+                        }
+                    }
+                }
+
+                Rectangle {
+                    width: parent.width
+                    height: 32
+                    radius: Theme.cornerRadius
+                    color: fwShowIconArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
+
+                    Row {
+                        anchors.left: parent.left
+                        anchors.leftMargin: Theme.spacingS
+                        anchors.right: fwShowIconToggle.left
+                        anchors.rightMargin: Theme.spacingS
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: Theme.spacingS
+                        clip: true
+
+                        DankIcon {
+                            name: "visibility"
+                            size: 16
+                            color: Theme.surfaceText
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        StyledText {
+                            text: I18n.tr("Show Icon")
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.surfaceText
+                            font.weight: Font.Normal
+                            anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 16 - Theme.spacingS
+                        }
+                    }
+
+                    DankToggle {
+                        id: fwShowIconToggle
+                        anchors.right: parent.right
+                        anchors.rightMargin: Theme.spacingS
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 40
+                        height: 20
+                        checked: focusedWindowContextMenu.currentWidgetData?.focusedWindowShowIcon ?? SettingsData.focusedWindowShowIcon
+                        onToggled: {
+                            root.overflowSettingChanged(focusedWindowContextMenu.sectionId, focusedWindowContextMenu.widgetIndex, "focusedWindowShowIcon", toggled);
+                        }
+                    }
+
+                    MouseArea {
+                        id: fwShowIconArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onPressed: {
+                            fwShowIconToggle.checked = !fwShowIconToggle.checked;
+                            root.overflowSettingChanged(focusedWindowContextMenu.sectionId, focusedWindowContextMenu.widgetIndex, "focusedWindowShowIcon", fwShowIconToggle.checked);
                         }
                     }
                 }
@@ -1549,13 +1972,16 @@ Column {
                         width: focusedWindowMenuColumn.width
                         height: Math.max(18, Theme.fontSizeSmall) + Theme.spacingM * 2
                         radius: Theme.cornerRadius
-                        color: focusedWindowOptionArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                        color: focusedWindowOptionArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                         Row {
                             anchors.left: parent.left
                             anchors.leftMargin: Theme.spacingS
+                            anchors.right: fwSizeCheck.left
+                            anchors.rightMargin: Theme.spacingS
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: Theme.spacingS
+                            clip: true
 
                             DankIcon {
                                 name: modelData.icon
@@ -1570,10 +1996,14 @@ Column {
                                 font.weight: isSelected() ? Font.Medium : Font.Normal
                                 color: isSelected() ? Theme.primary : Theme.surfaceText
                                 anchors.verticalCenter: parent.verticalCenter
+                                elide: Text.ElideRight
+                                maximumLineCount: 1
+                                width: parent.width - 18 - Theme.spacingS
                             }
                         }
 
                         DankIcon {
+                            id: fwSizeCheck
                             anchors.right: parent.right
                             anchors.rightMargin: Theme.spacingS
                             anchors.verticalCenter: parent.verticalCenter
@@ -1617,16 +2047,18 @@ Column {
         background: Rectangle {
             color: Theme.surfaceContainer
             radius: Theme.cornerRadius
-            border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.08)
+            border.color: Theme.outlineMedium
             border.width: 0
         }
 
         contentItem: Item {
+            LayoutMirroring.enabled: I18n.isRtl
+            LayoutMirroring.childrenInherit: true
             Column {
                 id: diskMenuColumn
                 anchors.fill: parent
                 anchors.margins: Theme.spacingS
-                spacing: 2
+                spacing: Theme.spacingXXS
 
                 Rectangle {
                     width: parent.width
@@ -1676,7 +2108,7 @@ Column {
                         width: diskMenuColumn.width
                         height: 32
                         radius: Theme.cornerRadius
-                        color: diskOptionArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                        color: diskOptionArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                         function isSelected() {
                             return (diskUsageContextMenu.currentWidgetData?.diskUsageMode ?? 0) === modelData.mode;
@@ -1685,8 +2117,11 @@ Column {
                         Row {
                             anchors.left: parent.left
                             anchors.leftMargin: Theme.spacingS
+                            anchors.right: diskModeCheck.left
+                            anchors.rightMargin: Theme.spacingS
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: Theme.spacingS
+                            clip: true
 
                             DankIcon {
                                 name: modelData.icon
@@ -1701,10 +2136,14 @@ Column {
                                 color: isSelected() ? Theme.primary : Theme.surfaceText
                                 font.weight: isSelected() ? Font.Medium : Font.Normal
                                 anchors.verticalCenter: parent.verticalCenter
+                                elide: Text.ElideRight
+                                maximumLineCount: 1
+                                width: parent.width - 16 - Theme.spacingS
                             }
                         }
 
                         DankIcon {
+                            id: diskModeCheck
                             anchors.right: parent.right
                             anchors.rightMargin: Theme.spacingS
                             anchors.verticalCenter: parent.verticalCenter
@@ -1878,7 +2317,7 @@ Column {
                         setting: "showDoNotDisturbIcon"
                     }
                 ]
-          }
+            }
         ]
         property var controlCenterGroups: defaultControlCenterGroups
         property int draggedControlCenterGroupIndex: -1
@@ -1990,11 +2429,13 @@ Column {
         background: Rectangle {
             color: Theme.surfaceContainer
             radius: Theme.cornerRadius
-            border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.08)
+            border.color: Theme.outlineMedium
             border.width: 0
         }
 
         contentItem: Item {
+            LayoutMirroring.enabled: I18n.isRtl
+            LayoutMirroring.childrenInherit: true
             function getCurrentWidgetData() {
                 const widgets = root.items || [];
                 if (controlCenterContextMenu.widgetIndex >= 0 && controlCenterContextMenu.widgetIndex < widgets.length)
@@ -2006,7 +2447,7 @@ Column {
                 id: menuColumn
                 anchors.fill: parent
                 anchors.margins: Theme.spacingS
-                spacing: 2
+                spacing: Theme.spacingXXS
 
                 Item {
                     id: controlCenterContentMetrics
@@ -2090,7 +2531,7 @@ Column {
                             anchors.top: parent.top
                             height: groupContent.implicitHeight + Theme.spacingXS * 2
                             radius: Theme.cornerRadius
-                            color: isDragged ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.18) : (groupHoverArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent")
+                            color: isDragged ? Theme.primaryPressed : (groupHoverArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0))
                             opacity: isDragged ? 0.75 : 1.0
                         }
 
@@ -2150,7 +2591,7 @@ Column {
                                         height: 32
                                         radius: Theme.cornerRadius
                                         opacity: rowEnabled ? 1.0 : 0.5
-                                        color: rowHovered ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08) : "transparent"
+                                        color: rowHovered ? Theme.primaryHoverLight : Theme.withAlpha(Theme.primaryHoverLight, 0)
 
                                         Row {
                                             anchors.left: parent.left
@@ -2159,6 +2600,7 @@ Column {
                                             anchors.rightMargin: Theme.spacingM
                                             anchors.verticalCenter: parent.verticalCenter
                                             spacing: Theme.spacingS
+                                            clip: true
 
                                             Item {
                                                 width: 16
@@ -2218,6 +2660,9 @@ Column {
                                                 color: Theme.surfaceText
                                                 font.weight: Font.Normal
                                                 anchors.verticalCenter: parent.verticalCenter
+                                                elide: Text.ElideRight
+                                                maximumLineCount: 1
+                                                width: parent.width - 16 - Theme.spacingS - 16 - Theme.spacingS
                                             }
                                         }
 
@@ -2275,8 +2720,8 @@ Column {
         property string sectionId: ""
         property int widgetIndex: -1
 
-        width: 200
-        height: 160
+        width: 240
+        height: menuPrivacyColumn.implicitHeight + Theme.spacingS * 2
         padding: 0
         modal: true
         focus: true
@@ -2293,17 +2738,19 @@ Column {
         background: Rectangle {
             color: Theme.surfaceContainer
             radius: Theme.cornerRadius
-            border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.08)
+            border.color: Theme.outlineMedium
             border.width: 0
         }
 
         contentItem: Item {
+            LayoutMirroring.enabled: I18n.isRtl
+            LayoutMirroring.childrenInherit: true
 
             Column {
                 id: menuPrivacyColumn
                 anchors.fill: parent
                 anchors.margins: Theme.spacingS
-                spacing: 2
+                spacing: Theme.spacingXXS
 
                 Rectangle {
                     width: parent.width
@@ -2331,13 +2778,16 @@ Column {
                     width: parent.width
                     height: 32
                     radius: Theme.cornerRadius
-                    color: micToggleArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: micToggleArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: micToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "mic"
@@ -2352,6 +2802,9 @@ Column {
                             color: Theme.surfaceText
                             font.weight: Font.Normal
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 16 - Theme.spacingS
                         }
                     }
 
@@ -2383,13 +2836,16 @@ Column {
                     width: parent.width
                     height: 32
                     radius: Theme.cornerRadius
-                    color: cameraToggleArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: cameraToggleArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: cameraToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "camera_video"
@@ -2404,6 +2860,9 @@ Column {
                             color: Theme.surfaceText
                             font.weight: Font.Normal
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 16 - Theme.spacingS
                         }
                     }
 
@@ -2435,13 +2894,16 @@ Column {
                     width: parent.width
                     height: 32
                     radius: Theme.cornerRadius
-                    color: screenshareToggleArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: screenshareToggleArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: screenshareToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "screen_share"
@@ -2456,6 +2918,9 @@ Column {
                             color: Theme.surfaceText
                             font.weight: Font.Normal
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 16 - Theme.spacingS
                         }
                     }
 
@@ -2504,16 +2969,18 @@ Column {
         background: Rectangle {
             color: Theme.surfaceContainer
             radius: Theme.cornerRadius
-            border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.08)
+            border.color: Theme.outlineMedium
             border.width: 0
         }
 
         contentItem: Item {
+            LayoutMirroring.enabled: I18n.isRtl
+            LayoutMirroring.childrenInherit: true
             Column {
                 id: gpuMenuColumn
                 anchors.fill: parent
                 anchors.margins: Theme.spacingS
-                spacing: 2
+                spacing: Theme.spacingXXS
 
                 Repeater {
                     model: DgopService.availableGpus || []
@@ -2525,7 +2992,7 @@ Column {
                         width: gpuMenuColumn.width
                         height: 40
                         radius: Theme.cornerRadius
-                        color: gpuOptionArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                        color: gpuOptionArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                         property bool isSelected: {
                             var selectedIdx = gpuContextMenu.widgetData ? (gpuContextMenu.widgetData.selectedGpuIndex !== undefined ? gpuContextMenu.widgetData.selectedGpuIndex : 0) : 0;
@@ -2549,7 +3016,7 @@ Column {
 
                             Column {
                                 anchors.verticalCenter: parent.verticalCenter
-                                spacing: 2
+                                spacing: Theme.spacingXXS
 
                                 StyledText {
                                     text: modelData.driver ? modelData.driver.toUpperCase() : ""
@@ -2613,28 +3080,33 @@ Column {
         background: Rectangle {
             color: Theme.surfaceContainer
             radius: Theme.cornerRadius
-            border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.08)
+            border.color: Theme.outlineMedium
             border.width: 0
         }
 
         contentItem: Item {
+            LayoutMirroring.enabled: I18n.isRtl
+            LayoutMirroring.childrenInherit: true
             Column {
                 id: batteryMenuColumn
                 anchors.fill: parent
                 anchors.margins: Theme.spacingS
-                spacing: 2
+                spacing: Theme.spacingXXS
 
                 Rectangle {
                     width: parent.width
                     height: Math.max(18, Theme.fontSizeSmall) + Theme.spacingM * 2
                     radius: Theme.cornerRadius
-                    color: batteryPercentArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: batteryPercentArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: batteryPercentToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "percent"
@@ -2649,6 +3121,9 @@ Column {
                             color: Theme.surfaceText
                             font.weight: Font.Normal
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 18 - Theme.spacingS
                         }
                     }
 
@@ -2681,14 +3156,17 @@ Column {
                     width: parent.width
                     height: Math.max(18, Theme.fontSizeSmall) + Theme.spacingM * 2
                     radius: Theme.cornerRadius
-                    color: batteryPercentOnlyOnBatteryArea.containsMouse && batteryPercentToggle.checked ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: batteryPercentOnlyOnBatteryArea.containsMouse && batteryPercentToggle.checked ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
                     opacity: batteryPercentToggle.checked ? 1.0 : 0.5
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS + 18
+                        anchors.right: batteryPercentOnlyOnBatteryToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "battery_charging_full"
@@ -2703,6 +3181,9 @@ Column {
                             color: Theme.surfaceText
                             font.weight: Font.Normal
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 18 - Theme.spacingS
                         }
                     }
 
@@ -2737,13 +3218,16 @@ Column {
                     width: parent.width
                     height: Math.max(18, Theme.fontSizeSmall) + Theme.spacingM * 2
                     radius: Theme.cornerRadius
-                    color: batteryTimeArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: batteryTimeArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: batteryTimeToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "schedule"
@@ -2758,6 +3242,9 @@ Column {
                             color: Theme.surfaceText
                             font.weight: Font.Normal
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 18 - Theme.spacingS
                         }
                     }
 
@@ -2790,14 +3277,17 @@ Column {
                     width: parent.width
                     height: Math.max(18, Theme.fontSizeSmall) + Theme.spacingM * 2
                     radius: Theme.cornerRadius
-                    color: batteryTimeOnlyOnBatteryArea.containsMouse && batteryTimeToggle.checked ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: batteryTimeOnlyOnBatteryArea.containsMouse && batteryTimeToggle.checked ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
                     opacity: batteryTimeToggle.checked ? 1.0 : 0.5
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS + 18
+                        anchors.right: batteryTimeOnlyOnBatteryToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "battery_charging_full"
@@ -2812,6 +3302,9 @@ Column {
                             color: Theme.surfaceText
                             font.weight: Font.Normal
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 18 - Theme.spacingS
                         }
                     }
 
@@ -2841,6 +3334,127 @@ Column {
                         }
                     }
                 }
+
+                Rectangle {
+                    width: parent.width
+                    height: Math.max(18, Theme.fontSizeSmall) + Theme.spacingM * 2
+                    radius: Theme.cornerRadius
+                    color: batteryPillArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
+
+                    Row {
+                        anchors.left: parent.left
+                        anchors.leftMargin: Theme.spacingS
+                        anchors.right: batteryPillToggle.left
+                        anchors.rightMargin: Theme.spacingS
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: Theme.spacingS
+                        clip: true
+
+                        DankIcon {
+                            name: "battery_horiz_075"
+                            size: 18
+                            color: Theme.outline
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        StyledText {
+                            text: I18n.tr("Material Battery Style")
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.surfaceText
+                            font.weight: Font.Normal
+                            anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 18 - Theme.spacingS
+                        }
+                    }
+
+                    DankToggle {
+                        id: batteryPillToggle
+                        anchors.right: parent.right
+                        anchors.rightMargin: Theme.spacingS
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 40
+                        height: 20
+                        checked: batteryContextMenu.currentWidgetData?.batteryPillStyle ?? SettingsData.batteryPillStyle
+                        onToggled: {
+                            root.overflowSettingChanged(batteryContextMenu.sectionId, batteryContextMenu.widgetIndex, "batteryPillStyle", toggled);
+                        }
+                    }
+
+                    MouseArea {
+                        id: batteryPillArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onPressed: {
+                            batteryPillToggle.checked = !batteryPillToggle.checked;
+                            root.overflowSettingChanged(batteryContextMenu.sectionId, batteryContextMenu.widgetIndex, "batteryPillStyle", batteryPillToggle.checked);
+                        }
+                    }
+                }
+
+                Rectangle {
+                    width: parent.width
+                    height: Math.max(18, Theme.fontSizeSmall) + Theme.spacingM * 2
+                    radius: Theme.cornerRadius
+                    color: batteryPillPercentArea.containsMouse && batteryPillToggle.checked ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
+                    opacity: batteryPillToggle.checked ? 1.0 : 0.5
+
+                    Row {
+                        anchors.left: parent.left
+                        anchors.leftMargin: Theme.spacingS + 18
+                        anchors.right: batteryPillPercentToggle.left
+                        anchors.rightMargin: Theme.spacingS
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: Theme.spacingS
+                        clip: true
+
+                        DankIcon {
+                            name: "percent"
+                            size: 18
+                            color: Theme.outline
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        StyledText {
+                            text: I18n.tr("Show Percentage")
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.surfaceText
+                            font.weight: Font.Normal
+                            anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 18 - Theme.spacingS
+                        }
+                    }
+
+                    DankToggle {
+                        id: batteryPillPercentToggle
+                        anchors.right: parent.right
+                        anchors.rightMargin: Theme.spacingS
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 40
+                        height: 20
+                        enabled: batteryPillToggle.checked
+                        checked: batteryContextMenu.currentWidgetData?.batteryPillPercentSign ?? SettingsData.batteryPillPercentSign
+                        onToggled: {
+                            root.overflowSettingChanged(batteryContextMenu.sectionId, batteryContextMenu.widgetIndex, "batteryPillPercentSign", toggled);
+                        }
+                    }
+
+                    MouseArea {
+                        id: batteryPillPercentArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        enabled: batteryPillToggle.checked
+                        cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                        onPressed: {
+                            batteryPillPercentToggle.checked = !batteryPillPercentToggle.checked;
+                            root.overflowSettingChanged(batteryContextMenu.sectionId, batteryContextMenu.widgetIndex, "batteryPillPercentSign", batteryPillPercentToggle.checked);
+                        }
+                    }
+                }
             }
         }
     }
@@ -2862,16 +3476,18 @@ Column {
         background: Rectangle {
             color: Theme.surfaceContainer
             radius: Theme.cornerRadius
-            border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.08)
+            border.color: Theme.outlineMedium
             border.width: 0
         }
 
         contentItem: Item {
+            LayoutMirroring.enabled: I18n.isRtl
+            LayoutMirroring.childrenInherit: true
             Column {
                 id: musicMenuColumn
                 anchors.fill: parent
                 anchors.margins: Theme.spacingS
-                spacing: 2
+                spacing: Theme.spacingXXS
 
                 Repeater {
                     model: [
@@ -2910,13 +3526,16 @@ Column {
                         width: musicMenuColumn.width
                         height: Math.max(18, Theme.fontSizeSmall) + Theme.spacingM * 2
                         radius: Theme.cornerRadius
-                        color: musicOptionArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                        color: musicOptionArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                         Row {
                             anchors.left: parent.left
                             anchors.leftMargin: Theme.spacingS
+                            anchors.right: musicSizeCheck.left
+                            anchors.rightMargin: Theme.spacingS
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: Theme.spacingS
+                            clip: true
 
                             DankIcon {
                                 name: modelData.icon
@@ -2931,10 +3550,14 @@ Column {
                                 font.weight: isSelected() ? Font.Medium : Font.Normal
                                 color: isSelected() ? Theme.primary : Theme.surfaceText
                                 anchors.verticalCenter: parent.verticalCenter
+                                elide: Text.ElideRight
+                                maximumLineCount: 1
+                                width: parent.width - 18 - Theme.spacingS
                             }
                         }
 
                         DankIcon {
+                            id: musicSizeCheck
                             anchors.right: parent.right
                             anchors.rightMargin: Theme.spacingS
                             anchors.verticalCenter: parent.verticalCenter
@@ -2979,16 +3602,18 @@ Column {
         background: Rectangle {
             color: Theme.surfaceContainer
             radius: Theme.cornerRadius
-            border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.08)
+            border.color: Theme.outlineMedium
             border.width: 0
         }
 
         contentItem: Item {
+            LayoutMirroring.enabled: I18n.isRtl
+            LayoutMirroring.childrenInherit: true
             Column {
                 id: runningAppsMenuColumn
                 anchors.fill: parent
                 anchors.margins: Theme.spacingS
-                spacing: 2
+                spacing: Theme.spacingXXS
 
                 Rectangle {
                     width: parent.width
@@ -3011,13 +3636,16 @@ Column {
                     width: parent.width
                     height: 32
                     radius: Theme.cornerRadius
-                    color: raCompactArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: raCompactArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: raCompactToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "zoom_in"
@@ -3031,6 +3659,9 @@ Column {
                             font.pixelSize: Theme.fontSizeSmall
                             color: Theme.surfaceText
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 16 - Theme.spacingS
                         }
                     }
 
@@ -3063,13 +3694,16 @@ Column {
                     width: parent.width
                     height: 32
                     radius: Theme.cornerRadius
-                    color: raGroupArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: raGroupArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: raGroupToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "apps"
@@ -3083,6 +3717,9 @@ Column {
                             font.pixelSize: Theme.fontSizeSmall
                             color: Theme.surfaceText
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 16 - Theme.spacingS
                         }
                     }
 
@@ -3115,13 +3752,16 @@ Column {
                     width: parent.width
                     height: 32
                     radius: Theme.cornerRadius
-                    color: raWorkspaceArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: raWorkspaceArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: raWorkspaceToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "workspaces"
@@ -3135,6 +3775,9 @@ Column {
                             font.pixelSize: Theme.fontSizeSmall
                             color: Theme.surfaceText
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 16 - Theme.spacingS
                         }
                     }
 
@@ -3167,13 +3810,16 @@ Column {
                     width: parent.width
                     height: 32
                     radius: Theme.cornerRadius
-                    color: raDisplayArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                    color: raDisplayArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                     Row {
                         anchors.left: parent.left
                         anchors.leftMargin: Theme.spacingS
+                        anchors.right: raDisplayToggle.left
+                        anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: Theme.spacingS
+                        clip: true
 
                         DankIcon {
                             name: "monitor"
@@ -3187,6 +3833,9 @@ Column {
                             font.pixelSize: Theme.fontSizeSmall
                             color: Theme.surfaceText
                             anchors.verticalCenter: parent.verticalCenter
+                            elide: Text.ElideRight
+                            maximumLineCount: 1
+                            width: parent.width - 16 - Theme.spacingS
                         }
                     }
 
@@ -3238,11 +3887,13 @@ Column {
         background: Rectangle {
             color: Theme.surfaceContainer
             radius: Theme.cornerRadius
-            border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.08)
+            border.color: Theme.outlineMedium
             border.width: 0
         }
 
         contentItem: Item {
+            LayoutMirroring.enabled: I18n.isRtl
+            LayoutMirroring.childrenInherit: true
             Column {
                 id: appsDockMenuColumn
                 anchors.fill: parent
@@ -3255,6 +3906,9 @@ Column {
                     font.weight: Font.Medium
                     color: Theme.surfaceText
                     leftPadding: Theme.spacingS
+                    rightPadding: Theme.spacingS
+                    width: parent.width
+                    horizontalAlignment: Text.AlignLeft
                 }
 
                 StyledText {
@@ -3263,6 +3917,9 @@ Column {
                     font.weight: Font.Medium
                     color: Theme.surfaceText
                     leftPadding: Theme.spacingS
+                    rightPadding: Theme.spacingS
+                    width: parent.width
+                    horizontalAlignment: Text.AlignLeft
                 }
 
                 Column {
@@ -3279,6 +3936,8 @@ Column {
                             color: Theme.surfaceText
                             anchors.verticalCenter: parent.verticalCenter
                             width: 120
+                            maximumLineCount: 1
+                            horizontalAlignment: Text.AlignLeft
                         }
 
                         Row {
@@ -3333,6 +3992,8 @@ Column {
                             color: Theme.surfaceText
                             anchors.verticalCenter: parent.verticalCenter
                             width: 120
+                            maximumLineCount: 1
+                            horizontalAlignment: Text.AlignLeft
                         }
 
                         Row {
@@ -3388,13 +4049,16 @@ Column {
                         width: parent.width
                         height: 32
                         radius: Theme.cornerRadius
-                        color: badgeToggleArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                        color: badgeToggleArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                         Row {
                             anchors.left: parent.left
                             anchors.leftMargin: Theme.spacingS
+                            anchors.right: badgeToggle.left
+                            anchors.rightMargin: Theme.spacingS
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: Theme.spacingS
+                            clip: true
 
                             DankIcon {
                                 name: "notifications"
@@ -3409,6 +4073,9 @@ Column {
                                 color: Theme.surfaceText
                                 font.weight: Font.Normal
                                 anchors.verticalCenter: parent.verticalCenter
+                                elide: Text.ElideRight
+                                maximumLineCount: 1
+                                width: parent.width - 16 - Theme.spacingS
                             }
                         }
 
@@ -3450,20 +4117,26 @@ Column {
                         font.weight: Font.Medium
                         color: Theme.surfaceText
                         leftPadding: Theme.spacingS
+                        rightPadding: Theme.spacingS
                         topPadding: Theme.spacingXS
+                        width: parent.width
+                        horizontalAlignment: Text.AlignLeft
                     }
 
                     Rectangle {
                         width: parent.width
                         height: 32
                         radius: Theme.cornerRadius
-                        color: hideIndicatorsArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                        color: hideIndicatorsArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                         Row {
                             anchors.left: parent.left
                             anchors.leftMargin: Theme.spacingS
+                            anchors.right: hideIndicatorsToggle.left
+                            anchors.rightMargin: Theme.spacingS
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: Theme.spacingS
+                            clip: true
 
                             DankIcon {
                                 name: "visibility_off"
@@ -3478,6 +4151,9 @@ Column {
                                 color: Theme.surfaceText
                                 font.weight: Font.Normal
                                 anchors.verticalCenter: parent.verticalCenter
+                                elide: Text.ElideRight
+                                maximumLineCount: 1
+                                width: parent.width - 16 - Theme.spacingS
                             }
                         }
 
@@ -3510,13 +4186,16 @@ Column {
                         width: parent.width
                         height: 32
                         radius: Theme.cornerRadius
-                        color: colorizeActiveArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                        color: colorizeActiveArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                         Row {
                             anchors.left: parent.left
                             anchors.leftMargin: Theme.spacingS
+                            anchors.right: colorizeActiveToggle.left
+                            anchors.rightMargin: Theme.spacingS
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: Theme.spacingS
+                            clip: true
 
                             DankIcon {
                                 name: "palette"
@@ -3531,6 +4210,9 @@ Column {
                                 color: Theme.surfaceText
                                 font.weight: Font.Normal
                                 anchors.verticalCenter: parent.verticalCenter
+                                elide: Text.ElideRight
+                                maximumLineCount: 1
+                                width: parent.width - 16 - Theme.spacingS
                             }
                         }
 
@@ -3571,6 +4253,8 @@ Column {
                             color: Theme.surfaceText
                             anchors.verticalCenter: parent.verticalCenter
                             width: 90
+                            maximumLineCount: 1
+                            horizontalAlignment: Text.AlignLeft
                         }
 
                         DankButtonGroup {
@@ -3609,13 +4293,16 @@ Column {
                         width: parent.width
                         height: 32
                         radius: Theme.cornerRadius
-                        color: enlargeOnHoverArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                        color: enlargeOnHoverArea.containsMouse ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
 
                         Row {
                             anchors.left: parent.left
                             anchors.leftMargin: Theme.spacingS
+                            anchors.right: enlargeOnHoverToggle.left
+                            anchors.rightMargin: Theme.spacingS
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: Theme.spacingS
+                            clip: true
 
                             DankIcon {
                                 name: "zoom_in"
@@ -3630,6 +4317,9 @@ Column {
                                 color: Theme.surfaceText
                                 font.weight: Font.Normal
                                 anchors.verticalCenter: parent.verticalCenter
+                                elide: Text.ElideRight
+                                maximumLineCount: 1
+                                width: parent.width - 16 - Theme.spacingS
                             }
                         }
 
@@ -3669,6 +4359,8 @@ Column {
                             color: Theme.surfaceText
                             anchors.verticalCenter: parent.verticalCenter
                             width: 120
+                            maximumLineCount: 1
+                            horizontalAlignment: Text.AlignLeft
                         }
 
                         Row {
@@ -3720,6 +4412,8 @@ Column {
                             color: Theme.surfaceText
                             anchors.verticalCenter: parent.verticalCenter
                             width: 120
+                            maximumLineCount: 1
+                            horizontalAlignment: Text.AlignLeft
                         }
 
                         Row {

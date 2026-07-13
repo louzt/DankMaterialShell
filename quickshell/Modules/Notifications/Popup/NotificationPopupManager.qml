@@ -161,11 +161,31 @@ QtObject {
         });
     }
 
-    function _isFocusedScreen() {
-        if (!SettingsData.notificationFocusedMonitor)
-            return true;
-        const focused = CompositorService.getFocusedScreen();
-        return focused && manager.modelData && focused.name === manager.modelData.name;
+    // _screenMatchesRouting(wrapper) → true if this manager's screen should
+    // show this notification, based on notificationRoutingMode:
+    // "all"         → every manager always qualifies (no per-manager filter)
+    // "focused"     → only the manager whose screen is the focused screen
+    // "per_app"    → manager.screen must match resolveRouteForNotification result
+    function _screenMatchesRouting(wrapper) {
+        const mode = SettingsData.notificationRoutingMode || "all";
+        const myScreen = manager.modelData ? manager.modelData.name : "";
+
+        if (mode === "all") return true;
+
+        if (mode === "focused") {
+            const focused = CompositorService.getFocusedScreen();
+            return focused && focused.name === myScreen;
+        }
+
+        // "per_app" — delegate to the routing resolver
+        if (mode === "per_app" && wrapper) {
+            const route = NotificationService.resolveRouteForNotification(wrapper.notification);
+            // undefined means fan-out (show on all)
+            if (route === undefined) return true;
+            return route === myScreen;
+        }
+
+        return true;
     }
 
     function _sync(newWrappers) {
@@ -181,7 +201,7 @@ QtObject {
             }
         }
         for (const w of newWrappers) {
-            if (w && !_hasWindowFor(w) && _isFocusedScreen()) {
+            if (w && !_hasWindowFor(w) && _screenMatchesRouting(w)) {
                 needsReposition = _insertAtTop(w, true) || needsReposition;
             }
         }

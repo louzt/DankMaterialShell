@@ -12,6 +12,10 @@ Item {
     focus: true
     property string highlightedId: ""
 
+    DankTooltipV2 {
+        id: sharedTooltip
+    }
+
     readonly property var __presentation: ({
             "overview": {
                 "icon": "dashboard",
@@ -261,6 +265,12 @@ Item {
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: SettingsData.resetDashTabs()
+                                onEntered: {
+                                    sharedTooltip.show(I18n.tr("Reset"), resetButton, 0, 0, "bottom");
+                                }
+                                onExited: {
+                                    sharedTooltip.hide();
+                                }
                             }
 
                             Behavior on color {
@@ -414,24 +424,20 @@ Item {
                                     id: surface
                                     anchors.fill: parent
                                     radius: rowItem.dragging ? Theme.cornerRadius + 6 : Theme.cornerRadius
-                                    color: {
-                                        if (rowItem.dragging)
-                                            return Theme.secondaryContainer;
-                                        const base = Theme.surfaceContainer;
-                                        return Qt.rgba(base.r, base.g, base.b, rowItem.isEnabled ? 0.7 : 0.4);
-                                    }
+                                    color: surfaceColor.value
                                     border.width: rowItem.dragging ? 2 : 1
-                                    border.color: rowItem.dragging ? Theme.primary : Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.2)
+                                    border.color: rowItem.dragging ? Theme.primary : Theme.outlineHeavy
+
+                                    DankColorAnimation {
+                                        id: surfaceColor
+                                        to: rowItem.dragging ? Theme.secondaryContainer : Theme.withAlpha(Theme.surfaceContainer, rowItem.isEnabled ? 0.7 : 0.4)
+                                        duration: Theme.shortDuration
+                                    }
 
                                     Behavior on radius {
                                         NumberAnimation {
                                             duration: Theme.shortDuration
                                             easing.type: Easing.OutCubic
-                                        }
-                                    }
-                                    Behavior on color {
-                                        ColorAnimation {
-                                            duration: Theme.shortDuration
                                         }
                                     }
                                     Behavior on border.color {
@@ -492,7 +498,7 @@ Item {
                                         anchors.right: visibilityButton.left
                                         anchors.rightMargin: Theme.spacingM
                                         anchors.verticalCenter: parent.verticalCenter
-                                        spacing: 2
+                                        spacing: Theme.spacingXXS
 
                                         StyledText {
                                             text: rowItem.present.text
@@ -506,7 +512,7 @@ Item {
                                         StyledText {
                                             text: rowItem.present.description
                                             font.pixelSize: Theme.fontSizeSmall
-                                            color: rowItem.isEnabled ? Theme.outline : Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.6)
+                                            color: rowItem.isEnabled ? Theme.outline : Theme.outlineVariant
                                             elide: Text.ElideRight
                                             width: parent.width
                                             visible: text.length > 0
@@ -527,6 +533,13 @@ Item {
                                             root.forceActiveFocus();
                                             root.highlightedId = rowItem.modelData;
                                             SettingsData.setDashTabEnabled(rowItem.modelData, !rowItem.isEnabled);
+                                        }
+                                        onEntered: {
+                                            const tooltipText = rowItem.isEnabled ? I18n.tr("Hide") : I18n.tr("Show");
+                                            sharedTooltip.show(tooltipText, visibilityButton, 0, 0, "bottom");
+                                        }
+                                        onExited: {
+                                            sharedTooltip.hide();
                                         }
                                     }
                                 }

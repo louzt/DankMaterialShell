@@ -173,6 +173,7 @@ Item {
     }
 
     property bool barSurfacesLoaded: true
+    property int pendingFrameTransitionRevision: 0
 
     function recreateBarSurfaces() {
         log.info("Recreating bar surfaces, screens:", Quickshell.screens.length, Quickshell.screens.map(s => s.name).join(","));
@@ -181,9 +182,23 @@ Item {
         barSurfaceReloadAction.schedule();
     }
 
+    // Holds the bar rebuild until the compositor applies the layout, so the swap lands in one pass
+    function runPendingFrameTransition() {
+        if (pendingFrameTransitionRevision <= 0 || !CompositorService.frameCompositorLayoutReady)
+            return;
+        recreateBarSurfaces();
+    }
+
     DeferredAction {
         id: barSurfaceReloadAction
-        onTriggered: root.barSurfacesLoaded = true
+        onTriggered: {
+            // Ack first so the latch flips and new bars build directly in the post-transition state
+            if (root.pendingFrameTransitionRevision > 0 && CompositorService.frameCompositorLayoutReady) {
+                FrameTransitionState.acknowledge(root.pendingFrameTransitionRevision);
+                root.pendingFrameTransitionRevision = 0;
+            }
+            root.barSurfacesLoaded = true;
+        }
     }
 
     property string _barLayoutStateJson: {
@@ -213,13 +228,22 @@ Item {
     }
 
     Connections {
+        target: FrameTransitionState
+        function onTransitionRequested(revision) {
+            root.pendingFrameTransitionRevision = Math.max(root.pendingFrameTransitionRevision, revision);
+            root.runPendingFrameTransition();
+        }
+    }
+
+    Connections {
+        target: CompositorService
+        function onFrameCompositorLayoutReadyChanged() {
+            root.runPendingFrameTransition();
+        }
+    }
+
+    Connections {
         target: SettingsData
-        function onFrameEnabledChanged() {
-            root.recreateBarSurfaces();
-        }
-        function onConnectedFrameModeActiveChanged() {
-            root.recreateBarSurfaces();
-        }
         function onForceDankBarLayoutRefresh() {
             root.recreateBarSurfaces();
         }
@@ -233,6 +257,12 @@ Item {
         sourceComponent: Frame {}
     }
 
+    Loader {
+        active: FrameTransitionState.effectiveFrameEnabled && SettingsData.frameLauncherEdgeHover
+        asynchronous: false
+        sourceComponent: FrameLauncherHoverZone {}
+    }
+
     DeferredAction {
         id: frameSurfaceReloadAction
         onTriggered: root.frameSurfacesLoaded = true
@@ -244,6 +274,8 @@ Item {
             id: barRepeaterModel
             values: JSON.parse(root._barLayoutStateJson)
         }
+
+        Component.onCompleted: BarWidgetService.dankBarRepeater = dankBarRepeater
 
         property var hyprlandOverviewLoaderRef: hyprlandOverviewLoader
 
@@ -579,7 +611,18 @@ Item {
     }
 
     Variants {
-        model: SettingsData.notificationFocusedMonitor ? Quickshell.screens : SettingsData.getFilteredScreens("notifications")
+        // Routing modes:
+        // "all"       → every screen gets notifications (fan-out)
+        // "focused"   → only the focused screen
+        // "per_app"   → per-app routes resolved via NotificationService.resolveRouteForNotification
+        model: {
+            const mode = SettingsData.notificationRoutingMode || "all";
+            if (mode === "focused") {
+                const focused = CompositorService.getFocusedScreen();
+                return focused ? [focused] : SettingsData.getFilteredScreens("notifications");
+            }
+            return SettingsData.getFilteredScreens("notifications");
+        }
 
         delegate: NotificationPopupManager {
             modelData: item

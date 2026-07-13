@@ -108,10 +108,7 @@ func (sc *SharedContext) eventDispatcher() {
 		if r := recover(); r != nil {
 			err := fmt.Errorf("FATAL: Wayland event dispatcher panic: %v", r)
 			log.Error(err)
-			select {
-			case sc.fatalError <- err:
-			default:
-			}
+			sc.signalFatal(err)
 		}
 	}()
 
@@ -141,6 +138,7 @@ func (sc *SharedContext) eventDispatcher() {
 			continue
 		case err != nil:
 			log.Errorf("Poll error: %v", err)
+			sc.signalFatal(fmt.Errorf("wayland poll error: %w", err))
 			return
 		}
 
@@ -161,6 +159,7 @@ func (sc *SharedContext) eventDispatcher() {
 
 			if consecutiveErrors >= maxConsecutiveErrors {
 				log.Errorf("Fatal: Wayland connection unrecoverable after %d attempts. Exiting dispatcher.", maxConsecutiveErrors)
+				sc.signalFatal(fmt.Errorf("wayland connection unrecoverable after %d dispatch failures: %w", maxConsecutiveErrors, err))
 				return
 			}
 
@@ -169,6 +168,13 @@ func (sc *SharedContext) eventDispatcher() {
 		}
 
 		consecutiveErrors = 0
+	}
+}
+
+func (sc *SharedContext) signalFatal(err error) {
+	select {
+	case sc.fatalError <- err:
+	default:
 	}
 }
 

@@ -31,7 +31,8 @@ LANGUAGES = {
     "de": "de.json",
     "sv": "sv.json",
     "vi": "vi.json",
-    "eo": "eo.json"
+    "eo": "eo.json",
+    "ko": "ko.json"
 }
 
 def error(msg):

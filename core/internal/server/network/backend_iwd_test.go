@@ -169,6 +169,41 @@ func TestIWDBackend_MapIwdDBusError(t *testing.T) {
 	}
 }
 
+func TestIWDBackend_ApplyManagedObjects_DeviceWithoutStation(t *testing.T) {
+	backend, _ := NewIWDBackend()
+
+	err := backend.applyManagedObjects(map[dbus.ObjectPath]map[string]map[string]dbus.Variant{
+		"/net/connman/iwd/0/1": {
+			iwdDeviceInterface: {
+				"Name":    dbus.MakeVariant("wlan0"),
+				"Powered": dbus.MakeVariant(false),
+			},
+		},
+	})
+
+	assert.NoError(t, err)
+	assert.Equal(t, dbus.ObjectPath("/net/connman/iwd/0/1"), backend.devicePath)
+	assert.Empty(t, backend.stationPath)
+
+	state, err := backend.GetCurrentState()
+	assert.NoError(t, err)
+	assert.Equal(t, "wlan0", state.WiFiDevice)
+	assert.False(t, state.WiFiEnabled)
+	assert.False(t, state.WiFiConnected)
+}
+
+func TestIWDBackend_ApplyManagedObjects_NoDevice(t *testing.T) {
+	backend, _ := NewIWDBackend()
+
+	err := backend.applyManagedObjects(map[dbus.ObjectPath]map[string]map[string]dbus.Variant{
+		"/net/connman/iwd/0": {
+			iwdAdapterInterface: {},
+		},
+	})
+
+	assert.ErrorContains(t, err, "no WiFi device found")
+}
+
 func TestIWDSavedWiFiProfilesFromManagedObjects(t *testing.T) {
 	objects := map[dbus.ObjectPath]map[string]map[string]dbus.Variant{
 		"/net/connman/iwd/known_network/1": {

@@ -24,6 +24,8 @@ FloatingWindow {
     color: Theme.surfaceContainer
     visible: false
 
+    onClosed: visible = false
+
     FocusScope {
         id: contentFocusScope
         anchors.fill: parent
@@ -129,7 +131,7 @@ FloatingWindow {
                     iconName: "open_in_new"
                     backgroundColor: Theme.surfaceContainerHighest
                     textColor: Theme.surfaceText
-                    onClicked: Qt.openUrlExternally("https://danklinux.com/blog/v1-4-release")
+                    onClicked: Qt.openUrlExternally("https://danklinux.com/blog/v1-5-release")
                 }
 
                 DankButton {

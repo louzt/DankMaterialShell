@@ -77,6 +77,7 @@ install-desktop:
 	@echo "Installing desktop entries..."
 	@install -D -m 644 $(ASSETS_DIR)/dms-open.desktop $(APPLICATIONS_DIR)/dms-open.desktop
 	@install -D -m 644 $(ASSETS_DIR)/com.danklinux.dms.desktop $(APPLICATIONS_DIR)/com.danklinux.dms.desktop
+	@install -D -m 644 $(ASSETS_DIR)/com.danklinux.dms.notepad.desktop $(APPLICATIONS_DIR)/com.danklinux.dms.notepad.desktop
 	@update-desktop-database -q $(APPLICATIONS_DIR) 2>/dev/null || true
 	@echo "Desktop entries installed"
 
@@ -120,6 +121,7 @@ uninstall-desktop:
 	@echo "Removing desktop entries..."
 	@rm -f $(APPLICATIONS_DIR)/dms-open.desktop
 	@rm -f $(APPLICATIONS_DIR)/com.danklinux.dms.desktop
+	@rm -f $(APPLICATIONS_DIR)/com.danklinux.dms.notepad.desktop
 	@update-desktop-database -q $(APPLICATIONS_DIR) 2>/dev/null || true
 	@echo "Desktop entries removed"
 

@@ -18,7 +18,7 @@ FloatingWindow {
     property bool keyboardNavigationActive: false
     property bool isLoading: false
     property var parentModal: null
-    parentWindow: null
+    parentWindow: parentModal
     property bool pendingInstallHandled: false
     property string typeFilter: ""
     property string categoryFilter: "all"
@@ -124,6 +124,25 @@ FloatingWindow {
         default:
             return status;
         }
+    }
+
+    function relatedNames(plugin) {
+        if (!plugin || !plugin.similar || plugin.similar.length === 0)
+            return [];
+
+        var names = [];
+        for (var i = 0; i < plugin.similar.length; i++) {
+            var id = plugin.similar[i];
+            var name = id;
+            for (var j = 0; j < allPlugins.length; j++) {
+                if (allPlugins[j].id === id) {
+                    name = allPlugins[j].name || id;
+                    break;
+                }
+            }
+            names.push(name);
+        }
+        return names;
     }
 
     function comparePluginAuthor(a, b) {
@@ -462,6 +481,8 @@ FloatingWindow {
     implicitHeight: 650
     color: Theme.surfaceContainer
     visible: false
+
+    onClosed: hide()
 
     onVisibleChanged: {
         if (visible) {
@@ -848,10 +869,7 @@ FloatingWindow {
                     anchors.topMargin: Theme.spacingS
                     anchors.bottomMargin: Theme.spacingS
                     spacing: Theme.spacingS
-                    model: ScriptModel {
-                        values: root.filteredPlugins
-                        objectProp: "id"
-                    }
+                    model: root.filteredPlugins
                     clip: true
                     visible: !root.isLoading
                     add: null
@@ -911,7 +929,7 @@ FloatingWindow {
 
                                 Column {
                                     width: parent.width - Theme.iconSize - Theme.spacingM - installButton.width - Theme.spacingM
-                                    spacing: 2
+                                    spacing: Theme.spacingXXS
 
                                     Row {
                                         spacing: Theme.spacingXS
@@ -938,7 +956,7 @@ FloatingWindow {
                                             Row {
                                                 id: featuredRow
                                                 anchors.centerIn: parent
-                                                spacing: 2
+                                                spacing: Theme.spacingXXS
 
                                                 DankIcon {
                                                     name: "star"
@@ -1034,7 +1052,7 @@ FloatingWindow {
                                             Row {
                                                 id: upvoteRow
                                                 anchors.centerIn: parent
-                                                spacing: 2
+                                                spacing: Theme.spacingXXS
 
                                                 DankIcon {
                                                     name: "thumb_up"
@@ -1075,6 +1093,15 @@ FloatingWindow {
                                             acceptedButtons: Qt.NoButton
                                             propagateComposedEvents: true
                                         }
+                                    }
+
+                                    StyledText {
+                                        visible: root.relatedNames(modelData).length > 0
+                                        text: I18n.tr("Related: %1", "related plugins").arg(root.relatedNames(modelData).join(", "))
+                                        font.pixelSize: Theme.fontSizeSmall
+                                        color: Theme.outline
+                                        elide: Text.ElideRight
+                                        width: parent.width
                                     }
                                 }
 

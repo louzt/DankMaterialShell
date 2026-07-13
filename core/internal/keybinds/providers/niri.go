@@ -19,6 +19,20 @@ type NiriProvider struct {
 	parsed           bool
 }
 
+type niriActionPart struct {
+	value  string
+	quoted bool
+}
+
+var niriActionPropertyOrder = []string{"focus", "show-pointer", "write-to-disk", "skip-confirmation", "delay-ms"}
+var niriActionProperties = map[string]struct{}{
+	"focus":             {},
+	"show-pointer":      {},
+	"write-to-disk":     {},
+	"skip-confirmation": {},
+	"delay-ms":          {},
+}
+
 func NewNiriProvider(configDir string) *NiriProvider {
 	if configDir == "" {
 		configDir = defaultNiriConfigDir()
@@ -55,6 +69,7 @@ func (n *NiriProvider) GetCheatSheet() (*keybinds.CheatSheet, error) {
 	sheet := &keybinds.CheatSheet{
 		Title:            "Niri Keybinds",
 		Provider:         n.Name(),
+		ModKey:           result.ModKey,
 		Binds:            categorizedBinds,
 		DMSBindsIncluded: result.DMSBindsIncluded,
 	}
@@ -352,7 +367,7 @@ func (n *NiriProvider) buildActionFromNode(bindNode *document.Node) string {
 	}
 
 	if actionNode.Properties != nil {
-		for _, propName := range []string{"focus", "show-pointer", "write-to-disk", "skip-confirmation", "delay-ms"} {
+		for _, propName := range niriActionPropertyOrder {
 			if val, ok := actionNode.Properties.Get(propName); ok {
 				parts = append(parts, propName+"="+val.String())
 			}
@@ -440,10 +455,10 @@ func (n *NiriProvider) buildActionNode(action string) *document.Node {
 		return node
 	}
 
-	node.SetName(parts[0])
+	node.SetName(parts[0].value)
 	for _, arg := range parts[1:] {
-		if strings.Contains(arg, "=") {
-			kv := strings.SplitN(arg, "=", 2)
+		if n.isNiriActionPropertyToken(arg) {
+			kv := strings.SplitN(arg.value, "=", 2)
 			switch kv[1] {
 			case "true":
 				node.AddProperty(kv[0], true, "")
@@ -454,13 +469,25 @@ func (n *NiriProvider) buildActionNode(action string) *document.Node {
 			}
 			continue
 		}
-		node.AddArgument(arg, "")
+		node.AddArgument(arg.value, "")
 	}
 	return node
 }
 
-func (n *NiriProvider) parseActionParts(action string) []string {
-	var parts []string
+func (n *NiriProvider) isNiriActionPropertyToken(part niriActionPart) bool {
+	if part.quoted || !strings.Contains(part.value, "=") {
+		return false
+	}
+	key, _, ok := strings.Cut(part.value, "=")
+	if !ok {
+		return false
+	}
+	_, ok = niriActionProperties[key]
+	return ok
+}
+
+func (n *NiriProvider) parseActionParts(action string) []niriActionPart {
+	var parts []niriActionPart
 	var current strings.Builder
 	var inQuote, escaped, wasQuoted bool
 
@@ -476,7 +503,7 @@ func (n *NiriProvider) parseActionParts(action string) []string {
 			inQuote = !inQuote
 		case r == ' ' && !inQuote:
 			if current.Len() > 0 || wasQuoted {
-				parts = append(parts, current.String())
+				parts = append(parts, niriActionPart{value: current.String(), quoted: wasQuoted})
 				current.Reset()
 				wasQuoted = false
 			}
@@ -485,7 +512,7 @@ func (n *NiriProvider) parseActionParts(action string) []string {
 		}
 	}
 	if current.Len() > 0 || wasQuoted {
-		parts = append(parts, current.String())
+		parts = append(parts, niriActionPart{value: current.String(), quoted: wasQuoted})
 	}
 	return parts
 }

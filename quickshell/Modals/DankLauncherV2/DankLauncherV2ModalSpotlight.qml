@@ -26,11 +26,15 @@ Item {
     property string _pendingMode: ""
 
     readonly property bool useHyprlandFocusGrab: CompositorService.useHyprlandFocusGrab
+
+    TransientSurfaceTracker {
+        id: transientSurfaces
+    }
     readonly property var effectiveScreen: launcherWindow.screen
     readonly property real screenWidth: effectiveScreen?.width ?? 1920
     readonly property real screenHeight: effectiveScreen?.height ?? 1080
     readonly property real dpr: effectiveScreen ? CompositorService.getScreenScale(effectiveScreen) : 1
-    readonly property bool useBackgroundDarken: !SettingsData.frameEnabled && SettingsData.modalDarkenBackground
+    readonly property bool useBackgroundDarken: !FrameTransitionState.effectiveFrameEnabled && SettingsData.modalDarkenBackground
     readonly property bool usesOverlayLayer: useBackgroundDarken || SettingsData.launcherUseOverlayLayer || triggerUsesOverlayLayer
     readonly property var effectiveLauncherLayer: LayerShell.fromEnv("DMS_MODAL_LAYER", root.usesOverlayLayer ? WlrLayer.Overlay : WlrLayer.Top, {
         "allow": ["top", "overlay"],
@@ -116,6 +120,18 @@ Item {
     readonly property int borderWidth: SettingsData.dankLauncherV2BorderEnabled ? SettingsData.dankLauncherV2BorderThickness : 0
     readonly property bool useSingleWindow: CompositorService.isHyprland || useBackgroundDarken
 
+    // Blur region isn't auto-committed on geometry changes; kick twice to catch resize settling.
+    function _kickBlurCommit() {
+        launcherBlur.kick();
+        Qt.callLater(launcherBlur.kick);
+    }
+
+    onAlignedXChanged: _kickBlurCommit()
+    onAlignedYChanged: _kickBlurCommit()
+    onAlignedWidthChanged: _kickBlurCommit()
+    on_ContentImplicitHChanged: _kickBlurCommit()
+    onContentVisibleChanged: _kickBlurCommit()
+
     signal dialogClosed
 
     function _ensureContentLoadedAndInitialize(query, mode) {
@@ -155,7 +171,7 @@ Item {
         }
         if (spotlightContent.searchField) {
             spotlightContent.searchField.forceActiveFocus();
-            spotlightContent.searchField.cursorPosition = spotlightContent.searchField.text.length;
+            spotlightContent.searchField.selectAll();
         }
     }
 
@@ -228,7 +244,7 @@ Item {
 
     HyprlandFocusGrab {
         id: focusGrab
-        windows: [launcherWindow]
+        windows: [launcherWindow].concat(transientSurfaces.focusWindows)
         active: root.useHyprlandFocusGrab && root.keyboardActive
         onCleared: {
             if (spotlightOpen)
@@ -324,6 +340,7 @@ Item {
         exclusionMode: ExclusionMode.Ignore
 
         WindowBlur {
+            id: launcherBlur
             targetWindow: launcherWindow
             readonly property real op: Math.max(0, Math.min(1, (modalContainer.opacity - 0.06) * 2))
             blurX: modalContainer.x
@@ -332,6 +349,9 @@ Item {
             blurHeight: contentVisible ? root._contentImplicitH * op : 0
             blurRadius: root.cornerRadius
         }
+
+        onWidthChanged: root._kickBlurCommit()
+        onHeightChanged: root._kickBlurCommit()
 
         WlrLayershell.namespace: "dms:spotlight"
         WlrLayershell.layer: root.effectiveLauncherLayer
@@ -407,8 +427,8 @@ Item {
                 enabled: spotlightOpen
                 hoverEnabled: false
                 acceptedButtons: Qt.AllButtons
-                onPressed: mouse.accepted = true
-                onClicked: mouse.accepted = true
+                onPressed: mouse => mouse.accepted = true
+                onClicked: mouse => mouse.accepted = true
                 z: -1
             }
 
@@ -416,6 +436,9 @@ Item {
             property real slideOffset: contentVisible ? 0 : -root._animHeadroom
 
             opacity: contentVisible ? 1 : 0
+
+            onOpacityChanged: root._kickBlurCommit()
+            onSlideOffsetChanged: root._kickBlurCommit()
 
             Behavior on opacity {
                 NumberAnimation {
@@ -480,6 +503,7 @@ Item {
                         sourceComponent: SpotlightLauncherContent {
                             focus: true
                             parentModal: root
+                            transientSurfaceTracker: transientSurfaces
                         }
 
                         onLoaded: {

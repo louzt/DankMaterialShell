@@ -87,22 +87,43 @@ Singleton {
         }
     }
 
-    function evaluateColorScheme() {
+    function canSyncColorScheme() {
         if (typeof SettingsData === "undefined" || !SettingsData.syncModeWithPortal)
-            return;
+            return false;
         if (!settingsPortalAvailable)
-            return;
+            return false;
         if (typeof SessionData !== "undefined" && SessionData.themeModeAutoEnabled)
-            return;
-        if (typeof Theme === "undefined")
-            return;
-        // Defer mid-generation: setLightMode's regen would be dropped, and DMS's own transient color-scheme toggle would be misread. Re-run on worker completion.
-        if (Theme.workerRunning)
+            return false;
+        return typeof Theme !== "undefined";
+    }
+
+    // Only follow values stable for the settle window — the opt-in GTK4-refresh toggle reverts within ~400ms and following it would loop.
+    function evaluateColorScheme() {
+        if (!canSyncColorScheme())
             return;
         const shouldBeLight = systemColorScheme !== 1;
-        if (Theme.isLightMode === shouldBeLight)
+        if (Theme.isLightMode === shouldBeLight) {
+            colorSchemeSettleTimer.stop();
             return;
-        Theme.setLightMode(shouldBeLight, true, false);
+        }
+        colorSchemeSettleTimer.restart();
+    }
+
+    Timer {
+        id: colorSchemeSettleTimer
+        interval: 1000
+        onTriggered: {
+            if (!root.canSyncColorScheme())
+                return;
+            const shouldBeLight = root.systemColorScheme !== 1;
+            if (Theme.isLightMode === shouldBeLight)
+                return;
+            if (Theme.workerRunning) {
+                restart();
+                return;
+            }
+            Theme.setLightMode(shouldBeLight, true, false);
+        }
     }
 
     function setLightMode(isLightMode) {

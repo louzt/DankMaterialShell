@@ -19,7 +19,8 @@ Item {
             PDFReader: 6,
             Mail: 7,
             Terminal: 8,
-            Calendar: 9
+            Calendar: 9,
+            Maps: 10
         })
 
     property string currentWebBrowserAppId: ""
@@ -32,6 +33,7 @@ Item {
     property string currentMailAppId: ""
     property string currentTerminalAppId: ""
     property string currentCalendarAppId: ""
+    property string currentMapsAppId: ""
 
     property var categoryModels: ({})
 
@@ -41,13 +43,14 @@ Item {
     readonly property var mimeMapping: ({
             [root.appCategory.WebBrowser]: ["x-scheme-handler/https", "x-scheme-handler/http", "text/html", "application/xhtml+xml"],
             [root.appCategory.FileManager]: ["inode/directory", "x-scheme-handler/file"],
-            [root.appCategory.TextEditor]: ["text/plain", "application/x-zerosize", "text/x-c++src", "text/x-csrc", "text/x-python", "text/x-shellscript", "application/json"],
+            [root.appCategory.TextEditor]: ["text/plain", "text/markdown", "application/x-zerosize", "text/x-c++src", "text/x-csrc", "text/x-python", "text/x-shellscript", "application/json"],
             [root.appCategory.ImageViewer]: ["image/png", "image/jpeg", "image/gif", "image/bmp", "image/webp", "image/avif", "image/svg+xml"],
             [root.appCategory.VideoPlayer]: ["video/mp4", "video/x-matroska", "video/webm", "video/avi", "video/mpeg", "video/quicktime", "video/x-msvideo"],
             [root.appCategory.MusicPlayer]: ["audio/mpeg", "audio/x-flac", "audio/wav", "audio/ogg", "audio/aac", "audio/webm"],
             [root.appCategory.PDFReader]: ["application/pdf", "application/x-ext-pdf", "application/x-bzpdf", "application/x-gzpdf", "application/vnd.comicbook-rar", "application/vnd.comicbook+zip"],
             [root.appCategory.Mail]: ["x-scheme-handler/mailto"],
             [root.appCategory.Calendar]: ["x-scheme-handler/calendar"],
+            [root.appCategory.Maps]: ["x-scheme-handler/geo"],
             [root.appCategory.Terminal]: ["terminal"] // Special
         })
 
@@ -279,6 +282,13 @@ Item {
                     category: root.appCategory.Mail
                     tags: ["mail", "email"]
                     description: I18n.tr("Handles mailto links", "Handles mailto links")
+                }
+
+                AppSelector {
+                    text: I18n.tr("Maps", "Maps")
+                    category: root.appCategory.Maps
+                    tags: ["maps", "geo", "location"]
+                    description: I18n.tr("Handles geo: location links", "Handles geo: location links")
                 }
             }
 

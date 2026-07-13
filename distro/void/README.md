@@ -13,22 +13,47 @@ All build from source.
 
 ## Distribution
 
-These packages target the official
-[`void-linux/void-packages`](https://github.com/void-linux/void-packages)
-repository, so they install with a plain `xbps-install dms` and no extra setup.
-Most dependencies (`quickshell`, `matugen`, `cava`, `niri`, `greetd`, …) are
-already in Void; `dgop` and `danksearch` are packaged alongside in the
-[danklinux repo](https://github.com/AvengeMedia/danklinux/tree/master/distro/void).
+This is a DMS maintained repo for VoidLinux until these packages are officially merged upstream in the Void Linux repositories, you can install them from our self-hosted custom XBPS repositories served via GitHub Pages.
+
+### Using the Self-Hosted Repositories
+
+We serve both stable release and development packages directly from our repository branches.
+
+#### 1. Add Repository Configurations
+
+Create configuration files in `/etc/xbps.d/` pointing to our repositories (needed for both stable and git/nightly variants):
+
+```sh
+echo "repository=https://avengemedia.github.io/DankMaterialShell/current" | sudo tee /etc/xbps.d/dms.conf
+echo "repository=https://avengemedia.github.io/DankLinux/current" | sudo tee /etc/xbps.d/danklinux.conf
+```
+
+#### 2. Install DMS
+
+Synchronize repositories and install the package:
+
+* For the **stable** variant:
+
+    ```sh
+    sudo xbps-install -S dms
+    ```
+
+* For the **git/nightly** variant (this will conflict with and replace the stable package):
+
+    ```sh
+    sudo xbps-install -S dms-git
+    ```
+
+*Note: On the first sync, `xbps-install` will output our signing key fingerprint and ask you to type `y` to trust and import it. Verify that the key matches our official signing fingerprint.*
 
 The templates here are the source of truth: copy each into a void-packages
-checkout at `srcpkgs/<pkg>/template` to build or submit it. Only tagged releases
-are packaged (no `-git`/nightly variant).
+checkout at `srcpkgs/<pkg>/template` to build or submit it.
 
 ## Dependencies
 
 Installing `dms` automatically pulls in `quickshell`, `accountsservice`, `dgop`,
-and `matugen` (which drives the Material You theming). The rest are optional —
-install whichever features you want:
+`matugen` (which drives the Material You theming), `dbus`, and `elogind`.
+The rest are optional, install whichever features you want:
 
 | Package | Enables |
 | --- | --- |
@@ -36,7 +61,6 @@ install whichever features you want:
 | `cava` | audio visualiser widget |
 | `qt6-multimedia` | system sound feedback |
 | `qt6ct` | Qt app theming |
-| `wtype` | virtual keyboard input |
 | `power-profiles-daemon` | power profile control |
 | `cups-pk-helper` | printer management |
 | `NetworkManager` | network control |
@@ -73,6 +97,27 @@ spawn-at-startup "dms" "run"
 ```
 
 or Hyprland: `exec-once = dms run`.
+
+From a TTY on Void without a greeter, start your compositor through a D-Bus
+session:
+
+```sh
+dbus-run-session niri
+dbus-run-session Hyprland
+dbus-run-session mango
+```
+
+The `mangowc` package provides the `mango` command.
+
+For power menu actions to work on runit systems, make sure the system D-Bus and
+elogind services are enabled:
+
+```sh
+sudo ln -sf /etc/sv/dbus /var/service/dbus
+sudo ln -sf /etc/sv/elogind /var/service/elogind
+```
+
+The `dankinstall` Void path does this automatically after installing packages.
 
 ## Greeter (optional)
 

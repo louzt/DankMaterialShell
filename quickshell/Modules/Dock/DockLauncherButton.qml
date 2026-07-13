@@ -24,15 +24,13 @@ Item {
 
     readonly property string tooltipText: I18n.tr("Applications")
 
-    readonly property color effectiveLogoColor: {
+    readonly property var effectiveLogoColor: {
         const override = SettingsData.dockLauncherLogoColorOverride;
         if (override === "primary")
             return Theme.primary;
         if (override === "surface")
             return Theme.surfaceText;
-        if (override !== "")
-            return override;
-        return Theme.surfaceText;
+        return override;
     }
 
     onIsHoveredChanged: {

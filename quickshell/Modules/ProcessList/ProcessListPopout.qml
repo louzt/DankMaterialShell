@@ -26,6 +26,19 @@ DankPopout {
         open();
     }
 
+    function prepareForTrigger(triggerSource) {
+        switch (triggerSource) {
+        case "memory":
+            DgopService.setSortBy("memory");
+            break;
+        case "cpu":
+        case "cpu_temp":
+        case "gpu_temp":
+            DgopService.setSortBy("cpu");
+            break;
+        }
+    }
+
     popupWidth: Math.round(Theme.fontSizeMedium * 46)
     popupHeight: Math.round(Theme.fontSizeMedium * 39)
     triggerWidth: 55
@@ -53,6 +66,7 @@ DankPopout {
 
     ProcessContextMenu {
         id: processContextMenu
+        transientSurfaceTracker: processListPopout.transientSurfaceTracker
     }
 
     content: Component {
@@ -230,7 +244,7 @@ DankPopout {
                             width: Theme.fontSizeMedium * 3
                             height: width
                             radius: Theme.cornerRadius
-                            color: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.1)
+                            color: Theme.primaryHover
 
                             SystemLogo {
                                 anchors.centerIn: parent
@@ -427,7 +441,7 @@ DankPopout {
                     const prog = startAngle + (endAngle - startAngle) * gaugeRoot.animValue;
                     ctx.beginPath();
                     ctx.arc(cx, cy, radius, startAngle, prog);
-                    ctx.strokeStyle = Qt.rgba(gaugeRoot.accentColor.r, gaugeRoot.accentColor.g, gaugeRoot.accentColor.b, 0.2);
+                    ctx.strokeStyle = Theme.withAlpha(gaugeRoot.accentColor, 0.2);
                     ctx.lineWidth = gaugeRoot.thickness + gaugeRoot.glowExtra;
                     ctx.stroke();
                 }
@@ -468,7 +482,7 @@ DankPopout {
 
                 ctx.beginPath();
                 ctx.arc(cx, cy, radius, startAngle, endAngle);
-                ctx.strokeStyle = Qt.rgba(gaugeRoot.accentColor.r, gaugeRoot.accentColor.g, gaugeRoot.accentColor.b, 0.1);
+                ctx.strokeStyle = Theme.withAlpha(gaugeRoot.accentColor, 0.1);
                 ctx.lineWidth = gaugeRoot.thickness;
                 ctx.stroke();
 

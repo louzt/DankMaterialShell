@@ -1,8 +1,8 @@
 import QtQuick
-import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Widgets
 import qs.Common
 
 Item {
@@ -58,23 +58,6 @@ Item {
     visible: intersectsViewport
     opacity: (monitorObj?.id ?? -1) == widgetMonitorId ? 1 : 0.4
 
-    Rectangle {
-        id: maskRect
-        width: root.width
-        height: root.height
-        radius: Theme.cornerRadius
-        visible: false
-        layer.enabled: true
-    }
-
-    layer.enabled: true
-    layer.effect: MultiEffect {
-        maskEnabled: true
-        maskSource: maskRect
-        maskSpreadAtMin: 1
-        maskThresholdMin: 0.5
-    }
-
     Behavior on x {
         NumberAnimation {
             duration: Theme.variantDuration(Theme.expressiveDurations.expressiveDefaultSpatial, overviewOpen)
@@ -104,51 +87,55 @@ Item {
         }
     }
 
-    ScreencopyView {
-        id: windowPreview
+    ClippingRectangle {
         anchors.fill: parent
-        captureSource: root.overviewOpen ? root.toplevel?.wayland : null
-        live: true
+        radius: Theme.cornerRadius
+        color: "transparent"
 
-        Rectangle {
+        ScreencopyView {
+            id: windowPreview
             anchors.fill: parent
-            radius: Theme.cornerRadius
-            color: pressed ? Theme.withAlpha(Theme.surfaceContainerHigh, 0.5) :
-                hovered ? Theme.withAlpha(Theme.surfaceVariant, 0.3) :
-                Theme.withAlpha(Theme.surfaceContainer, 0.1)
-            border.color: Theme.withAlpha(Theme.outline, 0.3)
-            border.width: 1
-        }
+            captureSource: root.overviewOpen ? root.toplevel?.wayland : null
+            live: true
 
-        ColumnLayout {
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: parent.left
-            anchors.right: parent.right
-            spacing: Theme.fontSizeSmall * 0.5
+            Rectangle {
+                anchors.fill: parent
+                radius: Theme.cornerRadius
+                color: pressed ? Theme.withAlpha(Theme.surfaceContainerHigh, 0.5) : hovered ? Theme.withAlpha(Theme.surfaceVariant, 0.3) : Theme.withAlpha(Theme.surfaceContainer, 0.1)
+                border.color: Theme.withAlpha(Theme.outline, 0.3)
+                border.width: 1
+            }
 
-            Image {
-                id: windowIcon
-                property var iconSize: {
-                    return Math.min(targetWindowWidth, targetWindowHeight) * (root.compactMode ? root.iconToWindowRatioCompact : root.iconToWindowRatio) / (root.monitorData?.scale ?? 1)
-                }
-                Layout.alignment: Qt.AlignHCenter
-                source: root.iconPath
-                width: iconSize
-                height: iconSize
-                sourceSize: Qt.size(iconSize, iconSize)
+            ColumnLayout {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                anchors.right: parent.right
+                spacing: Theme.fontSizeSmall * 0.5
 
-                Behavior on width {
-                    NumberAnimation {
-                        duration: Theme.variantDuration(Theme.expressiveDurations.expressiveDefaultSpatial, overviewOpen)
-                        easing.type: Easing.BezierSpline
-                        easing.bezierCurve: Theme.variantModalEnterCurve
+                Image {
+                    id: windowIcon
+                    property var iconSize: {
+                        return Math.min(targetWindowWidth, targetWindowHeight) * (root.compactMode ? root.iconToWindowRatioCompact : root.iconToWindowRatio) / (root.monitorData?.scale ?? 1);
                     }
-                }
-                Behavior on height {
-                    NumberAnimation {
-                        duration: Theme.variantDuration(Theme.expressiveDurations.expressiveDefaultSpatial, overviewOpen)
-                        easing.type: Easing.BezierSpline
-                        easing.bezierCurve: Theme.variantModalEnterCurve
+                    Layout.alignment: Qt.AlignHCenter
+                    source: root.iconPath
+                    width: iconSize
+                    height: iconSize
+                    sourceSize: Qt.size(iconSize, iconSize)
+
+                    Behavior on width {
+                        NumberAnimation {
+                            duration: Theme.variantDuration(Theme.expressiveDurations.expressiveDefaultSpatial, overviewOpen)
+                            easing.type: Easing.BezierSpline
+                            easing.bezierCurve: Theme.variantModalEnterCurve
+                        }
+                    }
+                    Behavior on height {
+                        NumberAnimation {
+                            duration: Theme.variantDuration(Theme.expressiveDurations.expressiveDefaultSpatial, overviewOpen)
+                            easing.type: Easing.BezierSpline
+                            easing.bezierCurve: Theme.variantModalEnterCurve
+                        }
                     }
                 }
             }

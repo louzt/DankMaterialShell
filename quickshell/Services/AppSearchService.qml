@@ -298,7 +298,11 @@ Singleton {
     function getBuiltInLauncherItems(pluginId, query) {
         if (pluginId === "dms_clipboard_search") {
             const trimmed = (query || "").toString().trim();
-            const entries = ClipboardService.internalEntries.length > 0 ? ClipboardService.getLauncherEntries(trimmed, 20, 0) : ClipboardService.getCachedLauncherSearchEntries(trimmed, 20);
+            const entries = ClipboardService.getCachedLauncherSearchEntries(trimmed, 20).slice().sort((a, b) => {
+                if (a.pinned !== b.pinned)
+                    return b.pinned ? 1 : -1;
+                return (b.id || 0) - (a.id || 0);
+            });
             return entries.map(entry => ({
                         type: "clipboard",
                         data: entry

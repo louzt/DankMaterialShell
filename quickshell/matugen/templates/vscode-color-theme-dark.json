@@ -67,7 +67,7 @@
     "list.focusOutline": "{{colors.primary.dark.hex}}",
     "list.focusBackground": "{{colors.surface_container_high.dark.hex}}",
     "list.highlightForeground": "{{colors.primary.dark.hex}}",
-    "list.focusHighlightForeground": "{{colors.on_primary.dark.hex}}",
+    "list.focusHighlightForeground": "{{colors.primary.dark.hex}}",
     "list.errorForeground": "{{colors.error.dark.hex}}",
     "list.warningForeground": "{{colors.secondary.dark.hex}}",
     //
@@ -159,6 +159,7 @@
     "editorSuggestWidget.background": "{{colors.surface_container.dark.hex}}",
     "editorSuggestWidget.foreground": "{{colors.on_surface.dark.hex}}",
     "editorSuggestWidget.selectedBackground": "{{colors.surface_container_high.dark.hex}}",
+    "editorSuggestWidget.selectedForeground": "{{colors.on_surface.dark.hex}}",
     "editorSuggestWidget.highlightForeground": "{{colors.primary.dark.hex}}",
     //
     // Scrollbar

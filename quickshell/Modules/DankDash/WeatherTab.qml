@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Effects
 import QtQuick.Shapes
 import qs.Common
 import qs.Services
@@ -245,17 +244,6 @@ Item {
                             size: Theme.iconSize * 2
                             color: Theme.primary
                             anchors.verticalCenter: parent.verticalCenter
-
-                            layer.enabled: Theme.elevationEnabled
-                            layer.effect: MultiEffect {
-                                shadowEnabled: Theme.elevationEnabled
-                                shadowHorizontalOffset: Theme.elevationOffsetX(Theme.elevationLevel1)
-                                shadowVerticalOffset: Theme.elevationOffsetY(Theme.elevationLevel1, 1)
-                                shadowBlur: Theme.elevationEnabled ? Math.max(0, Math.min(1, (Theme.elevationLevel1 && Theme.elevationLevel1.blurPx !== undefined ? Theme.elevationLevel1.blurPx : 4) / Theme.elevationBlurMax)) : 0
-                                blurMax: Theme.elevationBlurMax
-                                shadowColor: Theme.elevationShadowColor(Theme.elevationLevel1)
-                                shadowOpacity: Theme.elevationLevel1 && Theme.elevationLevel1.alpha !== undefined ? Theme.elevationLevel1.alpha : 0.2
-                            }
                         }
 
                         Column {
@@ -349,7 +337,7 @@ Item {
                                 }
 
                                 Column {
-                                    spacing: 2
+                                    spacing: Theme.spacingXXS
 
                                     StyledText {
                                         text: modelData.label
@@ -381,6 +369,9 @@ Item {
                 id: dateStepper
                 height: dateStepperInner.height + Theme.spacingM * 2
                 width: dateStepperInner.width
+
+                LayoutMirroring.enabled: false
+                LayoutMirroring.childrenInherit: true
 
                 property var currentDate: new Date()
 
@@ -512,7 +503,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
                         enabled: Math.abs(dateStepper.currentDate - new Date()) > 1000
-                        iconColor: enabled ? Theme.blendAlpha(Theme.surfaceText, 0.5) : "transparent"
+                        iconColor: enabled ? Theme.blendAlpha(Theme.surfaceText, 0.5) : Theme.withAlpha(Theme.blendAlpha(Theme.surfaceText, 0.5), 0)
                         iconSize: 12
                         buttonSize: 20
                         iconName: "replay"
@@ -559,295 +550,287 @@ Item {
 
                 color: "transparent"
 
-                Rectangle {
-                    anchors.fill: parent
-                    opacity: skyBox.backgroundOpacity
-
-                    gradient: Gradient {
-                        GradientStop {
-                            position: 0.0
-                            color: Theme.withAlpha(skyBox.blackColor, 0.0)
-                        }
-                        GradientStop {
-                            position: 0.05
-                            color: skyBox.topColor
-                        }
-                        GradientStop {
-                            position: 0.3
-                            color: skyBox.topColor
-                        }
-                        GradientStop {
-                            position: 0.5
-                            color: skyBox.topColor
-                        }
-                        GradientStop {
-                            position: 0.501
-                            color: skyBox.blackColor
-                        }
-                        GradientStop {
-                            position: 0.9
-                            color: skyBox.blackColor
-                        }
-                        GradientStop {
-                            position: 1.0
-                            color: Theme.withAlpha(skyBox.blackColor, 0.0)
-                        }
-                    }
-                }
-
                 property var currentDate: dateStepper.currentDate
                 property var hMargin: 0
                 property var vMargin: Theme.spacingM
                 property var effectiveHeight: skyBox.height - 2 * vMargin
                 property var effectiveWidth: skyBox.width - 2 * hMargin
 
-                StyledText {
-                    text: parent.sunTime?.period ?? ""
-                    font.pixelSize: Theme.fontSizeSmall
-                    color: Theme.withAlpha(Theme.surfaceText, 0.7)
-                    x: 0
-                    y: 0
-                }
-
-                Shape {
-                    id: skyShape
-                    anchors.left: parent.left
-                    anchors.top: parent.top
-                    anchors.right: parent.right
-                    height: parent.height / 2
-                    opacity: skyBox.backgroundOpacity
-
-                    ShapePath {
-                        strokeColor: "transparent"
-                        fillGradient: RadialGradient {
-                            centerX: skyBox.hMargin + sun.x + sun.width / 2
-                            centerY: skyBox.vMargin + sun.y + 30
-                            centerRadius: {
-                                const a = Math.abs((skyBox.sunTime?.dayPercent ?? 0) - 0.5);
-                                const out = 200 * (0.5 - a * a);
-                                return out;
-                            }
-                            focalX: skyBox.hMargin + sun.x + sun.width / 2
-                            focalY: skyBox.vMargin + sun.y
-                            GradientStop {
-                                position: 0
-                                color: skyBox.sunColor
-                            }
-                            GradientStop {
-                                position: 0.3
-                                color: Theme.blendAlpha(skyBox.sunColor, 0.5)
-                            }
-                            GradientStop {
-                                position: 1
-                                color: "transparent"
-                            }
-                        }
-                        PathLine {
-                            x: 0
-                            y: 0
-                        }
-                        PathLine {
-                            x: skyShape.width
-                            y: 0
-                        }
-                        PathLine {
-                            x: skyShape.width
-                            y: skyShape.height
-                        }
-                        PathLine {
-                            x: 0
-                            y: skyShape.height
-                        }
-                    }
-
-                    ShapePath {
-                        strokeColor: "transparent"
-                        fillGradient: RadialGradient {
-                            centerX: sun.x
-                            centerY: sun.y
-                            centerRadius: 500
-                            focalX: centerX
-                            focalY: centerY + 0.99 * (centerRadius - focalRadius)
-                            focalRadius: 10
-                            GradientStop {
-                                position: 0
-                                color: skyBox.sunColor
-                            }
-                            GradientStop {
-                                position: 0.45
-                                color: skyBox.sunColor
-                            }
-                            GradientStop {
-                                position: 0.55
-                                color: "transparent"
-                            }
-                            GradientStop {
-                                position: 1
-                                color: "transparent"
-                            }
-                        }
-                        PathLine {
-                            x: 0
-                            y: 0
-                        }
-                        PathLine {
-                            x: skyShape.width
-                            y: 0
-                        }
-                        PathLine {
-                            x: skyShape.width
-                            y: skyShape.height
-                        }
-                        PathLine {
-                            x: 0
-                            y: skyShape.height
-                        }
-                    }
-                }
-
-                Canvas {
-                    id: ecliptic
-                    anchors.fill: parent
-                    property var points: WeatherService.getEcliptic(dateStepper.currentDate)
-
-                    function getX(index) {
-                        return points[index].h * skyBox.effectiveWidth + skyBox.hMargin;
-                    }
-                    function getY(index) {
-                        return points[index].v * -(skyBox.effectiveHeight / 2) + skyBox.effectiveHeight / 2 + skyBox.vMargin;
-                    }
-
-                    onPointsChanged: requestPaint()
-
-                    onPaint: {
-                        var ctx = getContext("2d");
-                        ctx.clearRect(0, 0, width, height);
-                        if (!points || points.length === 0)
-                            return;
-                        ctx.beginPath();
-                        ctx.moveTo(getX(0), getY(0));
-                        for (var i = 1; i < points.length; i++) {
-                            ctx.lineTo(getX(i), getY(i));
-                        }
-                        ctx.strokeStyle = Theme.withAlpha(Theme.outline, 0.2);
-                        ctx.stroke();
-                    }
-                }
-
                 property real latitude: WeatherService.getLocation()?.latitude ?? 0
                 property real sunDeclination: WeatherService.getSunDeclination(dateStepper.currentDate)
 
                 readonly property bool solarNoonIsSouth: latitude > sunDeclination
 
-                StyledText {
-                    id: middle
-                    text: skyBox.solarNoonIsSouth ? "S" : "N"
-                    font.pixelSize: Theme.fontSizeSmall
-                    color: Theme.primary
-                    x: skyBox.width / 2 - middle.width / 2
-                    y: skyBox.height / 2 - middle.height / 2
-                }
+                Loader {
+                    anchors.fill: parent
+                    asynchronous: true
+                    sourceComponent: skyContentComponent
+                    opacity: status === Loader.Ready ? 1 : 0
 
-                StyledText {
-                    id: left
-                    text: skyBox.solarNoonIsSouth ? "E" : "W"
-                    font.pixelSize: Theme.fontSizeSmall
-                    color: Theme.primary
-                    x: skyBox.width / 4 - left.width / 2
-                    y: skyBox.height / 2 - left.height / 2
-                }
-
-                StyledText {
-                    id: right
-                    text: skyBox.solarNoonIsSouth ? "W" : "E"
-                    font.pixelSize: Theme.fontSizeSmall
-                    color: Theme.primary
-                    x: 3 * skyBox.width / 4 - right.width / 2
-                    y: skyBox.height / 2 - right.height / 2
-                }
-
-                Rectangle {
-                    height: 1
-                    anchors.leftMargin: Theme.spacingS
-                    anchors.rightMargin: Theme.spacingS
-                    anchors.left: right.right
-                    anchors.right: skyBox.right
-                    anchors.verticalCenter: middle.verticalCenter
-                    color: Theme.outline
-                }
-
-                Rectangle {
-                    height: 1
-                    anchors.leftMargin: Theme.spacingS
-                    anchors.rightMargin: Theme.spacingS
-                    anchors.left: middle.right
-                    anchors.right: right.left
-                    anchors.verticalCenter: middle.verticalCenter
-                    color: Theme.outline
-                }
-
-                Rectangle {
-                    height: 1
-                    anchors.leftMargin: Theme.spacingS
-                    anchors.rightMargin: Theme.spacingS
-                    anchors.left: left.right
-                    anchors.right: middle.left
-                    anchors.verticalCenter: middle.verticalCenter
-                    color: Theme.outline
-                }
-
-                Rectangle {
-                    height: 1
-                    anchors.leftMargin: Theme.spacingS
-                    anchors.rightMargin: Theme.spacingS
-                    anchors.left: skyBox.left
-                    anchors.right: left.left
-                    anchors.verticalCenter: middle.verticalCenter
-                    color: Theme.outline
-                }
-
-                DankNFIcon {
-                    id: moonPhase
-                    name: WeatherService.getMoonPhase(skyBox.currentDate) || ""
-                    size: Theme.fontSizeXLarge
-                    color: Theme.withAlpha(Theme.surfaceText, 0.7)
-                    rotation: (WeatherService.getMoonAngle(skyBox.currentDate) || 0) / Math.PI * 180
-                    visible: !!pos
-
-                    property var pos: WeatherService.getSkyArcPosition(skyBox.currentDate, false)
-                    x: (pos?.h ?? 0) * skyBox.effectiveWidth - (moonPhase.width / 2) + skyBox.hMargin
-                    y: (pos?.v ?? 0) * -(skyBox.effectiveHeight / 2) + skyBox.effectiveHeight / 2 - (moonPhase.height / 2) + skyBox.vMargin
-
-                    layer.enabled: Theme.elevationEnabled
-                    layer.effect: MultiEffect {
-                        shadowEnabled: Theme.elevationEnabled
-                        shadowHorizontalOffset: Theme.elevationOffsetX(Theme.elevationLevel2)
-                        shadowVerticalOffset: Theme.elevationOffsetY(Theme.elevationLevel2, 4)
-                        shadowBlur: Theme.elevationEnabled ? Math.max(0, Math.min(1, (Theme.elevationLevel2 && Theme.elevationLevel2.blurPx !== undefined ? Theme.elevationLevel2.blurPx : 8) / Theme.elevationBlurMax)) : 0
-                        blurMax: Theme.elevationBlurMax
-                        shadowColor: Theme.elevationShadowColor(Theme.elevationLevel2)
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: Theme.shortDuration
+                            easing.type: Theme.standardEasing
+                        }
                     }
                 }
+            }
 
-                DankIcon {
-                    id: sun
-                    name: "light_mode"
-                    size: Theme.fontSizeXLarge
-                    color: Theme.primary
-                    visible: !!pos
+            Component {
+                id: skyContentComponent
 
-                    property var pos: WeatherService.getSkyArcPosition(skyBox.currentDate, true)
-                    x: (pos?.h ?? 0) * skyBox.effectiveWidth - (sun.width / 2) + skyBox.hMargin
-                    y: (pos?.v ?? 0) * -(skyBox.effectiveHeight / 2) + skyBox.effectiveHeight / 2 - (sun.height / 2) + skyBox.vMargin
+                Item {
+                    Rectangle {
+                        anchors.fill: parent
+                        opacity: skyBox.backgroundOpacity
 
-                    layer.enabled: Theme.elevationEnabled
-                    layer.effect: MultiEffect {
-                        shadowEnabled: Theme.elevationEnabled
-                        shadowHorizontalOffset: Theme.elevationOffsetX(Theme.elevationLevel2)
-                        shadowVerticalOffset: Theme.elevationOffsetY(Theme.elevationLevel2, 4)
-                        shadowBlur: Theme.elevationEnabled ? Math.max(0, Math.min(1, (Theme.elevationLevel2 && Theme.elevationLevel2.blurPx !== undefined ? Theme.elevationLevel2.blurPx : 8) / Theme.elevationBlurMax)) : 0
-                        blurMax: Theme.elevationBlurMax
-                        shadowColor: Theme.elevationShadowColor(Theme.elevationLevel2)
+                        gradient: Gradient {
+                            GradientStop {
+                                position: 0.0
+                                color: Theme.withAlpha(skyBox.blackColor, 0.0)
+                            }
+                            GradientStop {
+                                position: 0.05
+                                color: skyBox.topColor
+                            }
+                            GradientStop {
+                                position: 0.3
+                                color: skyBox.topColor
+                            }
+                            GradientStop {
+                                position: 0.5
+                                color: skyBox.topColor
+                            }
+                            GradientStop {
+                                position: 0.501
+                                color: skyBox.blackColor
+                            }
+                            GradientStop {
+                                position: 0.9
+                                color: skyBox.blackColor
+                            }
+                            GradientStop {
+                                position: 1.0
+                                color: Theme.withAlpha(skyBox.blackColor, 0.0)
+                            }
+                        }
+                    }
+
+                    StyledText {
+                        text: skyBox.sunTime?.period ?? ""
+                        font.pixelSize: Theme.fontSizeSmall
+                        color: Theme.withAlpha(Theme.surfaceText, 0.7)
+                        x: 0
+                        y: 0
+                    }
+
+                    Shape {
+                        id: skyShape
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                        anchors.right: parent.right
+                        height: parent.height / 2
+                        opacity: skyBox.backgroundOpacity
+
+                        ShapePath {
+                            strokeColor: "transparent"
+                            fillGradient: RadialGradient {
+                                centerX: skyBox.hMargin + sun.x + sun.width / 2
+                                centerY: skyBox.vMargin + sun.y + 30
+                                centerRadius: {
+                                    const a = Math.abs((skyBox.sunTime?.dayPercent ?? 0) - 0.5);
+                                    const out = 200 * (0.5 - a * a);
+                                    return out;
+                                }
+                                focalX: skyBox.hMargin + sun.x + sun.width / 2
+                                focalY: skyBox.vMargin + sun.y
+                                GradientStop {
+                                    position: 0
+                                    color: skyBox.sunColor
+                                }
+                                GradientStop {
+                                    position: 0.3
+                                    color: Theme.blendAlpha(skyBox.sunColor, 0.5)
+                                }
+                                GradientStop {
+                                    position: 1
+                                    color: "transparent"
+                                }
+                            }
+                            PathLine {
+                                x: 0
+                                y: 0
+                            }
+                            PathLine {
+                                x: skyShape.width
+                                y: 0
+                            }
+                            PathLine {
+                                x: skyShape.width
+                                y: skyShape.height
+                            }
+                            PathLine {
+                                x: 0
+                                y: skyShape.height
+                            }
+                        }
+
+                        ShapePath {
+                            strokeColor: "transparent"
+                            fillGradient: RadialGradient {
+                                centerX: sun.x
+                                centerY: sun.y
+                                centerRadius: 500
+                                focalX: centerX
+                                focalY: centerY + 0.99 * (centerRadius - focalRadius)
+                                focalRadius: 10
+                                GradientStop {
+                                    position: 0
+                                    color: skyBox.sunColor
+                                }
+                                GradientStop {
+                                    position: 0.45
+                                    color: skyBox.sunColor
+                                }
+                                GradientStop {
+                                    position: 0.55
+                                    color: "transparent"
+                                }
+                                GradientStop {
+                                    position: 1
+                                    color: "transparent"
+                                }
+                            }
+                            PathLine {
+                                x: 0
+                                y: 0
+                            }
+                            PathLine {
+                                x: skyShape.width
+                                y: 0
+                            }
+                            PathLine {
+                                x: skyShape.width
+                                y: skyShape.height
+                            }
+                            PathLine {
+                                x: 0
+                                y: skyShape.height
+                            }
+                        }
+                    }
+
+                    Shape {
+                        anchors.fill: parent
+
+                        ShapePath {
+                            strokeColor: Theme.withAlpha(Theme.outline, 0.2)
+                            strokeWidth: 1
+                            fillColor: "transparent"
+
+                            PathPolyline {
+                                path: {
+                                    const points = WeatherService.getEcliptic(dateStepper.currentDate) ?? [];
+                                    const out = [];
+                                    for (let i = 0; i < points.length; i++) {
+                                        out.push(Qt.point(points[i].h * skyBox.effectiveWidth + skyBox.hMargin, points[i].v * -(skyBox.effectiveHeight / 2) + skyBox.effectiveHeight / 2 + skyBox.vMargin));
+                                    }
+                                    return out;
+                                }
+                            }
+                        }
+                    }
+
+                    StyledText {
+                        id: middle
+                        text: skyBox.solarNoonIsSouth ? "S" : "N"
+                        font.pixelSize: Theme.fontSizeSmall
+                        color: Theme.primary
+                        x: skyBox.width / 2 - middle.width / 2
+                        y: skyBox.height / 2 - middle.height / 2
+                    }
+
+                    StyledText {
+                        id: left
+                        text: skyBox.solarNoonIsSouth ? "E" : "W"
+                        font.pixelSize: Theme.fontSizeSmall
+                        color: Theme.primary
+                        x: skyBox.width / 4 - left.width / 2
+                        y: skyBox.height / 2 - left.height / 2
+                    }
+
+                    StyledText {
+                        id: right
+                        text: skyBox.solarNoonIsSouth ? "W" : "E"
+                        font.pixelSize: Theme.fontSizeSmall
+                        color: Theme.primary
+                        x: 3 * skyBox.width / 4 - right.width / 2
+                        y: skyBox.height / 2 - right.height / 2
+                    }
+
+                    Rectangle {
+                        height: 1
+                        anchors.leftMargin: Theme.spacingS
+                        anchors.rightMargin: Theme.spacingS
+                        anchors.left: right.right
+                        anchors.right: parent.right
+                        anchors.verticalCenter: middle.verticalCenter
+                        color: Theme.outline
+                    }
+
+                    Rectangle {
+                        height: 1
+                        anchors.leftMargin: Theme.spacingS
+                        anchors.rightMargin: Theme.spacingS
+                        anchors.left: middle.right
+                        anchors.right: right.left
+                        anchors.verticalCenter: middle.verticalCenter
+                        color: Theme.outline
+                    }
+
+                    Rectangle {
+                        height: 1
+                        anchors.leftMargin: Theme.spacingS
+                        anchors.rightMargin: Theme.spacingS
+                        anchors.left: left.right
+                        anchors.right: middle.left
+                        anchors.verticalCenter: middle.verticalCenter
+                        color: Theme.outline
+                    }
+
+                    Rectangle {
+                        height: 1
+                        anchors.leftMargin: Theme.spacingS
+                        anchors.rightMargin: Theme.spacingS
+                        anchors.left: parent.left
+                        anchors.right: left.left
+                        anchors.verticalCenter: middle.verticalCenter
+                        color: Theme.outline
+                    }
+
+                    DankNFIcon {
+                        id: moonPhase
+                        name: WeatherService.getMoonPhase(skyBox.currentDate) || ""
+                        size: Theme.fontSizeXLarge
+                        color: Theme.withAlpha(Theme.surfaceText, 0.7)
+                        rotation: (WeatherService.getMoonAngle(skyBox.currentDate) || 0) / Math.PI * 180
+                        visible: !!pos
+
+                        property var pos: WeatherService.getSkyArcPosition(skyBox.currentDate, false)
+                        x: (pos?.h ?? 0) * skyBox.effectiveWidth - (moonPhase.width / 2) + skyBox.hMargin
+                        y: (pos?.v ?? 0) * -(skyBox.effectiveHeight / 2) + skyBox.effectiveHeight / 2 - (moonPhase.height / 2) + skyBox.vMargin
+                    }
+
+                    DankIcon {
+                        id: sun
+                        name: "light_mode"
+                        size: Theme.fontSizeXLarge
+                        color: Theme.primary
+                        visible: !!pos
+
+                        property var pos: WeatherService.getSkyArcPosition(skyBox.currentDate, true)
+                        x: (pos?.h ?? 0) * skyBox.effectiveWidth - (sun.width / 2) + skyBox.hMargin
+                        y: (pos?.v ?? 0) * -(skyBox.effectiveHeight / 2) + skyBox.effectiveHeight / 2 - (sun.height / 2) + skyBox.vMargin
                     }
                 }
             }
@@ -990,6 +973,7 @@ Item {
         ListView {
             id: hourlyList
             anchors.fill: parent
+            reuseItems: true
             orientation: ListView.Horizontal
             spacing: Theme.spacingS
             clip: true
@@ -1076,6 +1060,7 @@ Item {
         ListView {
             id: dailyList
             anchors.fill: parent
+            reuseItems: true
             orientation: ListView.Horizontal
             spacing: Theme.spacingS
             clip: true

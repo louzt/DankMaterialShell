@@ -256,6 +256,11 @@ FocusScope {
         }
     }
 
+    function snapIndicator() {
+        indicator.initialSetupComplete = false;
+        updateIndicator();
+    }
+
     onCurrentIndexChanged: {
         Qt.callLater(updateIndicator);
     }

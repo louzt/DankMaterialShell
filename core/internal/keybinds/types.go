@@ -32,6 +32,7 @@ type DMSBindsStatus struct {
 type CheatSheet struct {
 	Title            string               `json:"title"`
 	Provider         string               `json:"provider"`
+	ModKey           string               `json:"modKey,omitempty"`
 	Binds            map[string][]Keybind `json:"binds"`
 	DMSBindsIncluded bool                 `json:"dmsBindsIncluded"`
 	DMSStatus        *DMSBindsStatus      `json:"dmsStatus,omitempty"`

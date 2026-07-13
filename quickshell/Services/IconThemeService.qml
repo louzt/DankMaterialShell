@@ -29,6 +29,10 @@ Singleton {
         const localData = Paths.strip(StandardPaths.writableLocation(StandardPaths.GenericDataLocation));
         const home = Paths.strip(StandardPaths.writableLocation(StandardPaths.HomeLocation));
         const dataDirs = xdg.trim() !== "" ? xdg.split(":").concat([localData]) : ["/usr/share", "/usr/local/share", localData];
+        for (const flatpak of [localData + "/flatpak/exports/share", "/var/lib/flatpak/exports/share"]) {
+            if (!dataDirs.includes(flatpak))
+                dataDirs.push(flatpak);
+        }
         return dataDirs.map(d => d + "/icons").concat([home + "/.icons"]);
     }
 

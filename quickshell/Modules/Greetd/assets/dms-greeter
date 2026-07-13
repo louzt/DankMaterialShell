@@ -245,6 +245,37 @@ if [[ -z "${NIRI_LOG:-}" ]]; then
     export NIRI_LOG=warn
 fi
 
+# Export the user's configured cursor (from synced settings.json) for the
+# compositor and greeter shell, but only if that theme is installed system-wide.
+apply_user_cursor() {
+    command -v jq >/dev/null 2>&1 || return 0
+    local settings="$DMS_GREET_CFG_DIR/settings.json"
+    [[ -f "$settings" ]] || return 0
+
+    local theme size
+    theme=$(jq -r '.cursorSettings.theme // empty' "$settings" 2>/dev/null)
+    size=$(jq -r '.cursorSettings.size // empty' "$settings" 2>/dev/null)
+    [[ -n "$theme" && "$theme" != "System Default" ]] || return 0
+
+    local dirs=()
+    IFS=':' read -ra data_dirs <<< "${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+    local d
+    for d in "${data_dirs[@]}"; do
+        [[ -n "$d" ]] && dirs+=("$d/icons")
+    done
+    dirs+=(/run/current-system/sw/share/icons /usr/share/icons /usr/local/share/icons)
+
+    for d in "${dirs[@]}"; do
+        if [[ -d "$d/$theme/cursors" ]]; then
+            export XCURSOR_PATH="$d${XCURSOR_PATH:+:$XCURSOR_PATH}"
+            export XCURSOR_THEME="$theme"
+            [[ -n "$size" ]] && export XCURSOR_SIZE="$size"
+            return 0
+        fi
+    done
+}
+apply_user_cursor
+
 if command -v qs >/dev/null 2>&1; then
     QS_BIN="qs"
 elif command -v quickshell >/dev/null 2>&1; then

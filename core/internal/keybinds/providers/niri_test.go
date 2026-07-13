@@ -17,7 +17,10 @@ func TestNiriProviderGetCheatSheet(t *testing.T) {
 	tmpDir := t.TempDir()
 	configFile := filepath.Join(tmpDir, "config.kdl")
 
-	content := `binds {
+	content := `input {
+    mod-key "Alt"
+}
+binds {
     Mod+Q { close-window; }
     Mod+F { fullscreen-window; }
     Mod+T hotkey-overlay-title="Open Terminal" { spawn "kitty"; }
@@ -43,6 +46,10 @@ func TestNiriProviderGetCheatSheet(t *testing.T) {
 
 	if cheatSheet.Provider != "niri" {
 		t.Errorf("Provider = %q, want %q", cheatSheet.Provider, "niri")
+	}
+
+	if cheatSheet.ModKey != "Alt" {
+		t.Errorf("ModKey = %q, want %q", cheatSheet.ModKey, "Alt")
 	}
 
 	windowBinds := cheatSheet.Binds["Window"]
@@ -226,6 +233,58 @@ func TestNiriGenerateBindsContent(t *testing.T) {
 			},
 			expected: `binds {
     Mod+Space hotkey-overlay-title="Application Launcher" { spawn "dms" "ipc" "call" "spotlight" "toggle"; }
+}
+`,
+		},
+		{
+			name: "spawn with equals arg",
+			binds: map[string]*overrideBind{
+				"Mod+B": {
+					Key:    "Mod+B",
+					Action: `spawn /opt/browser --profile-directory=Default`,
+				},
+			},
+			expected: `binds {
+    Mod+B { spawn "/opt/browser" "--profile-directory=Default"; }
+}
+`,
+		},
+		{
+			name: "spawn shell command with quoted equals args",
+			binds: map[string]*overrideBind{
+				"Mod+C": {
+					Key:    "Mod+C",
+					Action: `spawn sh -c "chrome --profile-directory=Default --app=x"`,
+				},
+			},
+			expected: `binds {
+    Mod+C { spawn "sh" "-c" "chrome --profile-directory=Default --app=x"; }
+}
+`,
+		},
+		{
+			name: "spawn env assignment stays arg",
+			binds: map[string]*overrideBind{
+				"Mod+E": {
+					Key:    "Mod+E",
+					Action: `spawn env FOO=bar mycmd`,
+				},
+			},
+			expected: `binds {
+    Mod+E { spawn "env" "FOO=bar" "mycmd"; }
+}
+`,
+		},
+		{
+			name: "niri action property remains property",
+			binds: map[string]*overrideBind{
+				"Print": {
+					Key:    "Print",
+					Action: `screenshot show-pointer=false`,
+				},
+			},
+			expected: `binds {
+    Print { screenshot show-pointer=false; }
 }
 `,
 		},

@@ -228,7 +228,7 @@ Singleton {
             if (deviceExists) {
                 setCurrentDevice(lastDevice, false);
             } else {
-                const backlight = devices.find(d => d.class === "backlight");
+                const backlight = internalPanelActive() ? devices.find(d => d.class === "backlight") : null;
                 const nonKbdDevice = devices.find(d => !d.id.includes("kbd"));
                 const defaultDevice = backlight || nonKbdDevice || devices[0];
                 setCurrentDevice(defaultDevice.id, false);
@@ -363,12 +363,21 @@ Singleton {
         return Math.round(normalizedPercent * 100.0);
     }
 
+    function internalPanelActive() {
+        return Quickshell.screens.some(s => /^(eDP|LVDS|DSI)/i.test(s.name));
+    }
+
     function getDefaultDevice() {
-        for (const device of devices) {
-            if (device.class === "backlight") {
-                return device.id;
+        if (internalPanelActive()) {
+            for (const device of devices) {
+                if (device.class === "backlight") {
+                    return device.id;
+                }
             }
         }
+        const nonKbdDevice = devices.find(d => d.class !== "backlight" && !d.id.includes("kbd"));
+        if (nonKbdDevice)
+            return nonKbdDevice.id;
         return devices.length > 0 ? devices[0].id : "";
     }
 

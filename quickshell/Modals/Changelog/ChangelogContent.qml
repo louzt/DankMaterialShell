@@ -65,7 +65,7 @@ Column {
                         StyledText {
                             id: codenameText
                             anchors.centerIn: parent
-                            text: "Saffron Bloom"
+                            text: "The Wolverine"
                             font.pixelSize: Theme.fontSizeSmall
                             font.weight: Font.Medium
                             color: Theme.primary
@@ -74,7 +74,7 @@ Column {
                 }
 
                 StyledText {
-                    text: "New launcher, enhanced plugin system, KDE Connect, & more"
+                    text: "Frame Mode, DankCalendar, Spotlight, & more"
                     font.pixelSize: Theme.fontSizeMedium
                     color: Theme.surfaceVariantText
                 }
@@ -108,76 +108,98 @@ Column {
 
             ChangelogFeatureCard {
                 width: (parent.width - Theme.spacingS) / 2
-                iconName: "space_dashboard"
-                title: "Dank Launcher V2"
-                description: "New capabilities & plugins"
-                onClicked: PopoutService.openDankLauncherV2()
+                iconName: "border_outer"
+                title: "Frame Mode"
+                description: "Connected shell surfaces"
+                onClicked: PopoutService.openSettingsWithTab("frame")
             }
 
             ChangelogFeatureCard {
                 width: (parent.width - Theme.spacingS) / 2
-                iconName: "smartphone"
-                title: "Phone Connect"
-                description: "KDE Connect & Valent"
-                onClicked: Qt.openUrlExternally("https://github.com/AvengeMedia/dms-plugins/tree/master/DankKDEConnect")
+                iconName: "calendar_month"
+                title: "DankCalendar"
+                description: "Native calendar & events"
+                onClicked: Qt.openUrlExternally("https://github.com/AvengeMedia/dankcalendar")
             }
 
             ChangelogFeatureCard {
                 width: (parent.width - Theme.spacingS) / 2
-                iconName: "monitor_heart"
-                title: "System Monitor"
-                description: "Redesigned process list"
-                onClicked: PopoutService.showProcessListModal()
+                iconName: "search"
+                title: "Spotlight"
+                description: "Lightweight launcher"
+                onClicked: PopoutService.openSpotlightBar()
             }
 
             ChangelogFeatureCard {
                 width: (parent.width - Theme.spacingS) / 2
                 iconName: "window"
                 title: "Window Rules"
-                description: "niri window rule manager"
-                visible: CompositorService.isNiri
+                description: "Rules for many compositors"
                 onClicked: PopoutService.openSettingsWithTab("window_rules")
             }
 
             ChangelogFeatureCard {
                 width: (parent.width - Theme.spacingS) / 2
-                iconName: "notifications_active"
-                title: "Enhanced Notifications"
-                description: "Configurable rules & styling"
-                visible: !CompositorService.isNiri
-                onClicked: PopoutService.openSettingsWithTab("notifications")
+                iconName: "display_settings"
+                title: "Display Profiles"
+                description: "Auto-switch monitor layouts"
+                onClicked: PopoutService.openSettingsWithTab("display_config")
             }
 
             ChangelogFeatureCard {
                 width: (parent.width - Theme.spacingS) / 2
-                iconName: "dock_to_bottom"
-                title: "Dock Enhancements"
-                description: "Bar dock widget & more"
-                onClicked: PopoutService.openSettingsWithTab("dock")
+                iconName: "dvr"
+                title: "Multiplexer Launcher"
+                description: "Attach to tmux sessions"
+                onClicked: PopoutService.openSettingsWithTab("multiplexers")
             }
 
             ChangelogFeatureCard {
                 width: (parent.width - Theme.spacingS) / 2
-                iconName: "volume_up"
-                title: "Audio Aliases"
-                description: "Custom device names"
-                onClicked: PopoutService.openSettingsWithTab("audio")
+                iconName: "edit_note"
+                title: "Notepad Rewrite"
+                description: "Popout & tiling support"
+                onClicked: PopoutService.openNotepad()
             }
 
             ChangelogFeatureCard {
                 width: (parent.width - Theme.spacingS) / 2
-                iconName: "extension"
-                title: "Enhanced Plugin System"
-                description: "Enables new types of plugins"
-                onClicked: PopoutService.openSettingsWithTab("plugins")
-            }
-
-            ChangelogFeatureCard {
-                width: (parent.width - Theme.spacingS) / 2
-                iconName: "light_mode"
-                title: "Auto Light/Dark"
-                description: "Automatic mode switching"
+                iconName: "gradient"
+                title: "M3 Shadows"
+                description: "Reworked elevation system"
                 onClicked: PopoutService.openSettingsWithTab("theme")
+            }
+
+            ChangelogFeatureCard {
+                width: (parent.width - Theme.spacingS) / 2
+                iconName: "login"
+                title: "Greeter Enhancements"
+                description: "Settings GUI & multi-user"
+                onClicked: PopoutService.openSettingsWithTab("greeter")
+            }
+
+            ChangelogFeatureCard {
+                width: (parent.width - Theme.spacingS) / 2
+                iconName: "content_paste"
+                title: "Clipboard Filtering"
+                description: "Text, image & pinned filters"
+                onClicked: PopoutService.openSettingsWithTab("clipboard")
+            }
+
+            ChangelogFeatureCard {
+                width: (parent.width - Theme.spacingS) / 2
+                iconName: "restart_alt"
+                title: "XDG Autostart"
+                description: "Manage apps at login"
+                onClicked: PopoutService.openSettingsWithTab("autostart")
+            }
+
+            ChangelogFeatureCard {
+                width: (parent.width - Theme.spacingS) / 2
+                iconName: "apps"
+                title: "Default Apps"
+                description: "Set preferred applications"
+                onClicked: PopoutService.openSettingsWithTab("default_apps")
             }
         }
     }
@@ -230,12 +252,7 @@ Column {
 
                 ChangelogUpgradeNote {
                     width: parent.width
-                    text: "Spotlight replaced by Dank Launcher V2 — check settings for new options"
-                }
-
-                ChangelogUpgradeNote {
-                    width: parent.width
-                    text: "Plugin API updated — third-party plugins may need updates"
+                    text: "App ID changed to com.danklinux.dms — update any compositor window rules targeting the old ID"
                 }
             }
         }

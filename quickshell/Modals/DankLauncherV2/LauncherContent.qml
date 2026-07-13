@@ -18,6 +18,7 @@ FocusScope {
     property alias resultsList: resultsList
     property alias actionPanel: actionPanel
     readonly property alias activeContextMenu: contextMenu
+    property var transientSurfaceTracker: null
 
     property bool editMode: false
     property var editingApp: null
@@ -43,7 +44,7 @@ FocusScope {
     }
 
     function closeTransientUi() {
-        contextMenu.hide();
+        transientSurfaceTracker?.closeAll?.();
         actionPanel.hide();
         root.enabled = true;
     }
@@ -53,14 +54,7 @@ FocusScope {
             return;
         editingApp = app;
         editAppId = app.id || app.execString || app.exec || "";
-        var existing = SessionData.getAppOverride(editAppId);
-        editNameField.text = existing?.name || "";
-        editIconField.text = existing?.icon || "";
-        editCommentField.text = existing?.comment || "";
-        editEnvVarsField.text = existing?.envVars || "";
-        editExtraFlagsField.text = existing?.extraFlags || "";
         editMode = true;
-        Qt.callLater(() => editNameField.forceActiveFocus());
     }
 
     function closeEditMode() {
@@ -68,27 +62,6 @@ FocusScope {
         editingApp = null;
         editAppId = "";
         Qt.callLater(() => searchField.forceActiveFocus());
-    }
-
-    function saveAppOverride() {
-        var override = {};
-        if (editNameField.text.trim())
-            override.name = editNameField.text.trim();
-        if (editIconField.text.trim())
-            override.icon = editIconField.text.trim();
-        if (editCommentField.text.trim())
-            override.comment = editCommentField.text.trim();
-        if (editEnvVarsField.text.trim())
-            override.envVars = editEnvVarsField.text.trim();
-        if (editExtraFlagsField.text.trim())
-            override.extraFlags = editExtraFlagsField.text.trim();
-        SessionData.setAppOverride(editAppId, override);
-        closeEditMode();
-    }
-
-    function resetAppOverride() {
-        SessionData.clearAppOverride(editAppId);
-        closeEditMode();
     }
 
     function showContextMenu(item, x, y, fromKeyboard) {
@@ -123,6 +96,7 @@ FocusScope {
         controller: root.controller
         searchField: root.searchField
         parentHandler: root
+        transientSurfaceTracker: root.transientSurfaceTracker
 
         onEditAppRequested: app => {
             root.openEditMode(app);
@@ -314,8 +288,12 @@ FocusScope {
     }
 
     Item {
+        id: contentHolder
         anchors.fill: parent
         visible: !editMode
+
+        readonly property bool inverted: (root.parentModal?.frameOwnsConnectedChrome ?? false) && (root.parentModal?.resolvedConnectedBarSide === "top")
+        readonly property bool _connectedArcAtHeader: inverted && !(root.parentModal?.launcherArcExtenderActive ?? false)
 
         Item {
             id: footerBar
@@ -325,11 +303,10 @@ FocusScope {
 
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.bottom: parent.bottom
             anchors.leftMargin: root.parentModal?.borderWidth ?? 1
             anchors.rightMargin: root.parentModal?.borderWidth ?? 1
-            anchors.bottomMargin: _connectedBottomEmerge ? 0 : (root.parentModal?.borderWidth ?? 1)
-            height: showFooter ? (_connectedArcAtFooter ? 76 : 36) : 0
+            y: contentHolder.inverted ? 0 : (parent.height - height - (_connectedBottomEmerge ? 0 : (root.parentModal?.borderWidth ?? 1)))
+            height: showFooter ? ((_connectedArcAtFooter || contentHolder._connectedArcAtHeader) ? 76 : 36) : 0
             visible: showFooter
             clip: true
 
@@ -348,7 +325,7 @@ FocusScope {
                 anchors.leftMargin: Theme.spacingM
                 anchors.verticalCenter: parent.verticalCenter
                 layoutDirection: I18n.isRtl ? Qt.RightToLeft : Qt.LeftToRight
-                spacing: 2
+                spacing: Theme.spacingXXS
 
                 Repeater {
                     model: [
@@ -381,7 +358,7 @@ FocusScope {
                         width: buttonContent.width + Theme.spacingM * 2
                         height: 28
                         radius: Theme.cornerRadius
-                        color: controller.searchMode === modelData.id ? Theme.buttonBg : modeArea.containsMouse ? Theme.surfaceContainerHighest : "transparent"
+                        color: controller.searchMode === modelData.id ? Theme.buttonBg : modeArea.containsMouse ? Theme.surfaceContainerHighest : Theme.withAlpha(Theme.surfaceContainerHighest, 0)
 
                         Row {
                             id: buttonContent
@@ -446,104 +423,111 @@ FocusScope {
             }
         }
 
-        Column {
+        Row {
+            id: searchRow
+            spacing: Theme.spacingS
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.bottom: footerBar.top
             anchors.leftMargin: Theme.spacingM
             anchors.rightMargin: Theme.spacingM
-            anchors.topMargin: Theme.spacingM
-            spacing: Theme.spacingXS
-            clip: false
+            y: contentHolder.inverted ? (parent.height - height - Theme.spacingM) : Theme.spacingM
 
-            Row {
-                width: parent.width
-                spacing: Theme.spacingS
+            Rectangle {
+                id: pluginBadge
+                visible: controller.activePluginName.length > 0
+                width: visible ? pluginBadgeContent.implicitWidth + Theme.spacingM : 0
+                height: searchField.height
+                radius: 16
+                color: Theme.primary
 
-                Rectangle {
-                    id: pluginBadge
-                    visible: controller.activePluginName.length > 0
-                    width: visible ? pluginBadgeContent.implicitWidth + Theme.spacingM : 0
-                    height: searchField.height
-                    radius: 16
-                    color: Theme.primary
+                Row {
+                    id: pluginBadgeContent
+                    anchors.centerIn: parent
+                    spacing: Theme.spacingXS
 
-                    Row {
-                        id: pluginBadgeContent
-                        anchors.centerIn: parent
-                        spacing: Theme.spacingXS
-
-                        DankIcon {
-                            anchors.verticalCenter: parent.verticalCenter
-                            name: "extension"
-                            size: 14
-                            color: Theme.primaryText
-                        }
-
-                        StyledText {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: controller.activePluginName
-                            font.pixelSize: Theme.fontSizeSmall
-                            font.weight: Font.Medium
-                            color: Theme.primaryText
-                        }
+                    DankIcon {
+                        anchors.verticalCenter: parent.verticalCenter
+                        name: "extension"
+                        size: 14
+                        color: Theme.primaryText
                     }
 
-                    Behavior on width {
-                        NumberAnimation {
-                            duration: Theme.shortDuration
-                            easing.type: Theme.standardEasing
-                        }
+                    StyledText {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: controller.activePluginName
+                        font.pixelSize: Theme.fontSizeSmall
+                        font.weight: Font.Medium
+                        color: Theme.primaryText
                     }
                 }
 
-                DankTextField {
-                    id: searchField
-                    width: parent.width - (pluginBadge.visible ? pluginBadge.width + Theme.spacingS : 0)
-                    cornerRadius: Theme.cornerRadius
-                    backgroundColor: root._launcherSearchFieldColor
-                    normalBorderColor: root._launcherSearchBorderColor
-                    focusedBorderColor: root._launcherSearchFocusedBorderColor
-                    borderWidth: 1
-                    focusedBorderWidth: 2
-                    leftIconName: controller.activePluginId ? "extension" : controller.searchQuery.startsWith("/") ? "folder" : "search"
-                    leftIconSize: Theme.iconSize
-                    leftIconColor: Theme.surfaceVariantText
-                    leftIconFocusedColor: Theme.primary
-                    showClearButton: true
-                    textColor: Theme.surfaceText
-                    font.pixelSize: Theme.fontSizeLarge
-                    enabled: root.parentModal ? (root.parentModal.spotlightOpen || root.parentModal.isClosing) : true
-                    placeholderText: ""
-                    ignoreUpDownKeys: true
-                    ignoreTabKeys: true
-                    keyForwardTargets: [root]
-
-                    onTextChanged: {
-                        controller.setSearchQuery(text);
-                        if (actionPanel.expanded) {
-                            actionPanel.hide();
-                        }
-                    }
-
-                    Keys.onPressed: event => {
-                        if (event.key === Qt.Key_Escape) {
-                            if (root.parentModal) {
-                                root.parentModal.hide();
-                            }
-                            event.accepted = true;
-                        } else if ((event.key === Qt.Key_Return || event.key === Qt.Key_Enter)) {
-                            if (actionPanel.expanded && actionPanel.selectedActionIndex > 0) {
-                                actionPanel.executeSelectedAction();
-                            } else {
-                                controller.executeSelected();
-                            }
-                            event.accepted = true;
-                        }
+                Behavior on width {
+                    NumberAnimation {
+                        duration: Theme.shortDuration
+                        easing.type: Theme.standardEasing
                     }
                 }
             }
+
+            DankTextField {
+                id: searchField
+                width: parent.width - (pluginBadge.visible ? pluginBadge.width + Theme.spacingS : 0)
+                cornerRadius: Theme.cornerRadius
+                backgroundColor: root._launcherSearchFieldColor
+                normalBorderColor: root._launcherSearchBorderColor
+                focusedBorderColor: root._launcherSearchFocusedBorderColor
+                borderWidth: 1
+                focusedBorderWidth: 2
+                leftIconName: controller.activePluginId ? "extension" : controller.searchQuery.startsWith("/") ? "folder" : "search"
+                leftIconSize: Theme.iconSize
+                leftIconColor: Theme.surfaceVariantText
+                leftIconFocusedColor: Theme.primary
+                showClearButton: true
+                textColor: Theme.surfaceText
+                font.pixelSize: Theme.fontSizeLarge
+                enabled: root.parentModal ? (root.parentModal.spotlightOpen || root.parentModal.isClosing) : true
+                placeholderText: ""
+                ignoreUpDownKeys: true
+                ignoreTabKeys: true
+                keyForwardTargets: [root]
+
+                onTextChanged: {
+                    controller.setSearchQuery(text);
+                    if (actionPanel.expanded) {
+                        actionPanel.hide();
+                    }
+                }
+
+                Keys.onPressed: event => {
+                    if (event.key === Qt.Key_Escape) {
+                        if (root.parentModal) {
+                            root.parentModal.hide();
+                        }
+                        event.accepted = true;
+                    } else if ((event.key === Qt.Key_Return || event.key === Qt.Key_Enter)) {
+                        if (actionPanel.expanded && actionPanel.selectedActionIndex > 0) {
+                            actionPanel.executeSelectedAction();
+                        } else {
+                            controller.executeSelected();
+                        }
+                        event.accepted = true;
+                    }
+                }
+            }
+        }
+
+        Item {
+            id: contentStack
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: contentHolder.inverted ? footerBar.bottom : searchRow.bottom
+            anchors.bottom: contentHolder.inverted ? searchRow.top : footerBar.top
+            anchors.leftMargin: Theme.spacingM
+            anchors.rightMargin: Theme.spacingM
+            anchors.topMargin: contentHolder.inverted && !footerBar.showFooter ? Theme.spacingM : contentStack.gap
+            anchors.bottomMargin: contentHolder.inverted ? contentStack.gap : 0
+            readonly property real gap: Theme.spacingXS
+            clip: false
 
             Row {
                 id: categoryRow
@@ -552,6 +536,8 @@ FocusScope {
                 height: showPluginCategories ? 36 : 0
                 visible: showPluginCategories
                 spacing: Theme.spacingS
+                anchors.top: parent.top
+                anchors.topMargin: 0
 
                 clip: true
 
@@ -607,6 +593,8 @@ FocusScope {
                 width: parent.width
                 height: showFileFilters ? fileFilterContent.height : 0
                 visible: showFileFilters
+                anchors.top: parent.top
+                anchors.topMargin: 0
 
                 readonly property bool showFileFilters: controller.searchMode === "files"
 
@@ -625,7 +613,7 @@ FocusScope {
                     Row {
                         id: typeChips
                         anchors.verticalCenter: parent.verticalCenter
-                        spacing: 2
+                        spacing: Theme.spacingXXS
                         visible: DSearchService.supportsTypeFilter
 
                         Repeater {
@@ -654,7 +642,7 @@ FocusScope {
                                 width: chipContent.width + Theme.spacingM * 2
                                 height: sortDropdown.height
                                 radius: Theme.cornerRadius
-                                color: controller.fileSearchType === modelData.id ? Theme.buttonBg : chipArea.containsMouse ? Theme.surfaceContainerHighest : "transparent"
+                                color: controller.fileSearchType === modelData.id ? Theme.buttonBg : chipArea.containsMouse ? Theme.surfaceContainerHighest : Theme.withAlpha(Theme.surfaceContainerHighest, 0)
 
                                 Row {
                                     id: chipContent
@@ -746,8 +734,12 @@ FocusScope {
             }
 
             Item {
+                id: resultsSlot
                 width: parent.width
-                height: parent.height - searchField.height - categoryRow.height - fileFilterRow.height - actionPanel.height - Theme.spacingXS * ((categoryRow.visible ? 1 : 0) + (fileFilterRow.visible ? 1 : 0) + 2)
+                anchors.top: fileFilterRow.visible ? fileFilterRow.bottom : (categoryRow.visible ? categoryRow.bottom : parent.top)
+                anchors.topMargin: (fileFilterRow.visible || categoryRow.visible) ? contentStack.gap : 0
+                anchors.bottom: actionPanel.top
+                anchors.bottomMargin: actionPanel.height > 0 || !contentHolder.inverted ? contentStack.gap : 0
                 opacity: {
                     if (!root.parentModal)
                         return 1;
@@ -760,6 +752,8 @@ FocusScope {
                     id: resultsList
                     anchors.fill: parent
                     controller: root.controller
+                    leadingSectionHeaderAtBottom: contentHolder.inverted
+                    transientSurfaceTracker: root.transientSurfaceTracker
 
                     onItemRightClicked: (index, item, sceneX, sceneY) => {
                         if (item && contextMenu.hasContextMenuActions(item)) {
@@ -773,6 +767,7 @@ FocusScope {
             ActionPanel {
                 id: actionPanel
                 width: parent.width
+                anchors.bottom: parent.bottom
                 selectedItem: controller.selectedItem
                 controller: controller
             }
@@ -794,291 +789,21 @@ FocusScope {
         }
     }
 
-    FocusScope {
-        id: editView
+    Loader {
+        id: editLoader
         anchors.fill: parent
         anchors.margins: Theme.spacingM
-        visible: editMode
-        focus: editMode
+        active: root.editMode
+        visible: active
+        focus: root.editMode
 
-        Keys.onPressed: event => {
-            if (event.key === Qt.Key_Escape) {
-                closeEditMode();
-                event.accepted = true;
-            } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                if (event.modifiers & Qt.ControlModifier) {
-                    saveAppOverride();
-                    event.accepted = true;
-                }
-            } else if (event.key === Qt.Key_S && event.modifiers & Qt.ControlModifier) {
-                saveAppOverride();
-                event.accepted = true;
-            }
+        sourceComponent: AppEditView {
+            focus: true
+            editingApp: root.editingApp
+            editAppId: root.editAppId
+            onCloseRequested: root.closeEditMode()
         }
 
-        Column {
-            anchors.fill: parent
-            spacing: Theme.spacingM
-
-            Row {
-                width: parent.width
-                spacing: Theme.spacingM
-
-                Rectangle {
-                    width: 40
-                    height: 40
-                    radius: Theme.cornerRadius
-                    color: backButtonArea.containsMouse ? Theme.surfaceHover : "transparent"
-
-                    DankIcon {
-                        anchors.centerIn: parent
-                        name: "arrow_back"
-                        size: 20
-                        color: Theme.surfaceText
-                    }
-
-                    MouseArea {
-                        id: backButtonArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: closeEditMode()
-                    }
-                }
-
-                Image {
-                    width: 40
-                    height: 40
-                    source: Paths.resolveIconUrl(editingApp?.icon || "application-x-executable")
-                    sourceSize.width: 40
-                    sourceSize.height: 40
-                    fillMode: Image.PreserveAspectFit
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                Column {
-                    anchors.verticalCenter: parent.verticalCenter
-                    spacing: 2
-
-                    StyledText {
-                        text: I18n.tr("Edit App")
-                        font.pixelSize: Theme.fontSizeLarge
-                        color: Theme.surfaceText
-                        font.weight: Font.Medium
-                    }
-
-                    StyledText {
-                        text: editingApp?.name || ""
-                        font.pixelSize: Theme.fontSizeSmall
-                        color: Theme.surfaceVariantText
-                    }
-                }
-            }
-
-            Rectangle {
-                width: parent.width
-                height: 1
-                color: Theme.outlineMedium
-            }
-
-            Flickable {
-                width: parent.width
-                height: parent.height - y - buttonsRow.height - Theme.spacingM
-                contentHeight: editFieldsColumn.height
-                clip: true
-                boundsBehavior: Flickable.StopAtBounds
-
-                Column {
-                    id: editFieldsColumn
-                    width: parent.width
-                    spacing: Theme.spacingS
-
-                    Column {
-                        width: parent.width
-                        spacing: 4
-
-                        StyledText {
-                            text: I18n.tr("Name")
-                            font.pixelSize: Theme.fontSizeSmall
-                            color: Theme.surfaceText
-                            font.weight: Font.Medium
-                        }
-
-                        DankTextField {
-                            id: editNameField
-                            width: parent.width
-                            placeholderText: editingApp?.name || ""
-                            keyNavigationTab: editIconField
-                            keyNavigationBacktab: editExtraFlagsField
-                        }
-                    }
-
-                    Column {
-                        width: parent.width
-                        spacing: 4
-
-                        StyledText {
-                            text: I18n.tr("Icon")
-                            font.pixelSize: Theme.fontSizeSmall
-                            color: Theme.surfaceText
-                            font.weight: Font.Medium
-                        }
-
-                        DankTextField {
-                            id: editIconField
-                            width: parent.width
-                            placeholderText: editingApp?.icon || ""
-                            keyNavigationTab: editCommentField
-                            keyNavigationBacktab: editNameField
-                        }
-                    }
-
-                    Column {
-                        width: parent.width
-                        spacing: 4
-
-                        StyledText {
-                            text: I18n.tr("Description")
-                            font.pixelSize: Theme.fontSizeSmall
-                            color: Theme.surfaceText
-                            font.weight: Font.Medium
-                        }
-
-                        DankTextField {
-                            id: editCommentField
-                            width: parent.width
-                            placeholderText: editingApp?.comment || ""
-                            keyNavigationTab: editEnvVarsField
-                            keyNavigationBacktab: editIconField
-                        }
-                    }
-
-                    Column {
-                        width: parent.width
-                        spacing: 4
-
-                        StyledText {
-                            text: I18n.tr("Environment Variables")
-                            font.pixelSize: Theme.fontSizeSmall
-                            color: Theme.surfaceText
-                            font.weight: Font.Medium
-                        }
-
-                        StyledText {
-                            text: "KEY=value KEY2=value2"
-                            font.pixelSize: Theme.fontSizeSmall - 1
-                            color: Theme.surfaceVariantText
-                        }
-
-                        DankTextField {
-                            id: editEnvVarsField
-                            width: parent.width
-                            placeholderText: "VAR=value"
-                            keyNavigationTab: editExtraFlagsField
-                            keyNavigationBacktab: editCommentField
-                        }
-                    }
-
-                    Column {
-                        width: parent.width
-                        spacing: 4
-
-                        StyledText {
-                            text: I18n.tr("Extra Arguments")
-                            font.pixelSize: Theme.fontSizeSmall
-                            color: Theme.surfaceText
-                            font.weight: Font.Medium
-                        }
-
-                        DankTextField {
-                            id: editExtraFlagsField
-                            width: parent.width
-                            placeholderText: "--flag --option=value"
-                            keyNavigationTab: editNameField
-                            keyNavigationBacktab: editEnvVarsField
-                        }
-                    }
-                }
-            }
-
-            Row {
-                id: buttonsRow
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: Theme.spacingM
-
-                Rectangle {
-                    id: resetButton
-                    width: 90
-                    height: 40
-                    radius: Theme.cornerRadius
-                    color: resetButtonArea.containsMouse ? Theme.surfacePressed : Theme.surfaceVariantAlpha
-                    visible: SessionData.getAppOverride(editAppId) !== null
-
-                    StyledText {
-                        text: I18n.tr("Reset")
-                        font.pixelSize: Theme.fontSizeMedium
-                        color: Theme.error
-                        font.weight: Font.Medium
-                        anchors.centerIn: parent
-                    }
-
-                    MouseArea {
-                        id: resetButtonArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: resetAppOverride()
-                    }
-                }
-
-                Rectangle {
-                    id: cancelButton
-                    width: 90
-                    height: 40
-                    radius: Theme.cornerRadius
-                    color: cancelButtonArea.containsMouse ? Theme.surfacePressed : Theme.surfaceVariantAlpha
-
-                    StyledText {
-                        text: I18n.tr("Cancel")
-                        font.pixelSize: Theme.fontSizeMedium
-                        color: Theme.surfaceText
-                        font.weight: Font.Medium
-                        anchors.centerIn: parent
-                    }
-
-                    MouseArea {
-                        id: cancelButtonArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: closeEditMode()
-                    }
-                }
-
-                Rectangle {
-                    id: saveButton
-                    width: 90
-                    height: 40
-                    radius: Theme.cornerRadius
-                    color: saveButtonArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.9) : Theme.primary
-
-                    StyledText {
-                        text: I18n.tr("Save")
-                        font.pixelSize: Theme.fontSizeMedium
-                        color: Theme.primaryText
-                        font.weight: Font.Medium
-                        anchors.centerIn: parent
-                    }
-
-                    MouseArea {
-                        id: saveButtonArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: saveAppOverride()
-                    }
-                }
-            }
-        }
+        onLoaded: item.loadOverride()
     }
 }

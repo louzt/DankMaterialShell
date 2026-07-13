@@ -90,6 +90,7 @@ install -Dm644 %{_builddir}/dms-qml/assets/systemd/dms.service %{buildroot}%{_us
 
 install -Dm644 %{_builddir}/dms-qml/assets/dms-open.desktop %{buildroot}%{_datadir}/applications/dms-open.desktop
 install -Dm644 %{_builddir}/dms-qml/assets/com.danklinux.dms.desktop %{buildroot}%{_datadir}/applications/com.danklinux.dms.desktop
+install -Dm644 %{_builddir}/dms-qml/assets/com.danklinux.dms.notepad.desktop %{buildroot}%{_datadir}/applications/com.danklinux.dms.notepad.desktop
 install -Dm644 %{_builddir}/dms-qml/assets/danklogo.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/danklogo.svg
 
 install -dm755 %{buildroot}%{_datadir}/quickshell/dms
@@ -113,6 +114,7 @@ pkill -USR1 -x dms >/dev/null 2>&1 || :
 %{_userunitdir}/dms.service
 %{_datadir}/applications/dms-open.desktop
 %{_datadir}/applications/com.danklinux.dms.desktop
+%{_datadir}/applications/com.danklinux.dms.notepad.desktop
 %{_datadir}/icons/hicolor/scalable/apps/danklogo.svg
 
 %files -n dms-cli

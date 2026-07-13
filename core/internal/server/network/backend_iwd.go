@@ -114,6 +114,14 @@ func (b *IWDBackend) discoverDevices() error {
 		return fmt.Errorf("failed to get managed objects: %w", err)
 	}
 
+	return b.applyManagedObjects(objects)
+}
+
+func (b *IWDBackend) applyManagedObjects(objects map[dbus.ObjectPath]map[string]map[string]dbus.Variant) error {
+	b.stationPath = ""
+	b.devicePath = ""
+	b.adapterPath = ""
+
 	for path, interfaces := range objects {
 		if _, hasStation := interfaces[iwdStationInterface]; hasStation {
 			b.stationPath = path
@@ -129,6 +137,13 @@ func (b *IWDBackend) discoverDevices() error {
 						b.stateMutex.Unlock()
 					}
 				}
+				if poweredVar, ok := devProps["Powered"]; ok {
+					if powered, ok := poweredVar.Value().(bool); ok {
+						b.stateMutex.Lock()
+						b.state.WiFiEnabled = powered
+						b.stateMutex.Unlock()
+					}
+				}
 			}
 		}
 		if _, hasAdapter := interfaces[iwdAdapterInterface]; hasAdapter {
@@ -136,8 +151,17 @@ func (b *IWDBackend) discoverDevices() error {
 		}
 	}
 
-	if b.stationPath == "" || b.devicePath == "" {
+	if b.devicePath == "" {
 		return fmt.Errorf("no WiFi device found")
+	}
+	if b.stationPath == "" {
+		b.stateMutex.Lock()
+		b.state.WiFiEnabled = false
+		b.state.WiFiConnected = false
+		b.state.NetworkStatus = StatusDisconnected
+		b.state.WiFiNetworks = nil
+		b.stateMutex.Unlock()
+		log.Infof("iwd device %s has no station interface; treating WiFi as disabled", b.devicePath)
 	}
 
 	return nil

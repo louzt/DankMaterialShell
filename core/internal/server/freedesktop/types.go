@@ -2,10 +2,16 @@ package freedesktop
 
 import (
 	"sync"
+	"time"
 
 	"github.com/AvengeMedia/DankMaterialShell/core/pkg/syncmap"
 	"github.com/godbus/dbus/v5"
 )
+
+type colorSchemeEcho struct {
+	value   uint32
+	expires time.Time
+}
 
 type AccountsState struct {
 	Available     bool   `json:"available"`
@@ -63,4 +69,6 @@ type Manager struct {
 	screensaverCookieCounter      uint32
 	screensaverFreedesktopClaimed bool
 	screensaverGnomeClaimed       bool
+	selfEchoMu                    sync.Mutex
+	selfEchoes                    []colorSchemeEcho
 }

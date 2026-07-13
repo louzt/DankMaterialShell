@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell
 import qs.Common
 import qs.Modals.Common
 import qs.Widgets
@@ -23,6 +24,7 @@ DankModal {
     property var rememberMimeTypes: []
     property bool rememberChoice: false
     property var mimeMatchedAppIds: []
+    property var mimeMatchedRawIds: []
 
     signal applicationSelected(var app, string targetData)
 
@@ -61,6 +63,7 @@ DankModal {
 
     function fetchMimeMatches() {
         mimeMatchedAppIds = [];
+        mimeMatchedRawIds = [];
         const queriedMime = mimeType;
         if (queriedMime.length === 0)
             return;
@@ -74,6 +77,7 @@ DankModal {
                 return;
             }
             const ids = (response.result && response.result.desktopIds) || [];
+            mimeMatchedRawIds = ids;
             mimeMatchedAppIds = ids.map(_normAppId);
             updateApplicationList();
         });
@@ -93,11 +97,13 @@ DankModal {
         const hasMimeMatches = mimeMatchedAppIds.length > 0;
         const lowerQuery = searchQuery.toLowerCase();
         let filteredApps = [];
+        const listedIds = new Set();
 
         for (const app of apps) {
             if (!app)
                 continue;
             const appId = _normAppId(app.id || app.execString || app.exec || "");
+            listedIds.add(appId);
             const mimeIdMatch = hasMimeMatches && mimeMatchedAppIds.includes(appId);
             const mimeFieldMatch = hasMime && _appMatchesMime(app, mimeType);
             const mimeMatch = mimeIdMatch || mimeFieldMatch;
@@ -132,6 +138,28 @@ DankModal {
                 startupClass: app.startupWMClass || "",
                 appData: app,
                 mimeMatch: mimeMatch
+            });
+        }
+
+        // NoDisplay entries are excluded from DesktopEntries.applications but
+        // remain valid mime handlers; resolve them by id so they stay pickable
+        for (const rawId of mimeMatchedRawIds) {
+            const normId = _normAppId(rawId);
+            if (normId === "dms-open" || listedIds.has(normId))
+                continue;
+            const entry = DesktopEntries.byId(rawId) || DesktopEntries.heuristicLookup(rawId);
+            if (!entry)
+                continue;
+            const name = entry.name || "";
+            if (searchQuery !== "" && !name.toLowerCase().includes(lowerQuery))
+                continue;
+            filteredApps.push({
+                name: name,
+                icon: entry.icon || "application-x-executable",
+                exec: entry.execString || "",
+                startupClass: entry.startupClass || "",
+                appData: entry,
+                mimeMatch: true
             });
         }
 
@@ -253,7 +281,7 @@ DankModal {
                     }
 
                     Row {
-                        spacing: 4
+                        spacing: Theme.spacingXS
                         anchors.right: parent.right
                         anchors.rightMargin: Theme.spacingS
                         anchors.verticalCenter: parent.verticalCenter
@@ -264,7 +292,7 @@ DankModal {
                             iconName: "view_list"
                             iconSize: 20
                             iconColor: root.viewMode === "list" ? Theme.primary : Theme.surfaceText
-                            backgroundColor: root.viewMode === "list" ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                            backgroundColor: root.viewMode === "list" ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
                             onClicked: {
                                 root.viewMode = "list";
                             }
@@ -276,7 +304,7 @@ DankModal {
                             iconName: "grid_view"
                             iconSize: 20
                             iconColor: root.viewMode === "grid" ? Theme.primary : Theme.surfaceText
-                            backgroundColor: root.viewMode === "grid" ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
+                            backgroundColor: root.viewMode === "grid" ? Theme.primaryHover : Theme.withAlpha(Theme.primaryHover, 0)
                             onClicked: {
                                 root.viewMode = "grid";
                             }

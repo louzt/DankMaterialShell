@@ -33,6 +33,7 @@ type NiriSection struct {
 
 type NiriParser struct {
 	configDir          string
+	modKey             string
 	processedFiles     map[string]bool
 	bindMap            map[string]*NiriKeyBinding
 	bindOrder          []string
@@ -237,6 +238,7 @@ func isBraceAdjacentSpace(b byte) bool {
 func NewNiriParser(configDir string) *NiriParser {
 	return &NiriParser{
 		configDir:          configDir,
+		modKey:             "Super",
 		processedFiles:     make(map[string]bool),
 		bindMap:            make(map[string]*NiriKeyBinding),
 		bindOrder:          []string{},
@@ -377,10 +379,25 @@ func (p *NiriParser) processNodes(nodes []*document.Node, section *NiriSection, 
 		switch name {
 		case "include":
 			p.handleInclude(node, section, baseDir)
+		case "input":
+			p.handleInput(node)
 		case "binds":
 			p.extractBinds(node, section, "")
 		case "recent-windows":
 			p.handleRecentWindows(node, section)
+		}
+	}
+}
+
+func (p *NiriParser) handleInput(node *document.Node) {
+	for _, child := range node.Children {
+		if child.Name.String() != "mod-key" || len(child.Arguments) == 0 {
+			continue
+		}
+
+		modKey := strings.Trim(strings.TrimSpace(child.Arguments[0].String()), "\"")
+		if modKey != "" {
+			p.modKey = modKey
 		}
 	}
 }
@@ -534,6 +551,7 @@ func (p *NiriParser) parseKeyCombo(combo string) ([]string, string) {
 
 type NiriParseResult struct {
 	Section            *NiriSection
+	ModKey             string
 	DMSBindsIncluded   bool
 	DMSStatus          *DMSBindsStatusInfo
 	ConflictingConfigs map[string]*NiriKeyBinding
@@ -586,6 +604,7 @@ func ParseNiriKeys(configDir string) (*NiriParseResult, error) {
 	}
 	return &NiriParseResult{
 		Section:            section,
+		ModKey:             parser.modKey,
 		DMSBindsIncluded:   parser.HasDMSBindsIncluded(),
 		DMSStatus:          parser.buildDMSStatus(),
 		ConflictingConfigs: parser.conflictingConfigs,

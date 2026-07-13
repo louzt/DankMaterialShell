@@ -48,9 +48,8 @@ Rectangle {
             return "file://" + raw;
         return raw;
     }
-    readonly property bool hasClipboardPreview: item?.type === "clipboard" && item?.data?.isImage === true && (item?.data?.mimeType ?? "").startsWith("image/")
+    readonly property bool hasClipboardPreview: item?.type === "clipboard" && !!item?.data?.isImage && String(item?.data?.mimeType ?? "").startsWith("image/")
     readonly property bool hasMediaPreview: previewSource.length > 0 || hasClipboardPreview
-    readonly property bool previewAnimated: previewSource.toLowerCase().indexOf(".gif") >= 0
 
     readonly property string typeLabel: {
         if (!item)
@@ -76,7 +75,7 @@ Rectangle {
     width: parent?.width ?? 200
     height: 64
     radius: Theme.cornerRadius
-    color: root.isSelected ? Theme.primaryPressed : root.isHovered ? Theme.primaryHoverLight : "transparent"
+    color: root.isSelected ? Theme.primaryPressed : root.isHovered ? Theme.primaryHoverLight : Theme.withAlpha(Theme.primaryHoverLight, 0)
 
     Behavior on color {
         ColorAnimation {
@@ -150,7 +149,7 @@ Rectangle {
         anchors.right: previewFrame.visible ? previewFrame.left : metaRow.left
         anchors.rightMargin: Theme.spacingM
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 2
+        spacing: Theme.spacingXXS
 
         StyledText {
             id: nameText
@@ -225,7 +224,7 @@ Rectangle {
             height: 28
             radius: height / 2
             anchors.verticalCenter: parent.verticalCenter
-            color: quickToggleArea.containsMouse ? Theme.surfaceHover : "transparent"
+            color: quickToggleArea.containsMouse ? Theme.surfaceHover : Theme.withAlpha(Theme.surfaceHover, 0)
 
             readonly property bool isAllowed: {
                 if (root.item?.type !== "plugin_browse")
@@ -284,16 +283,10 @@ Rectangle {
             anchors.fill: parent
             source: root.previewSource
             asynchronous: true
+            sourceSize.width: 128
+            sourceSize.height: 128
             fillMode: Image.PreserveAspectCrop
-            visible: !root.hasClipboardPreview && !root.previewAnimated
-        }
-
-        AnimatedImage {
-            anchors.fill: parent
-            source: root.previewSource
-            fillMode: Image.PreserveAspectCrop
-            playing: visible
-            visible: !root.hasClipboardPreview && root.previewAnimated
+            visible: !root.hasClipboardPreview
         }
 
         ClipboardLauncherPreview {

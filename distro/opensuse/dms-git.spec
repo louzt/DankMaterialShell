@@ -25,7 +25,7 @@ Recommends:     danksearch
 Recommends:     matugen
 Recommends:     quickshell-git
 Recommends:     NetworkManager
-Recommends:     qt6-qtmultimedia
+Recommends:     qt6-multimedia-imports
 Suggests:       cups-pk-helper
 Suggests:       qt6ct
 
@@ -117,6 +117,7 @@ install -Dm644 assets/systemd/dms.service %{buildroot}%{_userunitdir}/dms.servic
 
 install -Dm644 assets/dms-open.desktop %{buildroot}%{_datadir}/applications/dms-open.desktop
 install -Dm644 assets/com.danklinux.dms.desktop %{buildroot}%{_datadir}/applications/com.danklinux.dms.desktop
+install -Dm644 assets/com.danklinux.dms.notepad.desktop %{buildroot}%{_datadir}/applications/com.danklinux.dms.notepad.desktop
 install -Dm644 assets/danklogo.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/danklogo.svg
 
 install -dm755 %{buildroot}%{_datadir}/quickshell/dms
@@ -153,6 +154,7 @@ pkill -USR1 -x dms >/dev/null 2>&1 || :
 %{_userunitdir}/dms.service
 %{_datadir}/applications/dms-open.desktop
 %{_datadir}/applications/com.danklinux.dms.desktop
+%{_datadir}/applications/com.danklinux.dms.notepad.desktop
 %dir %{_datadir}/icons/hicolor
 %dir %{_datadir}/icons/hicolor/scalable
 %dir %{_datadir}/icons/hicolor/scalable/apps

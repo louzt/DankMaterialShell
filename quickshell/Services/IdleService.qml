@@ -35,9 +35,13 @@ Singleton {
     onIsShellLockedChanged: _rearmIdleMonitors()
 
     function _applyMonitorEnableds() {
-        const base = enabled;
+        // Gate on the shell's own inhibit state rather than relying on the
+        // compositor honoring the bar-surface zwp_idle_inhibit inhibitor,
+        // which goes inactive whenever the bar surface is occluded
+        // (fullscreen windows) or hidden (auto-hide).
+        const base = enabled && !SessionService.idleInhibited && !externalInhibitActive;
         monitorOffMonitor.enabled = base && monitorTimeout > 0 && !postLockMonitorActive;
-        postLockMonitorOffMonitor.enabled = base && postLockMonitorActive;
+        postLockMonitorOffMonitor.enabled = enabled && postLockMonitorActive;
         lockMonitor.enabled = base && lockTimeout > 0;
         suspendMonitor.enabled = base && suspendTimeout > 0;
     }
@@ -63,10 +67,6 @@ Singleton {
     property var lockComponent: null
     property bool monitorsOff: false
     property bool isShellLocked: false
-
-    function wake() {
-        requestMonitorOn();
-    }
 
     function reapplyDpmsIfNeeded() {
         if (monitorsOff)
@@ -154,6 +154,14 @@ Singleton {
     }
 
     Connections {
+        target: SessionService
+
+        function onIdleInhibitedChanged() {
+            root._rearmIdleMonitors();
+        }
+    }
+
+    Connections {
         target: root
         function onRequestMonitorOff() {
             monitorsOff = true;
@@ -174,21 +182,11 @@ Singleton {
         if (externalInhibitActive) {
             const apps = DMSService.screensaverInhibitors.map(i => i.appName).join(", ");
             log.info("External idle inhibit active from:", apps || "unknown");
-            SessionService.idleInhibited = true;
-            SessionService.inhibitReason = "External app: " + (apps || "unknown");
         } else {
             log.info("External idle inhibit released");
-            SessionService.idleInhibited = false;
-            SessionService.inhibitReason = "Keep system awake";
         }
+        _rearmIdleMonitors();
     }
 
-    Component.onCompleted: {
-        _applyMonitorEnableds();
-        if (externalInhibitActive) {
-            const apps = DMSService.screensaverInhibitors.map(i => i.appName).join(", ");
-            SessionService.idleInhibited = true;
-            SessionService.inhibitReason = "External app: " + (apps || "unknown");
-        }
-    }
+    Component.onCompleted: _applyMonitorEnableds()
 }

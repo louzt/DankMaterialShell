@@ -86,12 +86,10 @@ Rectangle {
     }
 
     function updateSelectedDateEvents() {
-        if (CalendarService && CalendarService.calendarAvailable) {
-            const events = CalendarService.getEventsForDate(selectedDate);
-            selectedDateEvents = events;
-        } else {
-            selectedDateEvents = [];
-        }
+        const events = (CalendarService && CalendarService.calendarAvailable) ? CalendarService.getEventsForDate(selectedDate) : [];
+        if (JSON.stringify(events) === JSON.stringify(selectedDateEvents))
+            return;
+        selectedDateEvents = events;
     }
 
     function loadEventsForMonth() {
@@ -228,8 +226,8 @@ Rectangle {
             visible: CalendarService && CalendarService.dankNeedsLaunch
             height: visible ? Math.max(28, warningRow.implicitHeight) + Theme.spacingS : 0
             radius: Theme.cornerRadius
-            color: Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.12)
-            border.color: Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.35)
+            color: Theme.warningHover
+            border.color: Theme.withAlpha(Theme.warning, 0.35)
             border.width: 1
 
             Row {
@@ -276,57 +274,29 @@ Rectangle {
             height: 40
             visible: showEventDetails
 
-            Rectangle {
-                width: 32
-                height: 32
+            DankActionButton {
+                buttonSize: 32
+                iconSize: 14
+                iconName: "arrow_back"
+                iconColor: Theme.primary
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
                 anchors.leftMargin: Theme.spacingS
-                radius: Theme.cornerRadius
-                color: backButtonArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
-
-                DankIcon {
-                    anchors.centerIn: parent
-                    name: "arrow_back"
-                    size: 14
-                    color: Theme.primary
-                }
-
-                MouseArea {
-                    id: backButtonArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: root.showEventDetails = false
-                }
+                onClicked: root.showEventDetails = false
             }
 
-            Rectangle {
-                width: 32
-                height: 32
+            DankActionButton {
+                buttonSize: 32
+                iconSize: 16
+                iconName: "event"
+                iconColor: Theme.primary
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: Theme.spacingS
-                radius: Theme.cornerRadius
                 visible: CalendarService && CalendarService.canCreateEvents
-                color: addEventArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
-
-                DankIcon {
-                    anchors.centerIn: parent
-                    name: "event"
-                    size: 16
-                    color: Theme.primary
-                }
-
-                MouseArea {
-                    id: addEventArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        root.editorEvent = null;
-                        root.showEditor = true;
-                    }
+                onClicked: {
+                    root.editorEvent = null;
+                    root.showEditor = true;
                 }
             }
 
@@ -358,31 +328,12 @@ Rectangle {
             height: 28
             visible: !showEventDetails
 
-            Rectangle {
-                width: 28
-                height: 28
-                radius: Theme.cornerRadius
-                color: prevMonthArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
-
-                DankIcon {
-                    anchors.centerIn: parent
-                    name: "chevron_left"
-                    size: 14
-                    color: Theme.primary
-                }
-
-                MouseArea {
-                    id: prevMonthArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        let newDate = new Date(calendarGrid.displayDate);
-                        newDate.setMonth(newDate.getMonth() - 1);
-                        calendarGrid.displayDate = newDate;
-                        loadEventsForMonth();
-                    }
-                }
+            DankActionButton {
+                buttonSize: 28
+                iconSize: 14
+                iconName: "chevron_left"
+                iconColor: Theme.primary
+                onClicked: root.shiftMonth(-1)
             }
 
             StyledText {
@@ -396,53 +347,20 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
             }
 
-            Rectangle {
-                width: 28
-                height: 28
-                radius: Theme.cornerRadius
-                color: todayArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
-
-                DankIcon {
-                    anchors.centerIn: parent
-                    name: "today"
-                    size: 14
-                    color: Theme.primary
-                }
-
-                MouseArea {
-                    id: todayArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: root.goToToday()
-                }
+            DankActionButton {
+                buttonSize: 28
+                iconSize: 14
+                iconName: "today"
+                iconColor: Theme.primary
+                onClicked: root.goToToday()
             }
 
-            Rectangle {
-                width: 28
-                height: 28
-                radius: Theme.cornerRadius
-                color: nextMonthArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
-
-                DankIcon {
-                    anchors.centerIn: parent
-                    name: "chevron_right"
-                    size: 14
-                    color: Theme.primary
-                }
-
-                MouseArea {
-                    id: nextMonthArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        let newDate = new Date(calendarGrid.displayDate);
-                        newDate.setMonth(newDate.getMonth() + 1);
-                        calendarGrid.displayDate = newDate;
-                        loadEventsForMonth();
-                    }
-                }
+            DankActionButton {
+                buttonSize: 28
+                iconSize: 14
+                iconName: "chevron_right"
+                iconColor: Theme.primary
+                onClicked: root.shiftMonth(1)
             }
         }
 
@@ -485,7 +403,7 @@ Rectangle {
                                     return root.getWeekNumber(rowDate);
                                 }
                                 font.pixelSize: Theme.fontSizeSmall
-                                color: Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.6)
+                                color: Theme.surfaceTextSecondary
                                 font.weight: Font.Medium
                             }
                         }
@@ -522,7 +440,7 @@ Rectangle {
                                 anchors.centerIn: parent
                                 text: modelData
                                 font.pixelSize: Theme.fontSizeSmall
-                                color: Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.6)
+                                color: Theme.surfaceTextSecondary
                                 font.weight: Font.Medium
                             }
                         }
@@ -565,16 +483,16 @@ Rectangle {
                                 anchors.centerIn: parent
                                 width: Math.min(parent.width - 4, parent.height - 4, 32)
                                 height: width
-                                color: isToday ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : dayArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08) : "transparent"
+                                color: isToday ? Theme.primaryHover : dayArea.containsMouse ? Theme.primaryHoverLight : Theme.withAlpha(Theme.primaryHoverLight, 0)
                                 radius: Theme.cornerRadius
-                                border.color: (isSelected && !isToday) ? Theme.primary : "transparent"
+                                border.color: (isSelected && !isToday) ? Theme.primary : Theme.withAlpha(Theme.primary, 0)
                                 border.width: (isSelected && !isToday) ? 1 : 0
 
                                 StyledText {
                                     anchors.centerIn: parent
                                     text: dayDate.getDate()
                                     font.pixelSize: Theme.fontSizeSmall
-                                    color: isToday ? Theme.primary : isCurrentMonth ? Theme.surfaceText : Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.4)
+                                    color: isToday ? Theme.primary : isCurrentMonth ? Theme.surfaceText : Theme.surfaceVariantText
                                     font.weight: isToday ? Font.Medium : Font.Normal
                                 }
 
@@ -582,7 +500,7 @@ Rectangle {
                                     anchors.bottom: parent.bottom
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     anchors.bottomMargin: 3
-                                    spacing: 2
+                                    spacing: Theme.spacingXXS
                                     visible: CalendarService && CalendarService.calendarAvailable && CalendarService.hasEventsForDate(dayDate)
 
                                     Repeater {
@@ -814,16 +732,20 @@ Rectangle {
                             }
                         }
 
-                        readonly property bool isTask: modelData && modelData.id && modelData.id.startsWith("task_")
-                        readonly property color accentColor: {
-                            if (isTask)
-                                return modelData.completed ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.4) : Theme.primary;
-                            return (modelData && modelData.color && modelData.color.length) ? modelData.color : Theme.primary;
+                        readonly property bool isLocalTask: taskId.startsWith("task_")
+                        readonly property bool isDankTask: taskId.startsWith("vtodo_")
+                        readonly property bool isTask: isLocalTask || isDankTask
+                        readonly property bool canModify: isLocalTask || (isDankTask && modelData && !modelData.readOnly)
+                        readonly property color baseAccent: {
+                            if (isLocalTask || !modelData || !modelData.color || !modelData.color.length)
+                                return Theme.primary;
+                            return modelData.color;
                         }
-                        readonly property color surfaceColor: isDragging ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.15) : (eventMouseArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.06) : Theme.nestedSurface)
+                        readonly property color accentColor: (isTask && modelData && modelData.completed) ? Theme.withAlpha(baseAccent, 0.4) : baseAccent
+                        readonly property color surfaceColor: isDragging ? Theme.primaryPressed : (eventMouseArea.containsMouse ? Theme.primaryBackground : Theme.nestedSurface)
 
                         color: surfaceColor
-                        border.color: isDragging ? Theme.primary : (eventMouseArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.15) : Theme.outlineMedium)
+                        border.color: isDragging ? Theme.primary : (eventMouseArea.containsMouse ? Theme.primaryPressed : Theme.outlineMedium)
                         border.width: (isDragging || eventMouseArea.containsMouse) ? 1 : Theme.layerOutlineWidth
 
                         scale: isDragging ? 1.02 : 1.0
@@ -888,13 +810,13 @@ Rectangle {
                             anchors.verticalCenter: parent.verticalCenter
                             radius: Theme.cornerRadius
                             color: "transparent"
-                            visible: modelData && modelData.id && modelData.id.startsWith("task_") && !taskItem.isEditing
+                            visible: taskItem.isLocalTask && !taskItem.isEditing
 
                             DankIcon {
                                 anchors.centerIn: parent
                                 name: "drag_indicator"
                                 size: 14
-                                color: dragMouseArea.containsMouse ? Theme.primary : Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.3)
+                                color: dragMouseArea.containsMouse ? Theme.primary : Theme.surfaceTextMedium
                             }
 
                             MouseArea {
@@ -937,42 +859,22 @@ Rectangle {
                             }
                         }
 
-                        // Checkbox status icon
-                        Rectangle {
-                            id: checkboxContainer
-                            width: 24
-                            height: 24
-                            anchors.left: parent.left
-                            anchors.leftMargin: (modelData && modelData.id && modelData.id.startsWith("task_")) ? (taskItem.isEditing ? 8 : 32) : 8
-                            anchors.verticalCenter: parent.verticalCenter
-                            radius: Theme.cornerRadius
-                            color: "transparent"
-                            visible: modelData && modelData.id && modelData.id.startsWith("task_")
-
-                            DankIcon {
-                                anchors.centerIn: parent
-                                name: (modelData && modelData.completed) ? "check_box" : "check_box_outline_blank"
-                                size: 16
-                                color: (modelData && modelData.completed) ? Theme.primary : Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.4)
-                            }
-                        }
-
                         Column {
                             id: eventContent
 
                             anchors.left: parent.left
                             anchors.right: parent.right
                             anchors.verticalCenter: parent.verticalCenter
-                            anchors.leftMargin: (modelData && modelData.id && modelData.id.startsWith("task_")) ? 60 : (Theme.spacingS + 6)
-                            anchors.rightMargin: (modelData && modelData.id && modelData.id.startsWith("task_")) ? 64 : Theme.spacingXS
-                            spacing: 2
+                            anchors.leftMargin: taskItem.isLocalTask ? 60 : taskItem.isDankTask ? 36 : (Theme.spacingS + 6)
+                            anchors.rightMargin: taskItem.canModify ? 64 : Theme.spacingXS
+                            spacing: Theme.spacingXXS
                             visible: !taskItem.isEditing
 
                             StyledText {
                                 width: parent.width
                                 text: modelData ? modelData.title : ""
                                 font.pixelSize: Theme.fontSizeSmall
-                                color: (modelData && modelData.id && modelData.id.startsWith("task_") && modelData.completed) ? Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.5) : Theme.surfaceText
+                                color: (taskItem.isTask && modelData && modelData.completed) ? Theme.surfaceTextSecondary : Theme.surfaceText
                                 font.weight: Font.Medium
                                 horizontalAlignment: Text.AlignLeft
                                 elide: Text.ElideRight
@@ -997,10 +899,10 @@ Rectangle {
                                     return "";
                                 }
                                 font.pixelSize: Theme.fontSizeSmall
-                                color: Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.7)
+                                color: Theme.surfaceTextMedium
                                 font.weight: Font.Normal
                                 horizontalAlignment: Text.AlignLeft
-                                visible: text !== "" && modelData && modelData.id && !modelData.id.startsWith("task_")
+                                visible: text !== "" && !taskItem.isLocalTask
                             }
                         }
 
@@ -1047,90 +949,73 @@ Rectangle {
                             id: eventMouseArea
 
                             anchors.fill: parent
-                            anchors.leftMargin: (modelData && modelData.id && modelData.id.startsWith("task_")) ? 32 : 6
-                            anchors.rightMargin: (modelData && modelData.id && modelData.id.startsWith("task_")) ? 64 : 0
+                            anchors.leftMargin: taskItem.isLocalTask ? 32 : 6
+                            anchors.rightMargin: taskItem.canModify ? 64 : 0
                             hoverEnabled: true
                             cursorShape: modelData ? Qt.PointingHandCursor : Qt.ArrowCursor
                             enabled: modelData && !taskItem.isEditing
                             onClicked: {
-                                if (modelData && modelData.id && modelData.id.startsWith("task_")) {
+                                if (!modelData)
+                                    return;
+                                if (taskItem.isTask && taskItem.canModify) {
                                     CalendarService.toggleTask(modelData.id);
                                     return;
                                 }
-                                if (modelData)
-                                    root.detailEvent = modelData;
+                                root.detailEvent = modelData;
                             }
                         }
 
-                        // Delete / Cancel Button
-                        Rectangle {
+                        DankActionButton {
+                            buttonSize: 24
+                            iconSize: 16
+                            iconName: (modelData && modelData.completed) ? "check_box" : "check_box_outline_blank"
+                            iconColor: (modelData && modelData.completed) ? Theme.primary : Theme.surfaceText
+                            anchors.left: parent.left
+                            anchors.leftMargin: taskItem.isLocalTask ? (taskItem.isEditing ? 8 : 32) : 8
+                            anchors.verticalCenter: parent.verticalCenter
+                            visible: taskItem.isTask
+                            enabled: taskItem.canModify && !taskItem.isEditing
+                            onClicked: CalendarService.toggleTask(modelData.id)
+                        }
+
+                        DankActionButton {
                             id: deleteButton
-                            width: 24
-                            height: 24
+                            buttonSize: 24
+                            iconSize: 14
+                            iconName: taskItem.isEditing ? "close" : "delete"
+                            iconColor: taskItem.isEditing ? Theme.surfaceText : Theme.error
                             anchors.right: parent.right
                             anchors.rightMargin: Theme.spacingS
                             anchors.verticalCenter: parent.verticalCenter
-                            radius: Theme.cornerRadius
-                            color: deleteMouseArea.containsMouse ? (taskItem.isEditing ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : Qt.rgba(0.9, 0.2, 0.2, 0.15)) : "transparent"
-                            visible: modelData && modelData.id && modelData.id.startsWith("task_")
-
-                            DankIcon {
-                                anchors.centerIn: parent
-                                name: taskItem.isEditing ? "close" : "delete"
-                                size: 14
-                                color: deleteMouseArea.containsMouse ? (taskItem.isEditing ? Theme.primary : Qt.rgba(0.9, 0.2, 0.2, 1.0)) : Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.4)
-                            }
-
-                            MouseArea {
-                                id: deleteMouseArea
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: {
-                                    if (taskItem.isEditing) {
-                                        taskItem.isEditing = false;
-                                    } else if (modelData && modelData.id) {
-                                        CalendarService.removeTask(modelData.id);
-                                    }
+                            visible: taskItem.canModify
+                            onClicked: {
+                                if (taskItem.isEditing) {
+                                    taskItem.isEditing = false;
+                                    return;
                                 }
+                                if (modelData && modelData.id)
+                                    CalendarService.removeTask(modelData.id);
                             }
                         }
 
-                        // Edit / Save Button
-                        Rectangle {
-                            id: editButton
-                            width: 24
-                            height: 24
+                        DankActionButton {
+                            buttonSize: 24
+                            iconSize: 14
+                            iconName: taskItem.isEditing ? "check" : "edit"
+                            iconColor: taskItem.isEditing ? Theme.primary : Theme.surfaceText
                             anchors.right: deleteButton.left
                             anchors.rightMargin: Theme.spacingXS
                             anchors.verticalCenter: parent.verticalCenter
-                            radius: Theme.cornerRadius
-                            color: editMouseArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
-                            visible: modelData && modelData.id && modelData.id.startsWith("task_")
-
-                            DankIcon {
-                                anchors.centerIn: parent
-                                name: taskItem.isEditing ? "check" : "edit"
-                                size: 14
-                                color: editMouseArea.containsMouse ? Theme.primary : Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.4)
-                            }
-
-                            MouseArea {
-                                id: editMouseArea
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: {
-                                    if (taskItem.isEditing) {
-                                        let txt = editInput.text.trim();
-                                        if (txt !== "" && modelData && modelData.id) {
-                                            CalendarService.editTask(modelData.id, txt);
-                                        }
-                                        taskItem.isEditing = false;
-                                    } else {
-                                        taskItem.isEditing = true;
-                                    }
+                            visible: taskItem.canModify
+                            onClicked: {
+                                if (!taskItem.isEditing) {
+                                    taskItem.isEditing = true;
+                                    return;
                                 }
+                                let txt = editInput.text.trim();
+                                if (txt !== "" && modelData && modelData.id)
+                                    CalendarService.editTask(modelData.id, txt);
+                                taskItem.isEditing = false;
                             }
                         }
                     }
@@ -1161,7 +1046,7 @@ Rectangle {
 
                 Text {
                     text: I18n.tr("Add a task...", "placeholder in the new-task input field")
-                    color: Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.4)
+                    color: Theme.onSurface_38
                     visible: taskInput.text.length === 0
                     font.pixelSize: Theme.fontSizeSmall
                     anchors.verticalCenter: parent.verticalCenter
@@ -1227,5 +1112,14 @@ Rectangle {
     SystemClock {
         id: systemClock
         precision: SystemClock.Hours
+    }
+
+    Connections {
+        target: SessionService
+
+        function onSessionResumed() {
+            systemClock.enabled = false;
+            systemClock.enabled = true;
+        }
     }
 }

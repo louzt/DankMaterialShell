@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Io
+import Quickshell.Wayland
 import qs.Common
 import qs.Services
 
@@ -14,7 +14,10 @@ Singleton {
     readonly property int longTextThreshold: 200
 
     readonly property bool clipboardAvailable: DMSService.isConnected && (DMSService.capabilities.length === 0 || DMSService.capabilities.includes("clipboard"))
-    readonly property bool wtypeAvailable: SessionService.wtypeAvailable
+    property bool pasteSupported: false
+    readonly property bool pasteAvailable: clipboardAvailable && pasteSupported
+
+    readonly property var terminalAppIds: ["kitty", "foot", "footclient", "alacritty", "st", "org.wezfurlong.wezterm", "com.mitchellh.ghostty", "ghostty", "org.kde.konsole", "konsole", "org.gnome.terminal", "gnome-terminal-server", "org.gnome.console", "kgx", "com.gexperts.tilix", "tilix", "terminator", "xfce4-terminal", "lxterminal", "deepin-terminal", "io.elementary.terminal", "rio", "contour", "wayst", "urxvt", "rxvt"]
 
     property var internalEntries: []
     property var clipboardEntries: []
@@ -27,7 +30,6 @@ Singleton {
     property int selectedIndex: 0
     property bool keyboardNavigationActive: false
     property int refCount: 0
-    property real _launcherLastRefresh: 0
     property bool _launcherCacheValid: false
     property string _launcherCachedQuery: ""
     property var _launcherCachedEntries: []
@@ -37,52 +39,75 @@ Singleton {
     signal historyCleared
     signal launcherSearchReady(string query)
 
-    Process {
-        id: wtypeProcess
-        // TODO: This is only a paste shortcut fallback. It assumes the target
-        // application accepts Ctrl+V, which is false for many terminals.
-        // Replace with a more reliable target-aware paste strategy.
-        command: ["wtype", "-M", "ctrl", "-P", "v", "-p", "v", "-m", "ctrl"]
-        running: false
-    }
-
     Timer {
         id: pasteTimer
         interval: 200
         repeat: false
-        onTriggered: wtypeProcess.running = true
+        onTriggered: root.sendPasteKeystroke()
+    }
+
+    Connections {
+        target: DMSService
+        function onIsConnectedChanged() {
+            root.refreshPasteSupport();
+        }
+    }
+
+    Component.onCompleted: refreshPasteSupport()
+
+    function refreshPasteSupport() {
+        if (!DMSService.isConnected) {
+            pasteSupported = false;
+            return;
+        }
+        DMSService.sendRequest("clipboard.pasteSupported", null, function (response) {
+            root.pasteSupported = !response.error && response.result && response.result.supported === true;
+        });
+    }
+
+    function isTerminalFocused() {
+        const appId = (ToplevelManager.activeToplevel?.appId ?? "").toLowerCase();
+        if (!appId) {
+            return false;
+        }
+        return terminalAppIds.includes(appId) || appId.endsWith("term") || appId.includes("terminal");
+    }
+
+    function sendPasteKeystroke() {
+        DMSService.sendRequest("clipboard.sendPaste", {
+            "shift": isTerminalFocused()
+        }, function (response) {
+            if (response.error) {
+                ToastService.showError(I18n.tr("Paste failed: %1").arg(response.error));
+            }
+        });
     }
 
     function updateFilteredModel() {
-        let filtered = internalEntries;
+        const query = searchText.trim().toLowerCase();
+        const filterAll = activeFilter === "all";
+        const unpinned = [];
+        const pinned = [];
 
-        if (activeFilter !== "all") {
-            filtered = filtered.filter(entry =>
-                getEntryType(entry) === activeFilter
-            );
+        for (let i = 0; i < internalEntries.length; i++) {
+            const entry = internalEntries[i];
+            if (!filterAll && getEntryType(entry) !== activeFilter)
+                continue;
+            if (query.length > 0 && !entry.preview.toLowerCase().includes(query))
+                continue;
+            (entry.pinned ? pinned : unpinned).push(entry);
         }
 
-        const query = searchText.trim();
+        const byIdDesc = (a, b) => b.id - a.id;
+        pinned.sort(byIdDesc);
+        unpinned.sort(byIdDesc);
 
-        if (query.length > 0) {
-            const lowerQuery = query.toLowerCase();
-            filtered = filtered.filter(entry =>
-                entry.preview.toLowerCase().includes(lowerQuery)
-            );
-        }
-
-        filtered.sort((a, b) => {
-            if (a.pinned !== b.pinned)
-                return b.pinned ? 1 : -1;
-            return b.id - a.id;
-        });
-
-        clipboardEntries = filtered;
-        unpinnedEntries = filtered.filter(e => !e.pinned);
-        pinnedEntries = filtered.filter(e => e.pinned);
+        pinnedEntries = pinned;
+        unpinnedEntries = unpinned;
+        clipboardEntries = pinned.concat(unpinned);
         totalCount = clipboardEntries.length;
 
-        const activeCount = Math.max(unpinnedEntries.length, pinnedEntries.length);
+        const activeCount = Math.max(unpinned.length, pinned.length);
 
         if (activeCount === 0) {
             keyboardNavigationActive = false;
@@ -90,9 +115,8 @@ Singleton {
             return;
         }
 
-        if (selectedIndex >= activeCount) {
+        if (selectedIndex >= activeCount)
             selectedIndex = activeCount - 1;
-        }
     }
 
     function refresh() {
@@ -109,18 +133,6 @@ Singleton {
             pinnedCount = pinnedEntries.length;
             updateFilteredModel();
         });
-    }
-
-    function ensureLauncherHistory() {
-        if (!clipboardAvailable) {
-            return;
-        }
-
-        const now = Date.now();
-        if (internalEntries.length === 0 || now - _launcherLastRefresh > 5000) {
-            _launcherLastRefresh = now;
-            refresh();
-        }
     }
 
     function requestLauncherSearch(query, limit) {
@@ -180,56 +192,6 @@ Singleton {
         _launcherSearchSeq++;
     }
 
-    function getLauncherEntries(query, limit, minLength) {
-        if (!clipboardAvailable) {
-            return [];
-        }
-
-        const trimmed = (query || "").toString().trim();
-        const requiredLength = minLength !== undefined ? minLength : 2;
-        if (trimmed.length < requiredLength) {
-            return [];
-        }
-
-        const lowerQuery = trimmed.toLowerCase();
-        const maxItems = limit > 0 ? limit : 8;
-        const matches = [];
-
-        for (var i = 0; i < internalEntries.length; i++) {
-            const entry = internalEntries[i];
-            const preview = getEntryPreview(entry).toString();
-            const typeText = entry.isImage ? "image picture screenshot clipboard" : "text clipboard";
-            const haystack = (preview + " " + typeText).toLowerCase();
-            if (haystack.indexOf(lowerQuery) === -1) {
-                continue;
-            }
-            matches.push(entry);
-        }
-
-        matches.sort((a, b) => {
-            if (a.pinned !== b.pinned)
-                return b.pinned ? 1 : -1;
-            return (b.id || 0) - (a.id || 0);
-        });
-
-        return matches.slice(0, maxItems);
-    }
-
-    function getRecentLauncherEntries(limit) {
-        if (!clipboardAvailable) {
-            return [];
-        }
-
-        const maxItems = limit > 0 ? limit : 20;
-        const entries = internalEntries.slice();
-        entries.sort((a, b) => {
-            if (a.pinned !== b.pinned)
-                return b.pinned ? 1 : -1;
-            return (b.id || 0) - (a.id || 0);
-        });
-        return entries.slice(0, maxItems);
-    }
-
     function reset() {
         searchText = "";
         selectedIndex = 0;
@@ -256,19 +218,17 @@ Singleton {
     }
 
     function pasteClipboard(closeCallback) {
-        if (!wtypeAvailable) {
-            ToastService.showError(I18n.tr("wtype not available - install wtype for paste support"));
-            return;
-        }
         if (closeCallback) {
             closeCallback();
         }
-        pasteTimer.start();
+        if (pasteAvailable) {
+            pasteTimer.start();
+        }
     }
 
     function pasteEntry(entry, closeCallback) {
-        if (!wtypeAvailable) {
-            ToastService.showError(I18n.tr("wtype not available - install wtype for paste support"));
+        if (!pasteAvailable) {
+            copyEntry(entry, closeCallback);
             return;
         }
         DMSService.sendRequest("clipboard.copyEntry", {

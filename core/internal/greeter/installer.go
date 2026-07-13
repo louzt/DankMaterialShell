@@ -30,6 +30,11 @@ const appArmorProfileDest = "/etc/apparmor.d/usr.bin.dms-greeter"
 
 const GreeterCacheDir = "/var/cache/dms-greeter"
 
+const (
+	runitSvDir      = "/etc/sv"
+	runitServiceDir = "/var/service"
+)
+
 func DetectDMSPath() (string, error) {
 	return config.LocateDMSConfig()
 }
@@ -39,6 +44,96 @@ func DetectDMSPath() (string, error) {
 func IsNixOS() bool {
 	_, err := os.Stat("/etc/NIXOS")
 	return err == nil
+}
+
+func IsVoidLinux() bool {
+	osInfo, err := distros.GetOSInfo()
+	if err != nil {
+		return false
+	}
+	config, exists := distros.Registry[osInfo.Distribution.ID]
+	return exists && config.Family == distros.FamilyVoid
+}
+
+func isRunit() bool {
+	if fi, err := os.Stat("/run/runit"); err == nil && fi.IsDir() {
+		return true
+	}
+	if _, err := os.Stat("/run/systemd/system"); err == nil {
+		return false
+	}
+	if fi, err := os.Stat(runitServiceDir); err == nil && fi.IsDir() {
+		return true
+	}
+	return false
+}
+
+func runitServiceInstalled(name string) bool {
+	fi, err := os.Stat(filepath.Join(runitSvDir, name))
+	return err == nil && fi.IsDir()
+}
+
+func runitServiceEnabled(name string) bool {
+	_, err := os.Lstat(filepath.Join(runitServiceDir, name))
+	return err == nil
+}
+
+func enableRunitService(name, sudoPassword string) error {
+	if !runitServiceInstalled(name) {
+		return fmt.Errorf("runit service %q not found in %s", name, runitSvDir)
+	}
+	if runitServiceEnabled(name) {
+		return nil
+	}
+	return privesc.Run(context.Background(), sudoPassword, "ln", "-sf",
+		filepath.Join(runitSvDir, name), filepath.Join(runitServiceDir, name))
+}
+
+func disableRunitService(name, sudoPassword string) error {
+	if !runitServiceEnabled(name) {
+		return nil
+	}
+	return privesc.Run(context.Background(), sudoPassword, "rm", "-f",
+		filepath.Join(runitServiceDir, name))
+}
+
+func ensureRunitSeat(greeterUser, sudoPassword string, logFunc func(string)) {
+	if runitServiceInstalled("seatd") {
+		if err := enableRunitService("seatd", sudoPassword); err != nil {
+			logFunc(fmt.Sprintf("⚠ could not enable seatd: %v", err))
+		} else {
+			logFunc("✓ seatd enabled")
+		}
+	} else {
+		logFunc("⚠ seatd not installed — the greeter compositor needs it for GPU/seat access")
+	}
+
+	if err := privesc.Run(context.Background(), sudoPassword, "usermod", "-aG", "_seatd,video,input", greeterUser); err != nil {
+		logFunc(fmt.Sprintf("⚠ could not add %s to seat groups: %v", greeterUser, err))
+	} else {
+		logFunc(fmt.Sprintf("✓ %s added to seat groups (_seatd, video, input)", greeterUser))
+	}
+}
+
+func ensureGreetdPamRundir(sudoPassword string, logFunc func(string)) {
+	const pamPath = "/etc/pam.d/greetd"
+	data, err := os.ReadFile(pamPath)
+	if err != nil {
+		logFunc(fmt.Sprintf("⚠ could not read %s: %v", pamPath, err))
+		return
+	}
+	if strings.Contains(string(data), "pam_rundir") {
+		logFunc("✓ pam_rundir already present in greetd PAM")
+		return
+	}
+
+	line := "session    optional    pam_rundir.so"
+	if err := privesc.Run(context.Background(), sudoPassword, "sh", "-c",
+		fmt.Sprintf("printf '%%s\\n' %q >> %s", line, pamPath)); err != nil {
+		logFunc(fmt.Sprintf("⚠ could not add pam_rundir to %s: %v", pamPath, err))
+		return
+	}
+	logFunc("✓ pam_rundir added to greetd PAM (provides XDG_RUNTIME_DIR for the session)")
 }
 
 func DetectGreeterGroup() string {
@@ -766,6 +861,8 @@ func EnsureGreetdInstalled(logFunc func(string), sudoPassword string) error {
 		installCmd = privesc.ExecCommand(ctx, sudoPassword, "apt-get install -y greetd")
 	case distros.FamilyGentoo:
 		installCmd = privesc.ExecCommand(ctx, sudoPassword, "emerge --ask n sys-apps/greetd")
+	case distros.FamilyVoid:
+		installCmd = privesc.ExecCommand(ctx, sudoPassword, "xbps-install -Sy greetd")
 	case distros.FamilyNix:
 		return fmt.Errorf("on NixOS, please add greetd to your configuration.nix")
 	default:
@@ -892,6 +989,14 @@ func TryInstallGreeterPackage(logFunc func(string), sudoPassword string) bool {
 		}
 		failHint = fmt.Sprintf("⚠ dms-greeter install failed. Install from AUR: %s -S greetd-dms-greeter-git", aurHelper)
 		installCmd = exec.CommandContext(ctx, aurHelper, "-S", "--noconfirm", "greetd-dms-greeter-git")
+	case distros.FamilyVoid:
+		failHint = "⚠ dms-greeter install failed. Add the DMS XBPS repo manually:\necho 'repository=https://avengemedia.github.io/DankMaterialShell/current' | sudo tee /etc/xbps.d/dms.conf\nsudo xbps-install -Sy dms-greeter"
+		logFunc("Adding DMS XBPS repository...")
+		if err := ensureVoidXBPSRepo(ctx, sudoPassword, "dms", distros.VoidDMSRepo); err != nil {
+			logFunc(fmt.Sprintf("⚠ Failed to add DMS XBPS repository: %v", err))
+		}
+		privesc.ExecCommand(ctx, sudoPassword, "sh -c 'yes y | xbps-install -Sy -i --repository "+distros.VoidDMSRepo+"'").Run()
+		installCmd = privesc.ExecCommand(ctx, sudoPassword, "xbps-install -Sy dms-greeter")
 	default:
 		return false
 	}
@@ -907,6 +1012,20 @@ func TryInstallGreeterPackage(logFunc func(string), sudoPassword string) bool {
 
 	logFunc("✓ dms-greeter package installed")
 	return true
+}
+
+func ensureVoidXBPSRepo(ctx context.Context, sudoPassword, name, repoURL string) error {
+	confPath := filepath.Join("/etc/xbps.d", name+".conf")
+	repoLine := fmt.Sprintf("repository=%s", repoURL)
+	repoFileContent := repoLine + "\n"
+	if content, err := os.ReadFile(confPath); err == nil && string(content) == repoFileContent {
+		return nil
+	}
+	if err := privesc.Run(ctx, sudoPassword, "mkdir", "-p", "/etc/xbps.d"); err != nil {
+		return err
+	}
+	return privesc.Run(ctx, sudoPassword, "sh", "-c",
+		fmt.Sprintf("printf '%%s\\n' %q > %s", repoLine, confPath))
 }
 
 // CopyGreeterFiles installs the dms-greeter wrapper and sets up cache directory
@@ -2275,6 +2394,19 @@ func checkSystemdEnabled(service string) (string, error) {
 func DisableConflictingDisplayManagers(sudoPassword string, logFunc func(string)) error {
 	conflictingDMs := []string{"gdm", "gdm3", "lightdm", "sddm", "lxdm", "xdm", "cosmic-greeter"}
 	for _, dm := range conflictingDMs {
+		if isRunit() {
+			if !runitServiceEnabled(dm) {
+				continue
+			}
+			logFunc(fmt.Sprintf("Disabling conflicting display manager: %s", dm))
+			if err := disableRunitService(dm, sudoPassword); err != nil {
+				logFunc(fmt.Sprintf("⚠ Warning: Failed to disable %s: %v", dm, err))
+			} else {
+				logFunc(fmt.Sprintf("✓ Disabled %s", dm))
+			}
+			continue
+		}
+
 		state, err := checkSystemdEnabled(dm)
 		if err != nil || state == "" || state == "not-found" {
 			continue
@@ -2294,6 +2426,19 @@ func DisableConflictingDisplayManagers(sudoPassword string, logFunc func(string)
 
 // EnableGreetd unmasks and enables greetd, forcing it over any other DM.
 func EnableGreetd(sudoPassword string, logFunc func(string)) error {
+	if isRunit() {
+		if !runitServiceInstalled("greetd") {
+			return fmt.Errorf("greetd service not found in %s; ensure greetd is installed", runitSvDir)
+		}
+		ensureRunitSeat(DetectGreeterUser(), sudoPassword, logFunc)
+		ensureGreetdPamRundir(sudoPassword, logFunc)
+		if err := enableRunitService("greetd", sudoPassword); err != nil {
+			return fmt.Errorf("failed to enable greetd: %w", err)
+		}
+		logFunc(fmt.Sprintf("✓ greetd enabled (%s)", runitServiceDir))
+		return nil
+	}
+
 	state, err := checkSystemdEnabled("greetd")
 	if err != nil {
 		return fmt.Errorf("failed to check greetd state: %w", err)
@@ -2317,6 +2462,11 @@ func EnableGreetd(sudoPassword string, logFunc func(string)) error {
 }
 
 func EnsureGraphicalTarget(sudoPassword string, logFunc func(string)) error {
+	if isRunit() {
+		logFunc("✓ runit detected; no graphical target is needed")
+		return nil
+	}
+
 	cmd := exec.Command("systemctl", "get-default")
 	output, err := cmd.Output()
 	if err != nil {

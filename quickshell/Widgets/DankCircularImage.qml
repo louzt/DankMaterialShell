@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Window
-import QtQuick.Effects
+import Quickshell.Widgets
 import qs.Common
 import qs.Widgets
 
@@ -10,11 +10,20 @@ Rectangle {
     property string imageSource: ""
     property string fallbackIcon: "notifications"
     property string fallbackText: ""
+    property bool cacheImages: true
     property bool hasImage: imageSource !== ""
     readonly property bool shouldProbe: imageSource !== "" && !imageSource.startsWith("image://")
-    // Probe with AnimatedImage first; once loaded, check frameCount to decide.
     readonly property bool isAnimated: shouldProbe && probe.status === Image.Ready && probe.frameCount > 1
-    readonly property var activeImage: isAnimated ? probe : staticImage
+    readonly property bool probeSettled: probe.status === Image.Ready || probe.status === Image.Error
+    readonly property var activeImage: {
+        if (isAnimated)
+            return probe;
+        if (staticImage.status === Image.Ready)
+            return staticImage;
+        if (probe.status === Image.Ready && probe.source !== "")
+            return probe;
+        return staticImage;
+    }
     property int imageStatus: activeImage.status
 
     signal imageSaved(string filePath)
@@ -52,97 +61,48 @@ Rectangle {
     }
 
     radius: width / 2
-    color: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.1)
+    color: Theme.primaryHover
     border.color: "transparent"
     border.width: 0
 
-    // Probe: loads as AnimatedImage to detect frame count.
-    AnimatedImage {
-        id: probe
+    ClippingRectangle {
         anchors.fill: parent
         anchors.margins: 2
-        asynchronous: true
-        fillMode: Image.PreserveAspectCrop
-        smooth: true
-        mipmap: true
-        cache: true
-        visible: false
-        source: root.shouldProbe ? root.imageSource : ""
-    }
+        radius: Math.min(width, height) / 2
+        color: "transparent"
 
-    // Static fallback: used once probe confirms the image is not animated.
-    Image {
-        id: staticImage
-        anchors.fill: parent
-        anchors.margins: 2
-        asynchronous: true
-        fillMode: Image.PreserveAspectCrop
-        smooth: true
-        mipmap: true
-        cache: true
-        visible: false
-        sourceSize.width: Math.max(width * 2, 128)
-        sourceSize.height: Math.max(height * 2, 128)
-        source: !root.shouldProbe ? root.imageSource : ""
-    }
-
-    // Once the probe loads, if not animated, hand off to Image and unload probe.
-    Connections {
-        target: probe
-        function onStatusChanged() {
-            if (!root.shouldProbe)
-                return;
-            switch (probe.status) {
-            case Image.Ready:
-                if (probe.frameCount <= 1) {
-                    staticImage.source = root.imageSource;
-                    probe.source = "";
-                }
-                break;
-            case Image.Error:
-                staticImage.source = root.imageSource;
-                probe.source = "";
-                break;
-            }
-        }
-    }
-
-    // If imageSource changes, reset: re-probe with AnimatedImage.
-    onImageSourceChanged: {
-        if (root.shouldProbe) {
-            staticImage.source = "";
-            probe.source = root.imageSource;
-        } else {
-            probe.source = "";
-            staticImage.source = root.imageSource;
-        }
-    }
-
-    MultiEffect {
-        anchors.fill: parent
-        anchors.margins: 2
-        source: root.activeImage
-        maskEnabled: true
-        maskSource: circularMask
-        visible: root.activeImage.status === Image.Ready && root.imageSource !== ""
-        maskThresholdMin: 0.5
-        maskSpreadAtMin: 1
-    }
-
-    Item {
-        id: circularMask
-        anchors.centerIn: parent
-        width: parent.width - 4
-        height: parent.height - 4
-        layer.enabled: true
-        layer.smooth: true
-        visible: false
-
-        Rectangle {
+        // Probes as AnimatedImage to read frameCount; retires once staticImage is ready.
+        AnimatedImage {
+            id: probe
             anchors.fill: parent
-            radius: width / 2
-            color: "black"
-            antialiasing: true
+            asynchronous: true
+            fillMode: Image.PreserveAspectCrop
+            smooth: true
+            mipmap: true
+            cache: root.cacheImages
+            visible: root.activeImage === probe && probe.status === Image.Ready && root.imageSource !== ""
+            source: root.shouldProbe && (root.isAnimated || staticImage.status !== Image.Ready) ? root.imageSource : ""
+        }
+
+        // Takes over once the probe settles on a non-animated image, then latches.
+        Image {
+            id: staticImage
+            anchors.fill: parent
+            asynchronous: true
+            fillMode: Image.PreserveAspectCrop
+            smooth: true
+            mipmap: true
+            cache: root.cacheImages
+            visible: root.activeImage === staticImage && staticImage.status === Image.Ready && root.imageSource !== ""
+            sourceSize.width: Math.max(width * 2, 128)
+            sourceSize.height: Math.max(height * 2, 128)
+            source: {
+                if (!root.shouldProbe)
+                    return root.imageSource;
+                if ((root.probeSettled && !root.isAnimated) || staticImage.status !== Image.Null)
+                    return root.imageSource;
+                return "";
+            }
         }
     }
 

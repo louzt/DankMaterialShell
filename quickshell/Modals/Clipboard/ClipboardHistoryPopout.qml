@@ -141,6 +141,7 @@ DankPopout {
             LayoutMirroring.childrenInherit: true
 
             surfaceHost: root
+            transientSurfaceTracker: root.transientSurfaceTracker
             clearConfirmDialog: clearConfirmDialog
             onCloseRequested: root.hide()
             onInstantCloseRequested: root.hide()

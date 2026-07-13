@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Wayland
 import qs.Common
 import qs.Services
+import qs.Widgets
 
 Item {
     id: root
@@ -35,11 +36,28 @@ Item {
     property bool shouldBeVisible: false
     property bool isClosing: false
     property bool animationsEnabled: true
+    property bool hoverDismissEnabled: false
+    property bool hoverDismissSuspended: false
+
+    function cancelHoverDismiss() {
+        hoverDismissController.cancelPending();
+    }
+
+    function closeFromHoverDismiss() {
+        if (hoverDismissSuspended || isClosing || !shouldBeVisible)
+            return;
+        if (popoutHandle?.closeFromHoverDismiss)
+            popoutHandle.closeFromHoverDismiss();
+        else
+            close();
+    }
+
     property var customKeyboardFocus: null
     property bool backgroundInteractive: true
     property bool contentHandlesKeys: false
     property bool fullHeightSurface: false
     property bool _primeContent: false
+    property bool _contentWarm: false
     property bool _resizeActive: false
     property real _surfaceMarginLeft: 0
     property real _surfaceMarginTop: 0
@@ -202,6 +220,31 @@ Item {
         onTriggered: root._bgCommitWindow = false
     }
 
+    // An idle layer surface won't commit the cleared blur region on auto-close, so the
+    // blur sticks; pulse updatesEnabled false->true to force a re-commit.
+    property bool _blurCommitSuppress: false
+
+    Timer {
+        id: blurCommitPulseTimer
+        interval: 16
+        onTriggered: root._blurCommitSuppress = false
+    }
+
+    function _pulseBlurCommit() {
+        if (!backgroundWindow.visible)
+            return;
+        _blurCommitSuppress = true;
+        blurCommitPulseTimer.restart();
+    }
+
+    Connections {
+        target: overlayLoader.item
+        ignoreUnknownSignals: true
+        function onOverlayBlurActiveChanged() {
+            root._pulseBlurCommit();
+        }
+    }
+
     function _setSurfaceGeometry(bodyX, bodyY, bodyW, bodyH) {
         const newX = Theme.snap(bodyX, dpr);
         const newY = Theme.snap(bodyY, dpr);
@@ -288,6 +331,7 @@ Item {
         isClosing = false;
         animationsEnabled = false;
         _primeContent = true;
+        _contentWarm = true;
 
         _frozenMaskX = maskX;
         _frozenMaskY = maskY;
@@ -387,7 +431,8 @@ Item {
 
     readonly property real screenWidth: screen ? screen.width : 0
     readonly property real screenHeight: screen ? screen.height : 0
-    readonly property real dpr: screen ? screen.devicePixelRatio : 1
+    // devicePixelRatio rounds to integer under fractional scaling; use the real scale Qt renders at.
+    readonly property real dpr: screen ? (CompositorService.getScreenScale(screen) || screen.devicePixelRatio) : 1
 
     readonly property var shadowLevel: Theme.elevationLevel3
     readonly property real shadowFallbackOffset: 6
@@ -520,7 +565,7 @@ Item {
         // Skip buffer updates when there's nothing to render. Briefly flipped
         // true via _bgCommitWindow when _surfaceBodyW/H changes so the
         // contentHoleRect mask carve-out actually commits to the compositor.
-        updatesEnabled: root.overlayContent !== null || root._bgCommitWindow
+        updatesEnabled: !root._blurCommitSuppress && (root.overlayContent !== null || root._bgCommitWindow)
 
         WlrLayershell.namespace: root.layerNamespace + ":background"
         WlrLayershell.layer: root.effectivePopoutLayer
@@ -585,17 +630,30 @@ Item {
         color: "transparent"
         readonly property bool closeVisualActive: root.shouldBeVisible || root.isClosing
 
+        PopoutHoverDismiss {
+            id: hoverDismissController
+            anchors.fill: parent
+            dismissEnabled: root.hoverDismissEnabled
+            dismissSuspended: root.hoverDismissSuspended
+            surfaceVisible: root.shouldBeVisible
+            globalOffsetX: root._surfaceMarginLeft
+            globalOffsetY: root._fullHeight ? 0 : root._surfaceMarginTop
+            onDismissRequested: root.closeFromHoverDismiss()
+        }
+
         WindowBlur {
             id: popoutBlur
             targetWindow: contentWindow
             readonly property real s: Math.min(1, contentContainer.scaleValue)
             readonly property real op: Math.max(0, Math.min(1, (morph.openProgress - 0.08) * 1.6))
+            readonly property real visibleScale: s * op
             readonly property bool revealClipActive: root.fluidStandaloneActive
 
-            blurX: revealClipActive ? contentContainer.x : contentContainer.x + contentContainer.width * (1 - s * op) * 0.5 + Theme.snap(contentContainer.animX, root.dpr)
-            blurY: revealClipActive ? contentContainer.y : contentContainer.y + contentContainer.height * (1 - s * op) * 0.5 + Theme.snap(contentContainer.animY, root.dpr)
-            blurWidth: root.shouldBeVisible ? (revealClipActive ? contentContainer.width : contentContainer.width * s * op) : 0
-            blurHeight: root.shouldBeVisible ? (revealClipActive ? contentContainer.height : contentContainer.height * s * op) : 0
+            // Blur tracks the surface's scaled rect, matching the connected backend
+            blurX: revealClipActive ? contentContainer.x : contentContainer.x + contentContainer.width * (1 - visibleScale) * 0.5 + Theme.snap(contentContainer.animX, root.dpr)
+            blurY: revealClipActive ? contentContainer.y : contentContainer.y + contentContainer.height * (1 - visibleScale) * 0.5 + Theme.snap(contentContainer.animY, root.dpr)
+            blurWidth: root.shouldBeVisible ? (revealClipActive ? contentContainer.width : contentContainer.width * visibleScale) : 0
+            blurHeight: root.shouldBeVisible ? (revealClipActive ? contentContainer.height : contentContainer.height * visibleScale) : 0
             blurRadius: Theme.cornerRadius
             clipEnabled: revealClipActive
             clipX: contentContainer.x + contentContainer.revealX
@@ -607,7 +665,7 @@ Item {
         WlrLayershell.namespace: root.layerNamespace
         WlrLayershell.layer: root.effectivePopoutLayer
         WlrLayershell.exclusiveZone: -1
-        WlrLayershell.keyboardFocus: KeyboardFocus.keyboardFocus(shouldBeVisible || (isClosing && CompositorService.useHyprlandFocusGrab), customKeyboardFocus)
+        WlrLayershell.keyboardFocus: KeyboardFocus.keyboardFocus(shouldBeVisible, customKeyboardFocus)
 
         anchors {
             left: true
@@ -702,12 +760,16 @@ Item {
 
             readonly property real computedScaleCollapsed: root.animationScaleCollapsed
 
+            PopoutHoverBodyTracker {
+                controller: hoverDismissController
+                trackingEnabled: root.hoverDismissEnabled && root.shouldBeVisible
+            }
+
             // openProgress: 0 = closed (at offset, scaleCollapsed), 1 = open (at 0, scale 1).
             QtObject {
                 id: morph
                 property real openProgress: 0
-                onOpenProgressChanged: if (root.fluidStandaloneActive)
-                    root._kickBlurCommit()
+                onOpenProgressChanged: root._kickBlurCommit()
                 Behavior on openProgress {
                     enabled: root.animationsEnabled
                     NumberAnimation {
@@ -810,9 +872,9 @@ Item {
                         x: Theme.snap(contentContainer.animX + (rollOutAdjuster.baseWidth - width) * (1 - contentContainer.scaleValue) * 0.5, root.dpr)
                         y: Theme.snap(contentContainer.animY + (rollOutAdjuster.baseHeight - height) * (1 - contentContainer.scaleValue) * 0.5, root.dpr)
 
-                        layer.enabled: !Theme.isDirectionalEffect && publishedOpacity < 1
+                        layer.enabled: !Theme.isDirectionalEffect && _renderActive
                         layer.smooth: false
-                        layer.textureSize: root.dpr > 1 ? Qt.size(Math.ceil(width * root.dpr), Math.ceil(height * root.dpr)) : Qt.size(0, 0)
+                        layer.textureSize: Qt.size(0, 0)
 
                         Behavior on opacity {
                             enabled: !Theme.isDirectionalEffect
@@ -857,7 +919,8 @@ Item {
                         Loader {
                             id: contentLoader
                             anchors.fill: parent
-                            active: root._primeContent || shouldBeVisible || contentWindow.visible
+                            // _contentWarm keeps the tree loaded across close for fast re-open; reclaimed by PopoutService on lock/idle.
+                            active: root._primeContent || shouldBeVisible || contentWindow.visible || root._contentWarm
                             asynchronous: false
                         }
                     }
@@ -872,7 +935,7 @@ Item {
                         visible: contentWrapper.visible
                         radius: Theme.cornerRadius
                         color: "transparent"
-                        border.color: BlurService.enabled ? BlurService.borderColor : Theme.outlineMedium
+                        border.color: BlurService.borderColor
                         border.width: BlurService.borderWidth
                         z: 100
                     }

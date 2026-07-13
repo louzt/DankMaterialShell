@@ -13,11 +13,18 @@ Column {
     property int draggedIndex: -1
     property int dropTargetIndex: -1
     property bool suppressShiftAnimation: false
-    readonly property real tabItemSize: 128 + Theme.spacingXS
+    property int editingIndex: -1
+    readonly property real tabItemSize: tabRow.dynamicTabWidth + Theme.spacingXS
 
     signal tabSwitched(int tabIndex)
     signal tabClosed(int tabIndex)
     signal newTabRequested
+
+    function commitRename(index, newTitle) {
+        if (index >= 0)
+            NotepadStorageService.renameTab(index, newTitle);
+        editingIndex = -1;
+    }
 
     function hasUnsavedChangesForTab(tab) {
         if (!tab)
@@ -32,11 +39,19 @@ Column {
     spacing: Theme.spacingXS
 
     Row {
+        id: tabRow
         width: parent.width
         height: 36
         spacing: Theme.spacingXS
 
+        readonly property real dynamicTabWidth: {
+            var count = Math.max(1, NotepadStorageService.tabs.length);
+            var raw = (tabScroll.width - (count - 1) * Theme.spacingXS) / count;
+            return Math.max(128, Math.min(300, raw));
+        }
+
         ScrollView {
+            id: tabScroll
             width: parent.width - newTabButton.width - Theme.spacingXS
             height: parent.height
             clip: true
@@ -57,7 +72,8 @@ Column {
 
                         readonly property bool isActive: NotepadStorageService.currentTabIndex === index
                         readonly property bool isHovered: tabMouseArea.containsMouse && !closeMouseArea.containsMouse
-                        readonly property real tabWidth: 128
+                        readonly property bool editing: root.editingIndex === index
+                        readonly property real tabWidth: tabRow.dynamicTabWidth
                         property bool longPressing: false
                         property bool dragging: false
                         property point dragStartPos: Qt.point(0, 0)
@@ -138,6 +154,7 @@ Column {
 
                                     StyledText {
                                         id: tabText
+                                        visible: !delegateItem.editing
                                         width: parent.width - (tabCloseButton.visible ? tabCloseButton.width + Theme.spacingXS : 0)
                                         text: {
                                             var prefix = "";
@@ -155,13 +172,54 @@ Column {
                                         anchors.verticalCenter: parent.verticalCenter
                                     }
 
+                                    TextInput {
+                                        id: renameField
+                                        visible: delegateItem.editing
+                                        enabled: delegateItem.editing
+                                        width: parent.width
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        font.pixelSize: Theme.fontSizeSmall
+                                        font.weight: Font.Medium
+                                        color: Theme.primary
+                                        selectionColor: Theme.primary
+                                        selectedTextColor: Theme.background
+                                        selectByMouse: true
+                                        clip: true
+
+                                        onEditingFinished: root.commitRename(index, text)
+                                        Keys.onEscapePressed: event => {
+                                            text = modelData.title || "Untitled";
+                                            root.editingIndex = -1;
+                                            event.accepted = true;
+                                        }
+
+                                        // A tab switch re-focuses the editor via Qt.callLater; the
+                                        // timer fires afterwards so the field keeps focus + selection.
+                                        Timer {
+                                            id: renameFocusTimer
+                                            interval: 20
+                                            repeat: false
+                                            onTriggered: {
+                                                renameField.forceActiveFocus();
+                                                renameField.selectAll();
+                                            }
+                                        }
+
+                                        onVisibleChanged: {
+                                            if (!visible)
+                                                return;
+                                            text = modelData.title || "Untitled";
+                                            renameFocusTimer.restart();
+                                        }
+                                    }
+
                                     Rectangle {
                                         id: tabCloseButton
                                         width: 20
                                         height: 20
                                         radius: Theme.cornerRadius
                                         color: closeMouseArea.containsMouse ? Theme.surfaceTextHover : Theme.withAlpha(Theme.surfaceTextHover, 0)
-                                        visible: NotepadStorageService.tabs.length > 1
+                                        visible: NotepadStorageService.tabs.length > 1 && !delegateItem.editing
                                         anchors.verticalCenter: parent.verticalCenter
 
                                         DankIcon {
@@ -195,10 +253,23 @@ Column {
                         MouseArea {
                             id: tabMouseArea
                             anchors.fill: parent
+                            enabled: !delegateItem.editing
                             hoverEnabled: true
                             preventStealing: dragging || longPressing
                             cursorShape: dragging || longPressing ? Qt.ClosedHandCursor : Qt.PointingHandCursor
                             acceptedButtons: Qt.LeftButton
+
+                            onDoubleClicked: {
+                                root.tabSwitched(index);
+                                root.editingIndex = index;
+                            }
+
+                            onExited: tabTooltip.hide()
+
+                            onContainsMouseChanged: {
+                                if (containsMouse && tabText.truncated)
+                                    tabTooltip.show(modelData.title || "Untitled", delegateItem, 0, 0, "bottom");
+                            }
 
                             onPressed: mouse => {
                                 if (mouse.button === Qt.LeftButton && NotepadStorageService.tabs.length > 1) {
@@ -278,5 +349,9 @@ Column {
             iconColor: Theme.surfaceText
             onClicked: root.newTabRequested()
         }
+    }
+
+    DankTooltipV2 {
+        id: tabTooltip
     }
 }

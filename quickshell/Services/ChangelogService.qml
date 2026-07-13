@@ -12,8 +12,8 @@ Singleton {
     id: root
     readonly property var log: Log.scoped("ChangelogService")
 
-    readonly property string currentVersion: "1.4"
-    readonly property bool changelogEnabled: false
+    readonly property string currentVersion: "1.5"
+    readonly property bool changelogEnabled: true
 
     readonly property string configDir: Paths.strip(StandardPaths.writableLocation(StandardPaths.ConfigLocation)) + "/DankMaterialShell"
     readonly property string changelogMarkerPath: configDir + "/.changelog-" + currentVersion
@@ -60,10 +60,6 @@ Singleton {
             if (FirstLaunchService.checkComplete && root.changelogEnabled && !root.checkComplete)
                 root.handleFirstLaunchResult();
         }
-    }
-
-    function showChangelog() {
-        changelogRequested();
     }
 
     function dismissChangelog() {

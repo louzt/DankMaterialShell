@@ -373,7 +373,7 @@ Item {
         }
 
         function open(): string {
-            if (SettingsData.notepadDefaultMode === "popout") {
+            if (PopoutService.notepadResolvedMode === "popout") {
                 PopoutService.openNotepadPopout();
                 return "NOTEPAD_OPEN_SUCCESS";
             }
@@ -385,8 +385,24 @@ Item {
             return "NOTEPAD_OPEN_FAILED";
         }
 
+        function openFile(path: string): string {
+            if (!path)
+                return open();
+            if (PopoutService.notepadResolvedMode === "popout") {
+                PopoutService.openNotepadPopoutWithFile(path);
+                return "NOTEPAD_OPEN_FILE_SUCCESS";
+            }
+            var instance = getActiveNotepadInstance();
+            if (instance) {
+                instance.show();
+                instance.loadedItem?.openExternalFile(path);
+                return "NOTEPAD_OPEN_FILE_SUCCESS";
+            }
+            return "NOTEPAD_OPEN_FILE_FAILED";
+        }
+
         function close(): string {
-            if (SettingsData.notepadDefaultMode === "popout") {
+            if (PopoutService.notepadResolvedMode === "popout") {
                 PopoutService.notepadPopout?.hide();
                 return "NOTEPAD_CLOSE_SUCCESS";
             }
@@ -399,7 +415,7 @@ Item {
         }
 
         function toggle(): string {
-            if (SettingsData.notepadDefaultMode === "popout") {
+            if (PopoutService.notepadResolvedMode === "popout") {
                 PopoutService.toggleNotepadPopout();
                 return "NOTEPAD_TOGGLE_SUCCESS";
             }
@@ -696,12 +712,13 @@ Item {
         target: "hypr"
     }
 
+    // ! TODO - remove for v1.6
     IpcHandler {
         function wallpaper(): string {
             const bar = root.getPreferredBar("clockButtonRef") || root.getPreferredBar();
             if (bar) {
                 bar.triggerWallpaperBrowser();
-                return "SUCCESS: Toggled wallpaper browser";
+                return "WARN; deprecated, use dms ipc call dash toggle wallpaper instead";
             }
             return "ERROR: Failed to toggle wallpaper browser";
         }
@@ -1776,8 +1793,8 @@ Item {
         }
 
         function open(): string {
-            if (!CompositorService.isNiri)
-                return "WINDOW_RULES_NIRI_ONLY";
+            if (!CompositorService.isNiri && !CompositorService.isHyprland && !CompositorService.isMango)
+                return "WINDOW_RULES_UNSUPPORTED_COMPOSITOR";
             root.windowRuleModalLoader.active = true;
             if (root.windowRuleModalLoader.item) {
                 root.windowRuleModalLoader.item.show(getFocusedWindow());
@@ -1795,8 +1812,8 @@ Item {
         }
 
         function toggle(): string {
-            if (!CompositorService.isNiri)
-                return "WINDOW_RULES_NIRI_ONLY";
+            if (!CompositorService.isNiri && !CompositorService.isHyprland && !CompositorService.isMango)
+                return "WINDOW_RULES_UNSUPPORTED_COMPOSITOR";
             root.windowRuleModalLoader.active = true;
             if (root.windowRuleModalLoader.item) {
                 if (root.windowRuleModalLoader.item.visible) {
@@ -2059,5 +2076,48 @@ Item {
         }
 
         target: "powerprofile"
+    }
+
+    IpcHandler {
+        // pickAppRoute(appId) → JSON array of screen names where notifs for
+        // this app would land under the current routing mode. Used by the
+        // settings UI to populate the per-app screen picker.
+        function pickAppRoute(appId: string): string {
+            if (!appId) return "[]";
+            // Simulate a minimal notif object to pass to resolveRouteForNotification
+            const fakeNotif = { appId: appId, desktopEntry: appId };
+            const route = NotificationService.resolveRouteForNotification(fakeNotif);
+            const screens = [];
+            if (route === undefined) {
+                // fan-out: app would show on all notification-eligible screens
+                const all = SettingsData.getFilteredScreens("notifications");
+                for (const s of all) screens.push(s.name || s);
+            } else {
+                screens.push(route);
+            }
+            return JSON.stringify(screens);
+        }
+
+        // setAppRoute(appId, screenName) → OK
+        function setAppRoute(appId: string, screenName: string): string {
+            if (!appId) return "ERROR: appId required";
+            SettingsData.setAppRoute(appId, screenName || "");
+            return "OK";
+        }
+
+        // setNotificationDndEnabled(val: bool) → OK
+        function setNotificationDndEnabled(val: bool): string {
+            SettingsData.notificationDndEnabled = !!val;
+            return "OK: dnd=" + !!val;
+        }
+
+        // setNotificationRoutingMode(mode: string) → OK
+        function setNotificationRoutingMode(mode: string): string {
+            if (!mode) return "ERROR: mode required (all|focused|per_app)";
+            SettingsData.notificationRoutingMode = mode;
+            return "OK: mode=" + mode;
+        }
+
+        target: "notification-routing"
     }
 }

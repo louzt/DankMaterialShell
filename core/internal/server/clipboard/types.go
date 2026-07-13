@@ -132,15 +132,9 @@ type Manager struct {
 	offerMutex     sync.RWMutex
 	offerRegistry  map[uint32]any
 
-	sourceMimeTypes []string
-	sourceMutex     sync.RWMutex
-
-	persistData      map[string][]byte
-	persistMimeTypes []string
-	persistMutex     sync.RWMutex
-
-	isOwner   bool
-	ownerLock sync.Mutex
+	isOwner        bool
+	ownerLock      sync.Mutex
+	pasteSupported bool
 
 	initialized bool
 

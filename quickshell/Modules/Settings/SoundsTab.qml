@@ -7,6 +7,43 @@ import qs.Modules.Settings.Widgets
 Item {
     id: root
 
+    readonly property string multimediaPackage: {
+        const id = (SystemUpdateService.distribution || "").toLowerCase();
+        if (id.includes("suse"))
+            return "qt6-multimedia-imports";
+        switch (id) {
+        case "fedora":
+        case "fedora-asahi-remix":
+        case "nobara":
+        case "bazzite":
+        case "bluefin":
+        case "ultramarine":
+        case "evernight":
+            return "qt6-qtmultimedia";
+        case "debian":
+        case "ubuntu":
+        case "linuxmint":
+        case "pop":
+        case "elementary":
+        case "zorin":
+            return "qml6-module-qtmultimedia";
+        case "arch":
+        case "archarm":
+        case "archcraft":
+        case "cachyos":
+        case "catos":
+        case "endeavouros":
+        case "manjaro":
+        case "garuda":
+        case "artix":
+        case "obarun":
+        case "xerolinux":
+            return "qt6-multimedia";
+        default:
+            return I18n.tr("the Qt 6 Multimedia QML module");
+        }
+    }
+
     DankFlickable {
         anchors.fill: parent
         clip: true
@@ -155,7 +192,7 @@ Item {
                 width: parent.width
                 height: notAvailableText.implicitHeight + Theme.spacingM * 2
                 radius: Theme.cornerRadius
-                color: Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.12)
+                color: Theme.warningHover
                 visible: !AudioService.soundsAvailable
 
                 Row {
@@ -173,7 +210,7 @@ Item {
                     StyledText {
                         id: notAvailableText
                         font.pixelSize: Theme.fontSizeSmall
-                        text: I18n.tr("System sounds are not available. Install %1 for sound support.").arg("qt6-multimedia")
+                        text: I18n.tr("System sounds are not available. Install %1 for sound support.").arg(root.multimediaPackage)
                         wrapMode: Text.WordWrap
                         width: parent.width - Theme.iconSizeSmall - Theme.spacingM
                         anchors.verticalCenter: parent.verticalCenter

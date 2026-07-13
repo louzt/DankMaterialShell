@@ -684,6 +684,10 @@ Notepad/scratchpad modal control for quick note-taking.
 - `open` - Show notepad modal
 - `close` - Hide notepad modal
 - `toggle` - Toggle notepad modal visibility
+- `openFile <path>` - Show notepad and load a file into a tab, reusing an existing tab if that file is already open
+  - Parameters: `path` - Absolute path to a file. Empty path behaves like `open`.
+  - Returns: Success/failure message
+  - This is what `com.danklinux.dms.notepad.desktop`'s `Exec=dms ipc call notepad openFile %f` uses so Notepad shows up in "Open With" pickers for text files.
 - `expand` - Expand the active notepad width and open it if hidden
 - `collapse` - Collapse the active notepad width without changing visibility
 - `toggleExpand` - Toggle the active notepad width between collapsed and expanded

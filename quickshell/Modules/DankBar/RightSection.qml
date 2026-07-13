@@ -13,12 +13,16 @@ Item {
     property real barThickness: 48
     property real barSpacing: 4
     property var barConfig: null
+    // hardening/notification-suite: null guard on widgetsModel. See
+    // LeftSection.qml for the full rationale.
+    readonly property var safeModel: widgetsModel || []
     property var blurBarWindow: null
     property real sectionAvailablePrimarySize: 0
     property bool overrideAxisLayout: false
     property bool forceVerticalLayout: false
 
     readonly property bool isVertical: overrideAxisLayout ? forceVerticalLayout : (axis?.isVertical ?? false)
+    property alias widgetLayoutLoader: layoutLoader
 
     implicitHeight: layoutLoader.item ? layoutLoader.item.implicitHeight : 0
     implicitWidth: layoutLoader.item ? layoutLoader.item.implicitWidth : 0
@@ -42,10 +46,11 @@ Item {
             anchors.right: parent ? parent.right : undefined
             Repeater {
                 id: rowRepeater
-                model: root.widgetsModel
+                model: root.safeModel
                 Item {
                     readonly property real rowSpacing: parent.widgetSpacing
                     property var itemData: modelData
+                    visible: widgetLoader.active && widgetLoader.widgetEnabled
                     width: widgetLoader.item ? widgetLoader.item.width : 0
                     height: widgetLoader.item ? widgetLoader.item.height : 0
                     WidgetHost {
@@ -88,11 +93,12 @@ Item {
             spacing: widgetSpacing
             Repeater {
                 id: columnRepeater
-                model: root.widgetsModel
+                model: root.safeModel
                 Item {
                     width: parent.width
                     readonly property real columnSpacing: parent.widgetSpacing
                     property var itemData: modelData
+                    visible: widgetLoader.active && widgetLoader.widgetEnabled
                     height: widgetLoader.item ? widgetLoader.item.height : 0
                     WidgetHost {
                         id: widgetLoader

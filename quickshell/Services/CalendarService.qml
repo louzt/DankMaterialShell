@@ -63,6 +63,7 @@ Singleton {
         id: dankBackend
         enabled: root.backendPref === "dankcal" || root.backendPref === "auto"
         onEventsByDateChanged: root.mergeEvents()
+        onTasksByDateChanged: root.mergeEvents()
         onConnectedChanged: {
             if (connected && root._rangeSet)
                 root.loadEvents(root.lastStartDate, root.lastEndDate);
@@ -198,6 +199,17 @@ Singleton {
     }
 
     function addTaskForDate(date, text) {
+        const taskCal = isDankActive && dankBackend.connected ? dankBackend.defaultTaskCalendar() : null;
+        if (taskCal) {
+            const due = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            dankBackend.createTask({
+                "calendarId": taskCal.id,
+                "summary": text,
+                "allDay": true,
+                "due": due.toISOString()
+            });
+            return;
+        }
         let dateKey = Qt.formatDate(date, "yyyy-MM-dd");
         let tasks = Object.assign({}, root.localTasks);
         if (!tasks[dateKey])
@@ -214,6 +226,13 @@ Singleton {
     }
 
     function toggleTask(taskId) {
+        if (taskId.startsWith("vtodo_")) {
+            const id = taskId.slice(6);
+            const task = dankBackend.taskById(id);
+            if (task)
+                dankBackend.completeTask(id, !task.completed);
+            return;
+        }
         let cleanId = taskId.replace("task_", "");
         let tasks = Object.assign({}, root.localTasks);
         let updated = false;
@@ -237,6 +256,10 @@ Singleton {
     }
 
     function removeTask(taskId) {
+        if (taskId.startsWith("vtodo_")) {
+            dankBackend.deleteTask(taskId.slice(6));
+            return;
+        }
         let cleanId = taskId.replace("task_", "");
         let tasks = Object.assign({}, root.localTasks);
         let updated = false;
@@ -283,6 +306,12 @@ Singleton {
     }
 
     function editTask(taskId, newText) {
+        if (taskId.startsWith("vtodo_")) {
+            dankBackend.updateTask(taskId.slice(6), {
+                "summary": newText
+            });
+            return;
+        }
         let cleanId = taskId.replace("task_", "");
         let tasks = Object.assign({}, root.localTasks);
         let updated = false;
@@ -305,6 +334,17 @@ Singleton {
         }
     }
 
+    function _mergeInto(merged, byDate) {
+        for (let dateKey in byDate) {
+            if (!merged[dateKey])
+                merged[dateKey] = [];
+            for (let event of byDate[dateKey]) {
+                if (!merged[dateKey].some(e => e.id === event.id))
+                    merged[dateKey].push(event);
+            }
+        }
+    }
+
     function mergeEvents() {
         let merged = {};
         let backendEvents = _activeBackendEventsByDate();
@@ -312,14 +352,9 @@ Singleton {
         for (let dateKey in backendEvents)
             merged[dateKey] = [].concat(backendEvents[dateKey]);
 
-        for (let dateKey in root.taskEventsByDate) {
-            if (!merged[dateKey])
-                merged[dateKey] = [];
-            for (let event of root.taskEventsByDate[dateKey]) {
-                if (!merged[dateKey].some(e => e.id === event.id))
-                    merged[dateKey].push(event);
-            }
-        }
+        _mergeInto(merged, root.taskEventsByDate);
+        if (isDankActive)
+            _mergeInto(merged, dankBackend.tasksByDate);
 
         for (let dateKey in merged) {
             let list = merged[dateKey];

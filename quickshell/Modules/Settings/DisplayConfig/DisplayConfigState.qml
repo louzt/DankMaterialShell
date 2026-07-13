@@ -402,6 +402,17 @@ Singleton {
     }
 
     // Convert monitors.json config entry → internal outputsData map
+    function profileKeyMatchesOutput(outputId, output, name) {
+        if (name === outputId || getOutputIdentifier(output, name) === outputId)
+            return true;
+        if (!outputId.startsWith("desc:") || !output?.make)
+            return false;
+        const want = outputId.slice(5).trim();
+        const full = [output.make, output.model, output.serial].filter(p => p).join(" ").replace(/,/g, "");
+        const noSerial = [output.make, output.model].filter(p => p).join(" ").replace(/,/g, "");
+        return want === full || want === noSerial || full.startsWith(want + " ");
+    }
+
     function generateOutputsDataFromConfig(configEntry) {
         const result = {};
         const cfgOutputs = configEntry.outputs || {};
@@ -410,20 +421,20 @@ Singleton {
             // Find matching live output to get modes list
             let liveOutput = null;
             for (const name in outputs) {
-                if (getOutputIdentifier(outputs[name], name) === outputId || name === outputId) {
+                if (profileKeyMatchesOutput(outputId, outputs[name], name)) {
                     liveOutput = outputs[name];
                     break;
                 }
             }
             const liveModes = liveOutput?.modes || [];
-            let currentMode = liveModes.findIndex(m => {
+            const currentMode = liveModes.findIndex(m => {
                 const s = m.width + "x" + m.height + "@" + (m.refresh_rate / 1000).toFixed(3);
                 return s === cfg.mode;
             });
-            if (currentMode < 0 && liveModes.length > 0)
-                currentMode = 0;
             const entry = {
                 "name": outputId,
+                "explicitIdentifier": true,
+                "configured_mode": cfg.mode || "",
                 "make": liveOutput?.make || "",
                 "model": liveOutput?.model || "",
                 "serial": liveOutput?.serial || "",
@@ -703,6 +714,37 @@ Singleton {
         }
     }
 
+    function configEntryMatchesLiveLayout(configEntry) {
+        const cfgOutputs = configEntry.outputs || {};
+        for (const outputId in cfgOutputs) {
+            const cfg = cfgOutputs[outputId];
+            let live = null;
+            for (const name in outputs) {
+                if (profileKeyMatchesOutput(outputId, outputs[name], name)) {
+                    live = outputs[name];
+                    break;
+                }
+            }
+            if (!live)
+                return false;
+            if ((cfg.disabled ?? false) !== !(live.enabled ?? true))
+                return false;
+            if (cfg.disabled)
+                continue;
+            const mode = (live.modes && live.current_mode >= 0) ? live.modes[live.current_mode] : null;
+            const modeStr = mode ? mode.width + "x" + mode.height + "@" + (mode.refresh_rate / 1000).toFixed(3) : null;
+            if (cfg.mode && modeStr !== cfg.mode)
+                return false;
+            if ((cfg.position?.x ?? 0) !== (live.logical?.x ?? 0) || (cfg.position?.y ?? 0) !== (live.logical?.y ?? 0))
+                return false;
+            if (Math.abs((cfg.scale ?? 1.0) - (live.logical?.scale ?? 1.0)) > 0.001)
+                return false;
+            if ((cfg.transform ?? "Normal") !== (live.logical?.transform ?? "Normal"))
+                return false;
+        }
+        return true;
+    }
+
     function applyAutoConfig() {
         if (!profilesReady || !SettingsData.displayProfileAutoSelect || manualActivation || !currentOutputSet.length)
             return;
@@ -710,6 +752,10 @@ Singleton {
         readMonitorsJson(data => {
             const match = findConfigEntryByFingerprint(data, currentOutputSet, true);
             if (match) {
+                if (configEntryMatchesLiveLayout(match.entry)) {
+                    SettingsData.setActiveDisplayProfile(CompositorService.compositor, match.entry.id);
+                    return;
+                }
                 applyConfigEntry(match.entry, match.entry.id, "", false);
                 return;
             }
@@ -843,6 +889,14 @@ Singleton {
     Connections {
         target: CompositorService
         function onCompositorChanged() {
+            root.checkIncludeStatus();
+        }
+    }
+
+    Connections {
+        target: NiriService
+        enabled: CompositorService.isNiri
+        function onConfigReloaded() {
             root.checkIncludeStatus();
         }
     }
@@ -1479,6 +1533,7 @@ Singleton {
                     }));
             map[output.name] = {
                 "name": output.name,
+                "enabled": output.enabled ?? true,
                 "make": output.make || "",
                 "model": output.model || "",
                 "serial": output.serialNumber || "",
@@ -1838,7 +1893,7 @@ Singleton {
 
     function getHyprlandOutputIdentifier(output, outputName) {
         if (SettingsData.displayNameMode === "model" && output?.make && output?.model)
-            return ("desc:" + output.make + " " + output.model + " " + (output?.serial || "Unknown")).replace(/,/g, "");
+            return ("desc:" + [output.make, output.model, output.serial].filter(p => p).join(" ")).replace(/,/g, "");
         return outputName;
     }
 
@@ -2187,19 +2242,17 @@ Singleton {
             outputs: outputConfigs
         };
 
-        if (profileId) {
-            readMonitorsJson(data => {
-                const match = findConfigEntryById(data, profileId);
-                if (match) {
-                    data.configurations[match.index] = {
-                        "id": match.entry.id,
-                        "name": match.entry.name || "",
-                        "outputs": outputConfigs
-                    };
-                    writeMonitorsJson(data, null);
-                }
-            });
-        }
+        readMonitorsJson(data => {
+            const match = profileId ? findConfigEntryById(data, profileId) : findConfigEntryByFingerprint(data, currentOutputSet, true);
+            if (!match)
+                return;
+            data.configurations[match.index] = {
+                "id": match.entry.id,
+                "name": match.entry.name || "",
+                "outputs": outputConfigs
+            };
+            writeMonitorsJson(data, null);
+        });
 
         clearPendingChanges();
         changesConfirmed();

@@ -1,10 +1,12 @@
 import QtQuick
 import Quickshell
 import Quickshell.Hyprland
+import Quickshell.I3
 import qs.Common
 import qs.Modules.Plugins
 import qs.Services
 import qs.Widgets
+import "../../../Common/LayoutCodes.js" as LayoutCodes
 
 BasePill {
     id: root
@@ -12,102 +14,6 @@ BasePill {
     property var widgetData: null
     property bool compactMode: widgetData?.keyboardLayoutNameCompactMode !== undefined ? widgetData.keyboardLayoutNameCompactMode : SettingsData.keyboardLayoutNameCompactMode
     property bool showIcon: widgetData?.keyboardLayoutNameShowIcon !== undefined ? widgetData.keyboardLayoutNameShowIcon : SettingsData.keyboardLayoutNameShowIcon
-    readonly property var langCodes: ({
-            "afrikaans": "af",
-            "albanian": "sq",
-            "amharic": "am",
-            "arabic": "ar",
-            "armenian": "hy",
-            "azerbaijani": "az",
-            "basque": "eu",
-            "belarusian": "be",
-            "bengali": "bn",
-            "bosnian": "bs",
-            "bulgarian": "bg",
-            "burmese": "my",
-            "catalan": "ca",
-            "chinese": "zh",
-            "croatian": "hr",
-            "czech": "cs",
-            "danish": "da",
-            "dutch": "nl",
-            "english": "en",
-            "esperanto": "eo",
-            "estonian": "et",
-            "filipino": "fil",
-            "finnish": "fi",
-            "french": "fr",
-            "galician": "gl",
-            "georgian": "ka",
-            "german": "de",
-            "greek": "el",
-            "gujarati": "gu",
-            "hausa": "ha",
-            "hebrew": "he",
-            "hindi": "hi",
-            "hungarian": "hu",
-            "icelandic": "is",
-            "igbo": "ig",
-            "indonesian": "id",
-            "irish": "ga",
-            "italian": "it",
-            "japanese": "ja",
-            "javanese": "jv",
-            "kannada": "kn",
-            "kazakh": "kk",
-            "khmer": "km",
-            "korean": "ko",
-            "kurdish": "ku",
-            "kyrgyz": "ky",
-            "lao": "lo",
-            "latvian": "lv",
-            "lithuanian": "lt",
-            "luxembourgish": "lb",
-            "macedonian": "mk",
-            "malay": "ms",
-            "malayalam": "ml",
-            "maltese": "mt",
-            "maori": "mi",
-            "marathi": "mr",
-            "mongolian": "mn",
-            "nepali": "ne",
-            "norwegian": "no",
-            "pashto": "ps",
-            "persian": "fa",
-            "iranian": "fa",
-            "farsi": "fa",
-            "polish": "pl",
-            "portuguese": "pt",
-            "punjabi": "pa",
-            "romanian": "ro",
-            "russian": "ru",
-            "serbian": "sr",
-            "sindhi": "sd",
-            "sinhala": "si",
-            "slovak": "sk",
-            "slovenian": "sl",
-            "somali": "so",
-            "spanish": "es",
-            "swahili": "sw",
-            "swedish": "sv",
-            "tajik": "tg",
-            "tamil": "ta",
-            "tatar": "tt",
-            "telugu": "te",
-            "thai": "th",
-            "tibetan": "bo",
-            "turkish": "tr",
-            "turkmen": "tk",
-            "ukrainian": "uk",
-            "urdu": "ur",
-            "uyghur": "ug",
-            "uzbek": "uz",
-            "vietnamese": "vi",
-            "welsh": "cy",
-            "yiddish": "yi",
-            "yoruba": "yo",
-            "zulu": "zu"
-        })
     readonly property var validVariants: ["US", "UK", "GB", "AZERTY", "QWERTY", "Dvorak", "Colemak", "Mac", "Intl", "International"]
     property string currentLayout: {
         if (CompositorService.isNiri) {
@@ -140,11 +46,7 @@ BasePill {
 
                 StyledText {
                     text: {
-                        if (!root.currentLayout)
-                            return "";
-                        const lang = root.currentLayout.split(" ")[0].toLowerCase();
-                        const code = root.langCodes[lang] || lang.substring(0, 2);
-                        return code.toUpperCase();
+                        return LayoutCodes.layoutCode(root.currentLayout);
                     }
                     font.pixelSize: Theme.barTextSize(root.barThickness, root.barConfig?.fontScale, root.barConfig?.maximizeWidgetText)
                     color: Theme.widgetTextColor
@@ -174,7 +76,7 @@ BasePill {
                             const match = root.currentLayout.match(/^(\S+)(?:.*\(([^)]+)\))?/);
                             if (match) {
                                 const lang = match[1].toLowerCase();
-                                const code = root.langCodes[lang] || lang.substring(0, 2);
+                                const code = LayoutCodes.LANG_CODES[lang] || lang.substring(0, 2);
                                 if (match[2]) {
                                     const variant = match[2].trim();
                                     const isValid = root.validVariants.some(v => variant.toUpperCase().includes(v.toUpperCase())) || variant.length <= 3;
@@ -183,7 +85,7 @@ BasePill {
                                 }
                                 return code.toUpperCase();
                             }
-                            return root.currentLayout.substring(0, 2).toUpperCase();
+                            return LayoutCodes.layoutCode(root.currentLayout);
                         }
                         return root.currentLayout;
                     }
@@ -209,6 +111,27 @@ BasePill {
                 Quickshell.execDetached(["hyprctl", "switchxkblayout", root.hyprlandKeyboard, "next"]);
             } else if (CompositorService.isMango) {
                 MangoService.cycleKeyboardLayout();
+            } else if (CompositorService.isSway) {
+                I3.dispatch("input type:keyboard xkb_switch_layout next");
+            }
+        }
+    }
+
+    Loader {
+        active: CompositorService.isSway
+        sourceComponent: I3IpcListener {
+            subscriptions: ["input"]
+            onIpcEvent: event => {
+                if (event.type !== "input")
+                    return;
+                try {
+                    const payload = JSON.parse(event.data);
+                    if (payload.change !== "xkb_layout")
+                        return;
+                    const name = payload.input?.xkb_active_layout_name;
+                    if (name)
+                        root.currentLayout = name;
+                } catch (e) {}
             }
         }
     }
@@ -225,12 +148,25 @@ BasePill {
     }
 
     Component.onCompleted: {
-        if (CompositorService.isHyprland) {
+        if (CompositorService.isHyprland || CompositorService.isSway) {
             updateLayout();
         }
     }
 
     function updateLayout() {
+        if (CompositorService.isSway) {
+            Proc.runCommand(null, ["swaymsg", "-t", "get_inputs", "-r"], (output, exitCode) => {
+                if (exitCode !== 0)
+                    return;
+                try {
+                    const inputs = JSON.parse(output);
+                    const kb = inputs.find(i => i.type === "keyboard" && i.xkb_active_layout_name);
+                    if (kb)
+                        root.currentLayout = kb.xkb_active_layout_name;
+                } catch (e) {}
+            });
+            return;
+        }
         if (CompositorService.isHyprland) {
             Proc.runCommand(null, ["hyprctl", "-j", "devices"], (output, exitCode) => {
                 if (exitCode !== 0) {

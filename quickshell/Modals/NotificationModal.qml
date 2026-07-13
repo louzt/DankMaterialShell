@@ -210,12 +210,14 @@ DankModal {
                 NotificationHeader {
                     id: notificationHeader
                     keyboardController: modalKeyboardController
+                    transientSurfaceTracker: notificationModal.transientSurfaceTracker
                     onCurrentTabChanged: notificationModal.currentTab = currentTab
                     Component.onCompleted: notificationModal.notificationHeaderRef = notificationHeader
                 }
 
                 NotificationSettings {
                     id: notificationSettings
+                    transientSurfaceTracker: notificationModal.transientSurfaceTracker
                     expanded: notificationHeader.showSettings
                 }
 
@@ -225,6 +227,7 @@ DankModal {
                     height: parent.height - y
                     visible: notificationHeader.currentTab === 0
                     keyboardController: modalKeyboardController
+                    transientSurfaceTracker: notificationModal.transientSurfaceTracker
                     Component.onCompleted: {
                         notificationModal.notificationListRef = notificationList;
                         if (modalKeyboardController) {

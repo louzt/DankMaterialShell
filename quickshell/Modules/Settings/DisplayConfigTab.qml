@@ -104,7 +104,7 @@ Item {
                 height: profileSection.implicitHeight + Theme.spacingL * 2
                 radius: Theme.cornerRadius
                 color: Theme.surfaceContainerHigh
-                border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.2)
+                border.color: Theme.outlineHeavy
                 border.width: 0
                 visible: DisplayConfigState.hasOutputBackend
 
@@ -378,7 +378,7 @@ Item {
 
                                     Column {
                                         anchors.verticalCenter: parent.verticalCenter
-                                        spacing: 2
+                                        spacing: Theme.spacingXXS
 
                                         StyledText {
                                             text: {
@@ -429,7 +429,7 @@ Item {
                 height: monitorConfigSection.implicitHeight + Theme.spacingL * 2
                 radius: Theme.cornerRadius
                 color: Theme.surfaceContainerHigh
-                border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.2)
+                border.color: Theme.outlineHeavy
                 border.width: 0
                 visible: DisplayConfigState.hasOutputBackend
 
@@ -535,6 +535,7 @@ Item {
                     }
 
                     MonitorCanvas {
+                        id: monitorCanvas
                         width: parent.width
                     }
 
@@ -631,5 +632,18 @@ Item {
         id: confirmationModal
         onConfirmed: DisplayConfigState.confirmChanges(root.selectedProfileId)
         onReverted: DisplayConfigState.revertChanges()
+    }
+
+    readonly property bool identifyConfigured: {
+        if (!DisplayConfigState.hasOutputBackend || DisplayConfigState.readOnly)
+            return false;
+        if (!["niri", "hyprland", "mango"].includes(CompositorService.compositor))
+            return true;
+        return DisplayConfigState.includeStatus.included;
+    }
+
+    Loader {
+        active: root.visible && root.identifyConfigured && monitorCanvas.identifyActive
+        sourceComponent: MonitorIdentifyOverlay {}
     }
 }

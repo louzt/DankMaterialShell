@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Services.Notifications
 import qs.Common
+import qs.Modules.Notifications
 import qs.Services
 import qs.Widgets
 
@@ -69,8 +70,25 @@ PanelWindow {
     property real _storedTopMargin: 0
     property real _storedBottomMargin: 0
     property bool _inlineGeometryReady: false
+    readonly property bool contextMenuActive: transientSurfaces.active
+
+    TransientSurfaceTracker {
+        id: transientSurfaces
+    }
     readonly property bool directionalEffect: Theme.isDirectionalEffect
     readonly property bool depthEffect: Theme.isDepthEffect
+    // hardening/notification-suite: dynamic radius. When the body is
+    // collapsed (closed pill), the radius is fully rounded so the
+    // notification reads as a single line. When the body is expanded,
+    // the radius eases back toward Theme.cornerRadius so the
+    // multi-line body has straight edges and reads as a card.
+    // Connected frame mode keeps its own radius (no animation there).
+    readonly property real currentCardRadius: {
+        if (win.connectedFrameMode) return Theme.connectedSurfaceRadius;
+        const base = Theme.cornerRadius;
+        if (descriptionExpanded) return base;
+        return Math.min(width, height) / 2;
+    }
     readonly property real entryTravel: {
         const base = Math.abs(Theme.effectAnimOffset);
         if (directionalEffect) {
@@ -121,6 +139,7 @@ PanelWindow {
         if (exiting || _isDestroying) {
             return;
         }
+        closeTransientUi();
         exiting = true;
         exitStarted();
         popupChromeGeometryChanged();
@@ -134,6 +153,7 @@ PanelWindow {
         if (_isDestroying) {
             return;
         }
+        closeTransientUi();
         _isDestroying = true;
         exiting = true;
         visible = false;
@@ -146,12 +166,31 @@ PanelWindow {
             return;
         }
 
+        closeTransientUi();
         _finalized = true;
         _isDestroying = true;
         exitWatchdog.stop();
         wrapperConn.enabled = false;
         wrapperConn.target = null;
         win.exitFinished();
+    }
+
+    function closeTransientUi() {
+        transientSurfaces.closeAll();
+        popupContextMenuLoader.active = false;
+    }
+
+    function dismissPopupReliably() {
+        if (!notificationData || win.exiting || win._isDestroying)
+            return;
+        if (notificationData.timer)
+            notificationData.timer.stop();
+        notificationData.popup = false;
+        // Fallback if wrapperConn.onPopupChanged doesn't reach startExit.
+        Qt.callLater(() => {
+            if (!win.exiting && !win._isDestroying)
+                startExit();
+        });
     }
 
     visible: !_finalized
@@ -273,6 +312,7 @@ PanelWindow {
     }
     onNotificationDataChanged: {
         if (!_isDestroying) {
+            closeTransientUi();
             if (SettingsData.notificationPopupPrivacyMode)
                 descriptionExpanded = false;
             wrapperConn.target = win.notificationData || null;
@@ -285,6 +325,7 @@ PanelWindow {
         }
     }
     Component.onDestruction: {
+        closeTransientUi();
         _isDestroying = true;
         exitWatchdog.stop();
         if (notificationData && notificationData.timer) {
@@ -639,17 +680,26 @@ PanelWindow {
             shadowBlurPx: content.shadowBlurPx
             shadowOffsetX: content.shadowOffsetX
             shadowOffsetY: content.shadowOffsetY
-            shadowColor: content.shadowsAllowed && content.elevLevel ? Theme.elevationShadowColor(content.elevLevel) : "transparent"
+            shadowColor: content.shadowsAllowed && content.elevLevel ? Theme.elevationShadowColor(content.elevLevel) : Theme.withAlpha(Theme.elevationShadowColor(content.elevLevel), 0)
             shadowEnabled: !win._isDestroying && win.screenValid && content.shadowsAllowed && !win.connectedFrameMode
 
-            sourceX: content.shadowRenderPadding + content.cardInset
-            sourceY: content.shadowRenderPadding + content.cardInset
-            sourceWidth: Math.max(0, content.width - (content.cardInset * 2))
-            sourceHeight: Math.max(0, content.height - (content.cardInset * 2))
-            targetRadius: win.connectedFrameMode ? Theme.connectedSurfaceRadius : Theme.cornerRadius
-            targetColor: win.connectedFrameMode ? Theme.floatingSurface : Theme.readableSurface
-            borderColor: win.notificationData && win.notificationData.urgency === NotificationUrgency.Critical ? Theme.withAlpha(Theme.primary, 0.3) : Theme.withAlpha(Theme.outline, 0.08)
-            borderWidth: win.notificationData && win.notificationData.urgency === NotificationUrgency.Critical ? 2 : 0
+            sourceRect.anchors.fill: undefined
+            sourceRect.x: content.shadowRenderPadding + content.cardInset
+            sourceRect.y: content.shadowRenderPadding + content.cardInset
+            sourceRect.width: Math.max(0, content.width - (content.cardInset * 2))
+            sourceRect.height: Math.max(0, content.height - (content.cardInset * 2))
+            sourceRect.radius: win.currentCardRadius
+            // hardening/notification-suite: ease the radius when the body
+            // expands. Same easing as the inline expand animation.
+            Behavior on radius {
+                NumberAnimation { duration: Theme.shortDuration; easing.type: Theme.standardEasing }
+            }
+            sourceRect.color: win.connectedFrameMode ? Theme.floatingSurface : Theme.readableSurface
+            sourceRect.antialiasing: true
+            sourceRect.layer.enabled: false
+            sourceRect.layer.textureSize: Qt.size(0, 0)
+            sourceRect.border.color: notificationData && notificationData.urgency === NotificationUrgency.Critical ? Theme.withAlpha(Theme.primary, 0.3) : Theme.withAlpha(Theme.outline, 0.08)
+            sourceRect.border.width: notificationData && notificationData.urgency === NotificationUrgency.Critical ? 2 : 0
         }
 
         // Keep critical accent outside shadow rendering so connected mode still shows it.
@@ -658,7 +708,8 @@ PanelWindow {
             y: content.cardInset
             width: Math.max(0, content.width - content.cardInset * 2)
             height: Math.max(0, content.height - content.cardInset * 2)
-            radius: win.connectedFrameMode ? Theme.connectedSurfaceRadius : Theme.cornerRadius
+            radius: win.currentCardRadius
+            Behavior on radius { NumberAnimation { duration: Theme.shortDuration; easing.type: Theme.standardEasing } }
             visible: win.notificationData && win.notificationData.urgency === NotificationUrgency.Critical
             opacity: 1
             clip: true
@@ -688,9 +739,10 @@ PanelWindow {
         Rectangle {
             anchors.fill: parent
             anchors.margins: content.cardInset
-            radius: win.connectedFrameMode ? Theme.connectedSurfaceRadius : Theme.cornerRadius
+            radius: win.currentCardRadius
+            Behavior on radius { NumberAnimation { duration: Theme.shortDuration; easing.type: Theme.standardEasing } }
             color: "transparent"
-            border.color: win.connectedFrameMode ? "transparent" : BlurService.borderColor
+            border.color: win.connectedFrameMode ? Theme.withAlpha(BlurService.borderColor, 0) : BlurService.borderColor
             border.width: win.connectedFrameMode ? 0 : BlurService.borderWidth
             z: 100
             scale: content.chromeScale
@@ -715,7 +767,7 @@ PanelWindow {
                     if (cardHoverHandler.hovered) {
                         if (notificationData.timer)
                             notificationData.timer.stop();
-                    } else if (notificationData.popup && notificationData.timer) {
+                    } else if (!win.contextMenuActive && notificationData.popup && notificationData.timer) {
                         notificationData.timer.restart();
                     }
                 }
@@ -802,6 +854,7 @@ PanelWindow {
 
                 DankCircularImage {
                     id: iconContainer
+                    cacheImages: false
 
                     readonly property string rawImage: notificationData?.image || ""
                     readonly property string iconFromImage: {
@@ -813,8 +866,8 @@ PanelWindow {
                         const icon = iconFromImage;
                         return icon.startsWith("material:") || icon.startsWith("svg:") || icon.startsWith("unicode:") || icon.startsWith("image:");
                     }
-                    readonly property bool hasNotificationImage: rawImage !== "" && !rawImage.startsWith("image://icon/")
-                    readonly property bool needsImagePersist: hasNotificationImage && rawImage.startsWith("image://qsimage/") && !notificationData.persistedImagePath
+                    readonly property bool hasNotificationImage: rawImage !== "" && (!rawImage.startsWith("image://icon/") || iconFromImage.startsWith("/"))
+                    readonly property bool needsImagePersist: hasNotificationImage && (rawImage.startsWith("image://qsimage/") || iconFromImage.startsWith("/")) && !notificationData.persistedImagePath
 
                     width: popupIconSize
                     height: popupIconSize
@@ -873,6 +926,90 @@ PanelWindow {
                     }
                 }
 
+                // hardening/notification-suite: dedicated status dot.
+                // Sits to the LEFT of the app icon. NOT a reused icon —
+                // explicit Rectangle so it cannot collide with the
+                // weather/material icon family.
+                Item {
+                    id: statusDot
+                    // 10-12px hit area centered vertically on the icon
+                    width: 12
+                    height: 12
+                    anchors.left: iconContainer.left
+                    anchors.leftMargin: -6
+                    anchors.verticalCenter: iconContainer.verticalCenter
+                    visible: win.hasValidData
+                    z: 5
+
+                    readonly property bool isCriticalUnattended:
+                        notificationData
+                        && notificationData.urgency === NotificationUrgency.Critical
+                        && (!notificationData.isRead || !NotificationService.isRead(notificationData.notification?.id))
+                    readonly property bool isSnoozed:
+                        notificationData && (notificationData.snoozed === true || notificationData.isSnoozed === true)
+                    readonly property bool isUnread:
+                        notificationData
+                        && notificationData.urgency !== NotificationUrgency.Critical
+                        && !NotificationService.isRead(notificationData.notification?.id)
+
+                    readonly property color dotColor: {
+                        if (!notificationData)
+                            return "transparent"
+                        if (statusDot.isCriticalUnattended)
+                            return Theme.error
+                        if (statusDot.isSnoozed)
+                            return Theme.warning
+                        if (statusDot.isUnread)
+                            return Theme.primary
+                        return "transparent"
+                    }
+                    readonly property bool shouldPulse:
+                        statusDot.isCriticalUnattended || statusDot.isUnread
+                    readonly property real baseAlpha: statusDot.isCriticalUnattended
+                        ? 1.0
+                        : statusDot.isUnread ? 0.55 : 1.0
+
+                    Rectangle {
+                        id: dot
+                        anchors.centerIn: parent
+                        width: 7
+                        height: 7
+                        radius: width / 2
+                        visible: statusDot.dotColor.a > 0 || statusDot.dotColor !== "transparent"
+                        color: statusDot.dotColor
+                        opacity: statusDot.baseAlpha
+                        // Subtle ring to lift the dot off busy icons
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.margins: -1
+                            radius: width / 2
+                            color: "transparent"
+                            border.color: Qt.rgba(0, 0, 0, 0.35)
+                            border.width: 1
+                            z: -1
+                        }
+                    }
+
+                    SequentialAnimation {
+                        running: statusDot.shouldPulse
+                        loops: Animation.Infinite
+                        NumberAnimation {
+                            target: dot
+                            property: "opacity"
+                            to: statusDot.isCriticalUnattended ? 0.45 : 0.30
+                            duration: 1100
+                            easing.type: Easing.InOutSine
+                        }
+                        NumberAnimation {
+                            target: dot
+                            property: "opacity"
+                            to: statusDot.baseAlpha
+                            duration: 1100
+                            easing.type: Easing.InOutSine
+                        }
+                    }
+                }
+
                 Column {
                     id: textContainer
 
@@ -891,7 +1028,7 @@ PanelWindow {
                         StyledText {
                             id: headerAppNameText
                             text: notificationData ? (notificationData.appName || "") : ""
-                            color: Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.7)
+                            color: Theme.surfaceTextMedium
                             font.pixelSize: Theme.fontSizeSmall
                             font.weight: Font.Normal
                             elide: Text.ElideRight
@@ -902,7 +1039,7 @@ PanelWindow {
                         StyledText {
                             id: headerSeparator
                             text: (headerAppNameText.text.length > 0 && headerTimeText.text.length > 0) ? " • " : ""
-                            color: Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.7)
+                            color: Theme.surfaceTextMedium
                             font.pixelSize: Theme.fontSizeSmall
                             font.weight: Font.Normal
                         }
@@ -910,12 +1047,11 @@ PanelWindow {
                         StyledText {
                             id: headerTimeText
                             text: notificationData ? (notificationData.timeStr || "") : ""
-                            color: Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.7)
+                            color: Theme.surfaceTextMedium
                             font.pixelSize: Theme.fontSizeSmall
                             font.weight: Font.Normal
                         }
                     }
-
 
                     StyledText {
                         text: notificationData ? (notificationData.summary || "") : ""
@@ -991,8 +1127,7 @@ PanelWindow {
                 z: 15
 
                 onClicked: {
-                    if (notificationData && !win.exiting)
-                        notificationData.popup = false;
+                    dismissPopupReliably();
                 }
             }
 
@@ -1041,7 +1176,7 @@ PanelWindow {
                         width: Math.max(actionText.implicitWidth + Theme.spacingM, Theme.notificationActionMinWidth)
                         height: actionButtonHeight
                         radius: Theme.notificationButtonCornerRadius
-                        color: isHovered ? Theme.withAlpha(Theme.primary, Theme.stateLayerHover) : "transparent"
+                        color: isHovered ? Theme.withAlpha(Theme.primary, Theme.stateLayerHover) : Theme.withAlpha(Theme.primary, 0)
 
                         StyledText {
                             id: actionText
@@ -1064,8 +1199,7 @@ PanelWindow {
                             onClicked: {
                                 if (modelData && modelData.invoke)
                                     modelData.invoke();
-                                if (notificationData && !win.exiting)
-                                    notificationData.popup = false;
+                                dismissPopupReliably();
                             }
                         }
                     }
@@ -1093,7 +1227,7 @@ PanelWindow {
                 width: Math.max(clearTextLabel.implicitWidth + Theme.spacingM, Theme.notificationActionMinWidth)
                 height: actionButtonHeight
                 radius: Theme.notificationButtonCornerRadius
-                color: isHovered ? Theme.withAlpha(Theme.primary, Theme.stateLayerHover) : "transparent"
+                color: isHovered ? Theme.withAlpha(Theme.primary, Theme.stateLayerHover) : Theme.withAlpha(Theme.primary, 0)
                 z: 20
 
                 StyledText {
@@ -1133,7 +1267,12 @@ PanelWindow {
                     if (!notificationData || win.exiting)
                         return;
                     if (mouse.button === Qt.RightButton) {
-                        popupContextMenu.popup();
+                        popupContextMenuLoader.active = true;
+                        const menu = popupContextMenuLoader.item;
+                        if (menu) {
+                            const p = mapToItem(null, mouse.x, mouse.y);
+                            menu.showAt(win.margins.left + p.x, win.margins.top + p.y, win.screen);
+                        }
                     } else if (mouse.button === Qt.LeftButton) {
                         const canExpand = bodyText.hasMoreText || win.descriptionExpanded || (SettingsData.notificationPopupPrivacyMode && win.hasExpandableBody);
                         if (canExpand) {
@@ -1142,7 +1281,7 @@ PanelWindow {
                             notificationData.actions[0].invoke();
                             NotificationService.dismissNotification(notificationData);
                         } else {
-                            notificationData.popup = false;
+                            dismissPopupReliably();
                         }
                     }
                 }
@@ -1352,8 +1491,23 @@ PanelWindow {
         interval: 160
         repeat: false
         onTriggered: {
-            if (notificationData && notificationData.timer && !exiting && !_isDestroying)
+            if (notificationData && notificationData.timer && !contextMenuActive && !exiting && !_isDestroying)
                 notificationData.timer.start();
+        }
+    }
+
+    Connections {
+        target: popupContextMenuLoader.item
+        ignoreUnknownSignals: true
+
+        function onVisibleChanged() {
+            if (!notificationData?.timer || exiting || _isDestroying)
+                return;
+            if (win.contextMenuActive) {
+                notificationData.timer.stop();
+            } else if (!cardHoverHandler.hovered && notificationData.popup) {
+                notificationData.timer.restart();
+            }
         }
     }
 
@@ -1377,95 +1531,20 @@ PanelWindow {
         }
     }
 
-    Menu {
-        id: popupContextMenu
-        width: 220
-        contentHeight: 130
-        margins: -1
-        popupType: Popup.Window
-        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+    Loader {
+        id: popupContextMenuLoader
+        active: false
 
-        background: Rectangle {
-            color: Theme.withAlpha(Theme.surfaceContainer, Theme.popupTransparency)
-            radius: Theme.cornerRadius
-            border.width: 0
-            border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.12)
-        }
-
-        MenuItem {
-            id: setNotificationRulesItem
-            text: I18n.tr("Set notification rules")
-
-            contentItem: StyledText {
-                text: parent.text
-                font.pixelSize: Theme.fontSizeSmall
-                color: Theme.surfaceText
-                leftPadding: Theme.spacingS
-                verticalAlignment: Text.AlignVCenter
+        sourceComponent: NotificationContextMenu {
+            transientSurfaceTracker: transientSurfaces
+            appName: notificationData?.appName ?? ""
+            desktopEntry: notificationData?.desktopEntry ?? ""
+            onMuted: {
+                if (notificationData && !win.exiting)
+                    NotificationService.dismissNotification(notificationData);
             }
-
-            background: Rectangle {
-                color: parent.hovered ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08) : "transparent"
-                radius: Theme.cornerRadius / 2
-            }
-
-            onTriggered: {
-                const appName = notificationData?.appName || "";
-                const desktopEntry = notificationData?.desktopEntry || "";
-                SettingsData.addNotificationRuleForNotification(appName, desktopEntry);
-                PopoutService.openSettingsWithTab("notifications");
-            }
-        }
-
-        MenuItem {
-            id: muteUnmuteItem
-            readonly property bool isMuted: SettingsData.isAppMuted(notificationData?.appName || "", notificationData?.desktopEntry || "")
-            text: isMuted ? I18n.tr("Unmute popups for %1").arg(notificationData?.appName || I18n.tr("this app")) : I18n.tr("Mute popups for %1").arg(notificationData?.appName || I18n.tr("this app"))
-
-            contentItem: StyledText {
-                text: parent.text
-                font.pixelSize: Theme.fontSizeSmall
-                color: Theme.surfaceText
-                leftPadding: Theme.spacingS
-                verticalAlignment: Text.AlignVCenter
-            }
-
-            background: Rectangle {
-                color: parent.hovered ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08) : "transparent"
-                radius: Theme.cornerRadius / 2
-            }
-
-            onTriggered: {
-                const appName = notificationData?.appName || "";
-                const desktopEntry = notificationData?.desktopEntry || "";
-                if (isMuted) {
-                    SettingsData.removeMuteRuleForApp(appName, desktopEntry);
-                } else {
-                    SettingsData.addMuteRuleForApp(appName, desktopEntry);
-                    if (notificationData && !exiting)
-                        NotificationService.dismissNotification(notificationData);
-                }
-            }
-        }
-
-        MenuItem {
-            text: I18n.tr("Dismiss")
-
-            contentItem: StyledText {
-                text: parent.text
-                font.pixelSize: Theme.fontSizeSmall
-                color: Theme.surfaceText
-                leftPadding: Theme.spacingS
-                verticalAlignment: Text.AlignVCenter
-            }
-
-            background: Rectangle {
-                color: parent.hovered ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.08) : "transparent"
-                radius: Theme.cornerRadius / 2
-            }
-
-            onTriggered: {
-                if (notificationData && !exiting)
+            onDismissRequested: {
+                if (notificationData && !win.exiting)
                     NotificationService.dismissNotification(notificationData);
             }
         }

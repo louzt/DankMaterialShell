@@ -240,8 +240,10 @@ DankPopout {
             Connections {
                 target: root
                 function onShouldBeVisibleChanged() {
-                    if (root.shouldBeVisible)
-                        mainContainer.forceActiveFocus();
+                    if (!root.shouldBeVisible)
+                        return;
+                    mainContainer.forceActiveFocus();
+                    tabBar.snapIndicator();
                 }
             }
 
@@ -411,6 +413,7 @@ DankPopout {
                         anchors.fill: parent
                         active: root.currentTabId === "media"
                         visible: active
+                        asynchronous: true
                         sourceComponent: Component {
                             MediaPlayerTab {
                                 targetScreen: root.screen
@@ -447,6 +450,7 @@ DankPopout {
                         anchors.fill: parent
                         active: root.currentTabId === "wallpaper"
                         visible: active
+                        asynchronous: true
                         sourceComponent: Component {
                             WallpaperTab {
                                 active: true
@@ -458,11 +462,18 @@ DankPopout {
                         }
                     }
 
+                    DankSpinner {
+                        anchors.centerIn: parent
+                        size: 40
+                        visible: (wallpaperLoader.active && wallpaperLoader.status === Loader.Loading) || (mediaLoader.active && mediaLoader.status === Loader.Loading) || (weatherLoader.active && weatherLoader.status === Loader.Loading)
+                    }
+
                     Loader {
                         id: weatherLoader
                         anchors.fill: parent
                         active: root.currentTabId === "weather"
                         visible: active
+                        asynchronous: true
                         sourceComponent: Component {
                             WeatherTab {}
                         }

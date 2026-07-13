@@ -35,6 +35,10 @@ Item {
     property real _frozenMotionX: 0
     property real _frozenMotionY: 0
 
+    TransientSurfaceTracker {
+        id: transientSurfaces
+    }
+
     readonly property bool useHyprlandFocusGrab: CompositorService.useHyprlandFocusGrab
     readonly property var effectiveScreen: contentWindow.screen
     readonly property real screenWidth: effectiveScreen?.width ?? 1920
@@ -77,7 +81,7 @@ Item {
 
     readonly property string preferredConnectedBarSide: SettingsData.frameLauncherEmergeSide
 
-    readonly property bool frameConnectedMode: SettingsData.frameEnabled && Theme.isConnectedEffect && !!effectiveScreen && SettingsData.isScreenInPreferences(effectiveScreen, SettingsData.frameScreenPreferences)
+    readonly property bool frameConnectedMode: FrameTransitionState.effectiveFrameEnabled && Theme.isConnectedEffect && !!effectiveScreen && SettingsData.isScreenInPreferences(effectiveScreen, SettingsData.frameScreenPreferences)
 
     readonly property string resolvedConnectedBarSide: frameConnectedMode ? preferredConnectedBarSide : ""
 
@@ -168,7 +172,7 @@ Item {
         }
     }
     readonly property int borderWidth: SettingsData.dankLauncherV2BorderEnabled ? SettingsData.dankLauncherV2BorderThickness : 0
-    readonly property color effectiveBorderColor: connectedSurfaceOverride ? "transparent" : borderColor
+    readonly property color effectiveBorderColor: connectedSurfaceOverride ? Theme.withAlpha(borderColor, 0) : borderColor
     readonly property int effectiveBorderWidth: connectedSurfaceOverride ? 0 : borderWidth
     readonly property bool effectiveBlurEnabled: Theme.connectedSurfaceBlurEnabled
 
@@ -359,8 +363,10 @@ Item {
         contentVisible = true;
         spotlightContent.closeTransientUi?.();
 
+        const targetQuery = query || (SettingsData.rememberLastQuery ? (SessionData.launcherLastQuery || "") : "");
+
         if (spotlightContent.searchField) {
-            spotlightContent.searchField.text = query;
+            spotlightContent.searchField.text = targetQuery;
         }
         if (spotlightContent.controller) {
             var targetMode = mode || SessionData.getLauncherRestoreMode();
@@ -375,8 +381,8 @@ Item {
             spotlightContent.controller.collapsedSections = {};
             spotlightContent.controller.selectedFlatIndex = 0;
             spotlightContent.controller.selectedItem = null;
-            if (query) {
-                spotlightContent.controller.setSearchQuery(query);
+            if (targetQuery) {
+                spotlightContent.controller.setSearchQuery(targetQuery);
             } else {
                 spotlightContent.controller.searchQuery = "";
                 spotlightContent.controller.performSearch();
@@ -394,6 +400,8 @@ Item {
         closeCleanupTimer.stop();
         isClosing = false;
         openedFromOverview = false;
+        _edgeArmed = false;
+        _edgeBodyHover = false;
 
         animationsEnabled = false;
 
@@ -420,8 +428,10 @@ Item {
 
             Qt.callLater(() => {
                 root.keyboardActive = true;
-                if (root.spotlightContent && root.spotlightContent.searchField)
+                if (root.spotlightContent && root.spotlightContent.searchField) {
                     root.spotlightContent.searchField.forceActiveFocus();
+                    root.spotlightContent.searchField.selectAll();
+                }
             });
         });
     }
@@ -447,6 +457,9 @@ Item {
 
         keyboardActive = false;
         spotlightOpen = false;
+        _edgeRetractGrace.stop();
+        _edgeArmed = false;
+        _edgeBodyHover = false;
         ModalManager.closeModal(modalHandle);
         closeCleanupTimer.start();
     }
@@ -489,6 +502,39 @@ Item {
         }
     }
 
+    // Handles hover dismissal grace periods for edge-hover sessions w/cursor
+    readonly property bool _edgeRetractEnabled: (modalHandle && modalHandle.edgeHoverManaged === true) && spotlightOpen && !isClosing && !transientSurfaces.active
+    property bool _edgeBodyHover: false
+    property bool _edgeArmed: false
+
+    on_EdgeRetractEnabledChanged: {
+        if (!_edgeRetractEnabled) {
+            _edgeRetractGrace.stop();
+        } else if (_edgeArmed && !_edgeBodyHover) {
+            _edgeRetractGrace.restart();
+        }
+    }
+
+    Timer {
+        id: _edgeRetractGrace
+        interval: 150
+        repeat: false
+        onTriggered: {
+            if (root._edgeRetractEnabled && root._edgeArmed && !root._edgeBodyHover)
+                root.hide();
+        }
+    }
+
+    function _onEdgeBodyHoverChanged(over) {
+        root._edgeBodyHover = over;
+        if (over) {
+            root._edgeArmed = true;
+            _edgeRetractGrace.stop();
+        } else if (root._edgeRetractEnabled) {
+            _edgeRetractGrace.restart();
+        }
+    }
+
     Connections {
         target: spotlightContent?.controller ?? null
         function onModeChanged(mode, userInitiated) {
@@ -500,7 +546,7 @@ Item {
 
     HyprlandFocusGrab {
         id: focusGrab
-        windows: [contentWindow]
+        windows: [contentWindow].concat(transientSurfaces.focusWindows)
         active: root.useHyprlandFocusGrab && root.spotlightOpen
 
         onCleared: {
@@ -628,13 +674,20 @@ Item {
             width: root.alignedWidth
             height: root.contentSurfaceHeight
 
+            // Passive tracker for edge-hover dismissal that preserves input events.
+            HoverHandler {
+                id: edgeBodyHoverHandler
+                enabled: root._edgeRetractEnabled
+                onHoveredChanged: root._onEdgeBodyHoverChanged(hovered)
+            }
+
             MouseArea {
                 anchors.fill: parent
                 enabled: root.spotlightOpen
                 hoverEnabled: false
                 acceptedButtons: Qt.AllButtons
-                onPressed: mouse.accepted = true
-                onClicked: mouse.accepted = true
+                onPressed: mouse => mouse.accepted = true
+                onClicked: mouse => mouse.accepted = true
                 z: -1
             }
 
@@ -760,8 +813,8 @@ Item {
                         y: contentWrapper.y
                         level: root.shadowLevel
                         fallbackOffset: root.shadowFallbackOffset
-                        targetColor: root.frameOwnsConnectedChrome ? "transparent" : root.backgroundColor
-                        borderColor: root.frameOwnsConnectedChrome ? "transparent" : root.effectiveBorderColor
+                        targetColor: root.frameOwnsConnectedChrome ? Theme.withAlpha(root.backgroundColor, 0) : root.backgroundColor
+                        borderColor: root.frameOwnsConnectedChrome ? Theme.withAlpha(root.effectiveBorderColor, 0) : root.effectiveBorderColor
                         borderWidth: root.frameOwnsConnectedChrome ? 0 : root.effectiveBorderWidth
                         targetRadius: root.cornerRadius
                         shadowEnabled: !root.frameOwnsConnectedChrome && Theme.elevationEnabled && SettingsData.modalElevationEnabled && Quickshell.env("DMS_DISABLE_LAYER") !== "true" && Quickshell.env("DMS_DISABLE_LAYER") !== "1"
@@ -826,6 +879,7 @@ Item {
                                 sourceComponent: LauncherContent {
                                     focus: true
                                     parentModal: root
+                                    transientSurfaceTracker: transientSurfaces
                                 }
 
                                 onLoaded: {

@@ -16,7 +16,7 @@ StyledRect {
     Column {
         anchors.fill: parent
         anchors.margins: Theme.spacingS
-        spacing: 4
+        spacing: Theme.spacingXS
 
         StyledText {
             text: I18n.tr("Quick Access")
@@ -34,7 +34,7 @@ StyledRect {
                 width: parent?.width ?? 0
                 height: 38
                 radius: Theme.cornerRadius
-                color: quickAccessMouseArea.containsMouse ? Theme.withAlpha(Theme.surfaceContainerHigh, Theme.popupTransparency) : (currentPath === modelData?.path ? Theme.surfacePressed : "transparent")
+                color: quickAccessMouseArea.containsMouse ? Theme.withAlpha(Theme.surfaceContainerHigh, Theme.popupTransparency) : (currentPath === modelData?.path ? Theme.surfacePressed : Theme.withAlpha(Theme.surfacePressed, 0))
 
                 Row {
                     anchors.fill: parent
